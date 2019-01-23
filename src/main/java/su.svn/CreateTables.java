@@ -10,10 +10,12 @@ package su.svn;
  * createSchema.sh or createSchema.bat
  */
 
-public class CreateTables {
+public class CreateTables
+{
     public static final String DB_SCHEMA_DDL = "db-schema.hibernate5.ddl";
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         // createTables();
     }
 }
