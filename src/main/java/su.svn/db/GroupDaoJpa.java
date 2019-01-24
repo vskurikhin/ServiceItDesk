@@ -137,7 +137,6 @@ public class GroupDaoJpa implements GroupDao
     void setEntityManager(EntityManager entityManager)
     {
         this.em = entityManager;
-
     }
 }
 

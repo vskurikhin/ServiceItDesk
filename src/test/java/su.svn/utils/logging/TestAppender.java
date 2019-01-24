@@ -1,9 +1,12 @@
-package su.svn.utils;
+package su.svn.utils.logging;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
@@ -18,18 +21,29 @@ import java.util.List;
  * https://stackoverflow.com/questions/28416788/how-to-write-a-unit-test-for-a-custom-logger-in-log4j2/28422839#28422839
  */
 
-@Plugin(name = "TestAppender", category = "Core", elementType = "apender", printObject = true)
+@Plugin(name = "TestAppender", category = "Core", elementType = "appender", printObject = true)
 public class TestAppender extends AbstractAppender
 {
     private static final long serialVersionUID = 8047713135100613185L;
-    private List<String> messages = new ArrayList<String>();
 
-    protected TestAppender(String name, Filter filter, Layout<? extends Serializable> layout) {
+    private List<String> messages = new ArrayList<>();
+
+    public static TestAppender create()
+    {
+        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        final Configuration config = ctx.getConfiguration();
+
+        return (TestAppender) config.getAppenders().get("TestAppender");
+    }
+
+    protected TestAppender(String name, Filter filter, Layout<? extends Serializable> layout)
+    {
         super(name, filter, layout);
     }
 
     @Override
-    public void append(LogEvent event) {
+    public void append(LogEvent event)
+    {
         getMessages().add(event.getMessage().toString());
     }
 
@@ -38,7 +52,8 @@ public class TestAppender extends AbstractAppender
     public static TestAppender createAppender(@PluginAttribute("name") String name,
                                               @PluginElement("Layout") Layout<? extends Serializable> layout,
                                               @PluginElement("Filter") final Filter filter,
-                                              @PluginAttribute("otherAttribute") String otherAttribute) {
+                                              @PluginAttribute("otherAttribute") String otherAttribute)
+    {
         if (name == null) {
             LOGGER.error("No name provided for TestAppender");
             return null;
@@ -46,14 +61,17 @@ public class TestAppender extends AbstractAppender
         if (layout == null) {
             layout = PatternLayout.createDefaultLayout();
         }
+
         return new TestAppender(name, filter, layout);
     }
 
-    public List<String> getMessages() {
+    public List<String> getMessages()
+    {
         return messages;
     }
 
-    public void setMessages(List<String> messages) {
+    public void setMessages(List<String> messages)
+    {
         this.messages = messages;
     }
 }

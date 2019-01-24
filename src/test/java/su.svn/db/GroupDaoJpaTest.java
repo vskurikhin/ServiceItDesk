@@ -5,10 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import su.svn.models.Group;
+import su.svn.utils.logging.TestAppender;
 
 import javax.persistence.*;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,11 +67,14 @@ class GroupDaoJpaTest
     {
         private EntityManager entityManager;
 
+        private TestAppender appender;
+
         @BeforeEach
         void mockEntityManager()
         {
             entityManager = mock(EntityManager.class);
             dao = new GroupDaoJpa(entityManager);
+            appender = TestAppender.create();
         }
 
         @Test
@@ -114,6 +117,7 @@ class GroupDaoJpaTest
 
             Group test = dao.findById(TEST_ID9);
             assertNull(test);
+            assertTrue(appender.getMessages().size() > 0);
         }
 
         @DisplayName("find all from empty table")
@@ -140,6 +144,7 @@ class GroupDaoJpaTest
 
             List<Group> test = dao.findAll();
             assertEquals(expected, test);
+            assertTrue(appender.getMessages().size() > 0);
         }
 
         @DisplayName("find by name from empty table")
@@ -168,6 +173,7 @@ class GroupDaoJpaTest
 
             List<Group> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
+            assertTrue(appender.getMessages().size() > 0);
         }
 
         @DisplayName("find by description from empty table")
@@ -196,6 +202,7 @@ class GroupDaoJpaTest
 
             List<Group> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
+            assertTrue(appender.getMessages().size() > 0);
         }
     }
 }
