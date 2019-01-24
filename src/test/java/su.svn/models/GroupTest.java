@@ -41,7 +41,7 @@ class GroupTest
 
         @Test
         @DisplayName("use setter and getter for name")
-        void testGetSettName()
+        void testGetSetName()
         {
             group.setName(TEST_STR1);
             assertThat(group).hasFieldOrPropertyWithValue("name", TEST_STR1);
@@ -50,7 +50,7 @@ class GroupTest
 
         @Test
         @DisplayName("use setter and getter for description")
-        void testGetSettDescription()
+        void testGetSetDescription()
         {
             group.setDescription(TEST_STR1);
             assertThat(group).hasFieldOrPropertyWithValue("description", TEST_STR1);

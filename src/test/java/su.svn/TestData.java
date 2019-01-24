@@ -4,6 +4,10 @@ import lombok.experimental.FieldNameConstants;
 import lombok.AccessLevel;
 import su.svn.models.Group;
 
+import javax.persistence.TypedQuery;
+
+import static org.mockito.Mockito.mock;
+
 @FieldNameConstants
 public class TestData
 {
@@ -30,7 +34,12 @@ public class TestData
     public static final long TEST_ID8 = 8L;
     public static final long TEST_ID9 = 9L;
 
-    public static final Group createGroup1()
+    @SuppressWarnings("unchecked") // still needed :( but just once :)
+    public static <T> TypedQuery<T> mockTypedQuery() {
+        return mock(TypedQuery.class);
+    }
+
+    public static Group createGroup1()
     {
         return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
     }
