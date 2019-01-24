@@ -8,6 +8,7 @@ import su.svn.models.Group;
 
 import javax.persistence.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,13 +106,36 @@ class GroupDaoJpaTest
             assertNull(test);
         }
 
+        @DisplayName("find by id from table had throw IllegalArgumentException")
+        @Test
+        void findById_exception()
+        {
+            when(entityManager.find(Group.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
+
+            Group test = dao.findById(TEST_ID9);
+            assertNull(test);
+        }
+
         @DisplayName("find all from empty table")
         @Test
         void findAll_empty()
         {
-            List<Group> expected = new LinkedList<>();
+            List<Group> expected = dao.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
+            when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
+
+            List<Group> test = dao.findAll();
+            assertEquals(expected, test);
+        }
+
+        @DisplayName("find all had throw IllegalArgumentException")
+        @Test
+        void findAll_exception()
+        {
+            List<Group> expected = dao.emptyList();
+            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
             when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findAll();
@@ -132,6 +156,20 @@ class GroupDaoJpaTest
             assertEquals(expected, test);
         }
 
+        @DisplayName("find by name had throw IllegalArgumentException")
+        @Test
+        void findByName_exception()
+        {
+            List<Group> expected = dao.emptyList();
+            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
+            when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
+            when(entityManager.createQuery(SELECT_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
+
+            List<Group> test = dao.findByName(TEST_NAME);
+            assertEquals(expected, test);
+        }
+
         @DisplayName("find by description from empty table")
         @Test
         void findByDescription_empty()
@@ -140,6 +178,20 @@ class GroupDaoJpaTest
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
+            when(entityManager.createQuery(SELECT_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
+
+            List<Group> test = dao.findByDescription(TEST_DESCRIPTION);
+            assertEquals(expected, test);
+        }
+
+        @DisplayName("find by description had throw IllegalArgumentException")
+        @Test
+        void findByDescription_exception()
+        {
+            List<Group> expected = dao.emptyList();
+            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
+            when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
             when(entityManager.createQuery(SELECT_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findByDescription(TEST_DESCRIPTION);

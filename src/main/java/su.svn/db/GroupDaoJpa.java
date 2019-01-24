@@ -13,10 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TransactionRequiredException;
+import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
@@ -46,32 +44,61 @@ public class GroupDaoJpa implements GroupDao
         em = entityManager;
     }
 
-    @Override
-    public List<Group> findByName(String value)
-    {
-        return em.createQuery(SELECT_WHERE_NAME, Group.class)
-            .setParameter("name", value)
-            .getResultList();
-    }
-
-    @Override
-    public List<Group> findByDescription(String value)
-    {
-        return em.createQuery(SELECT_WHERE_DESC, Group.class)
-            .setParameter("desc", value)
-            .getResultList();
-    }
-
-    @Override
-    public List<Group> findAll()
-    {
-        return em.createQuery(SELECT_ALL, Group.class).getResultList();
+    public List<Group> emptyList() {
+        //noinspection unchecked
+        return Collections.EMPTY_LIST;
     }
 
     @Override
     public Group findById(Long id)
     {
-        return em.find(Group.class, id);
+        try {
+            return em.find(Group.class, id);
+        }
+        catch (IllegalArgumentException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Group> findAll()
+    {
+        try {
+            return em.createQuery(SELECT_ALL, Group.class).getResultList();
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search all because had the exception {}", e);
+            return emptyList();
+        }
+    }
+
+    @Override
+    public List<Group> findByName(String value)
+    {
+        try {
+            return em.createQuery(SELECT_WHERE_NAME, Group.class)
+                .setParameter("name", value)
+                .getResultList();
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by name: {} because had the exception {}", value, e);
+            return emptyList();
+        }
+    }
+
+    @Override
+    public List<Group> findByDescription(String value)
+    {
+        try {
+            return em.createQuery(SELECT_WHERE_DESC, Group.class)
+                .setParameter("desc", value)
+                .getResultList();
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by description: {} because had the exception {}", value, e);
+            return emptyList();
+        }
     }
 
     @Override
