@@ -1,6 +1,6 @@
 /*
- * GroupDaoJpa.java
- * This file was last modified at 2019.01.23 20:05 by Victor N. Skurikhin.
+ * ConfigurationTypeDaoJpa.java
+ * This file was last modified at 2019.01.25 20:05 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -8,7 +8,7 @@
 
 package su.svn.db;
 
-import su.svn.models.Group;
+import su.svn.models.ConfigurationType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,38 +23,38 @@ import static javax.ejb.TransactionAttributeType.SUPPORTS;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
-public class GroupDaoJpa implements GroupDao
+public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
 
-    public static final String SELECT_ALL = "SELECT g FROM Group g";
+    public static final String SELECT_ALL = "SELECT ct FROM ConfigurationType ct";
 
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
+    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE ct.name LIKE :name";
 
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE g.description LIKE :desc";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE ct.description LIKE :desc";
 
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupDaoJpa.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationTypeDaoJpa.class);
 
-    public GroupDaoJpa() { /* None */}
+    public ConfigurationTypeDaoJpa() { /* None */}
 
-    public GroupDaoJpa(EntityManager entityManager)
+    public ConfigurationTypeDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
-    public List<Group> emptyList() {
+    public List<ConfigurationType> emptyList() {
         //noinspection unchecked
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public Group findById(Long id)
+    public ConfigurationType findById(Long id)
     {
         try {
-            return em.find(Group.class, id);
+            return em.find(ConfigurationType.class, id);
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
@@ -63,10 +63,10 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    public List<Group> findAll()
+    public List<ConfigurationType> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Group.class).getResultList();
+            return em.createQuery(SELECT_ALL, ConfigurationType.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -75,10 +75,10 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    public List<Group> findByName(String value)
+    public List<ConfigurationType> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, Group.class)
+            return em.createQuery(SELECT_WHERE_NAME, ConfigurationType.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -89,10 +89,10 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    public List<Group> findByDescription(String value)
+    public List<ConfigurationType> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Group.class)
+            return em.createQuery(SELECT_WHERE_DESC, ConfigurationType.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -104,7 +104,7 @@ public class GroupDaoJpa implements GroupDao
 
     @Override
     @TransactionAttribute(REQUIRES_NEW)
-    public boolean save(Group entity)
+    public boolean save(ConfigurationType entity)
     {
         try {
             if (null == entity.getId() || 0 == entity.getId()) {
@@ -115,11 +115,11 @@ public class GroupDaoJpa implements GroupDao
             }
         }
         catch (IllegalArgumentException | PersistenceException e) {
-            LOGGER.error("Can't save group with id: {} because had the exception {}", entity.getId(), e);
+            LOGGER.error("Can't save ctype with id: {} because had the exception {}", entity.getId(), e);
             return false;
         }
 
-        LOGGER.info("Save group with id: {}", entity.getId());
+        LOGGER.info("Save ctype with id: {}", entity.getId());
         return true;
     }
 
@@ -128,13 +128,13 @@ public class GroupDaoJpa implements GroupDao
     public boolean delete(Long id)
     {
         try {
-            Group merged = em.merge(findById(id));
+            ConfigurationType merged = em.merge(findById(id));
             em.remove(merged);
             LOGGER.info("Delete genre id: {}", merged.getId());
             return true;
         }
         catch (IllegalArgumentException | PersistenceException e) {
-            LOGGER.error("Can't save group with id: {} because had the exception {}", id, e);
+            LOGGER.error("Can't save ctype with id: {} because had the exception {}", id, e);
             return false;
         }
     }

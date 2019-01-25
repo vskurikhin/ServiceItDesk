@@ -89,7 +89,7 @@ class GroupTest
         void testEquals()
         {
             assertNotEquals(new Group(), group);
-            Group expected = createGroup1();
+            final Group expected = TEST_GROUP1;
             assertEquals(expected.hashCode(), group.hashCode());
             assertEquals(expected, group);
         }

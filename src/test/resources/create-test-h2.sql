@@ -8,13 +8,15 @@
 --------------------------------------------------------------------------------
 DROP TABLE IF EXISTS cm_user;
 DROP TABLE IF EXISTS cm_group;
+DROP TABLE IF EXISTS cm_admin;
+DROP TABLE IF EXISTS cm_ctype;
 --
 --------------------------------------------------------------------------------
 -- Configuration Management ----------------------------------------------------
 -- Groups
 CREATE TABLE IF NOT EXISTS cm_group (
   group_id          BIGINT       NOT NULL AUTO_INCREMENT,
-  name              VARCHAR(255) NOT NULL,
+  name              VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
   UNIQUE (name),
   PRIMARY KEY (group_id)
@@ -23,7 +25,7 @@ CREATE TABLE IF NOT EXISTS cm_group (
 -- Users
 CREATE TABLE IF NOT EXISTS cm_user (
   user_id           BIGINT       NOT NULL AUTO_INCREMENT,
-  name              VARCHAR(255) NOT NULL,
+  name              VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
   primary_group_id  BIGINT REFERENCES cm_group (group_id),
   UNIQUE (name),
@@ -39,7 +41,7 @@ CREATE TABLE IF NOT EXISTS cm_admin (
 -- Configuration types
 CREATE TABLE IF NOT EXISTS cm_ctype (
   type_id           BIGINT       NOT NULL AUTO_INCREMENT,
-  name              VARCHAR(255) NOT NULL,
+  name              VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
   UNIQUE (name),
   PRIMARY KEY (type_id)
@@ -48,9 +50,9 @@ CREATE TABLE IF NOT EXISTS cm_ctype (
 -- Configuration units
 CREATE TABLE IF NOT EXISTS cm_cunit (
   cunit_id          BIGINT       NOT NULL AUTO_INCREMENT,
-  name              VARCHAR(128) NOT NULL,
+  name              VARCHAR(127) NOT NULL,
   environ           ENUM('prod', 'test', 'dev'),
-  description       VARCHAR(254) NOT NULL,
+  description       VARCHAR(255) NOT NULL,
   admin_user_id     BIGINT REFERENCES cm_admin (admin_user_id),
   group_id          BIGINT REFERENCES cm_group (group_id),
   owner_user_id     BIGINT REFERENCES cm_user (user_id),
@@ -63,15 +65,15 @@ CREATE TABLE IF NOT EXISTS cm_cunit (
 -- Messages
 CREATE TABLE IF NOT EXISTS pm_message (
   message_id        BIGINT       NOT NULL AUTO_INCREMENT,
-  message_text      VARCHAR(254) NOT NULL,
+  message_text      VARCHAR(255) NOT NULL,
   PRIMARY KEY (message_id)
 );
 
 -- Tasks
 CREATE TABLE IF NOT EXISTS pm_task (
   task_id           BIGINT       NOT NULL AUTO_INCREMENT,
-  title             VARCHAR(128) NOT NULL,
-  description_text  VARCHAR(254) NOT NULL,
+  title             VARCHAR(127) NOT NULL,
+  description_text  VARCHAR(255) NOT NULL,
   consumer_user_id  BIGINT REFERENCES cm_user (user_id),
   PRIMARY KEY (task_id)
 );
@@ -97,7 +99,7 @@ CREATE TABLE IF NOT EXISTS pm_task_record (
 -- Incidents
 CREATE TABLE IF NOT EXISTS pm_incident (
   incident_id       BIGINT       NOT NULL AUTO_INCREMENT,
-  title             VARCHAR(128) NOT NULL,
+  title             VARCHAR(127) NOT NULL,
   description_text  VARCHAR(254) NOT NULL,
   consumer_user_id  BIGINT REFERENCES cm_user (user_id),
   PRIMARY KEY (incident_id)

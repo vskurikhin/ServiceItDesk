@@ -1,6 +1,7 @@
 package su.svn;
 
 import lombok.experimental.FieldNameConstants;
+import su.svn.models.ConfigurationType;
 import su.svn.models.Group;
 import su.svn.models.User;
 
@@ -50,4 +51,10 @@ public class TestData
         return new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createGroup1());
     }
     public static final User TEST_USER1 = createUser1();
+
+    public static ConfigurationType createConfigurationType1()
+    {
+        return new ConfigurationType(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
+    }
+    public static final ConfigurationType TEST_CONFIGURATION_TYPE1 = createConfigurationType1();
 }

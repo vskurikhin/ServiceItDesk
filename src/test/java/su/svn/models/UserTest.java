@@ -89,7 +89,7 @@ class UserTest
         void testEquals()
         {
             assertNotEquals(new User(), user);
-            User expected = createUser1();
+            final User expected = TEST_USER1;
             assertEquals(expected.hashCode(), user.hashCode());
             assertEquals(expected, user);
         }
