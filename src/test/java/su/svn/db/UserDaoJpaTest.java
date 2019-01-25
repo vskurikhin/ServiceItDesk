@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import su.svn.models.Group;
+import su.svn.models.User;
 import su.svn.utils.db.JpaDedicatedEntityManagerTest;
 import su.svn.utils.logging.TestAppender;
 
@@ -19,20 +19,20 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.GroupDaoJpa.SELECT_ALL;
-import static su.svn.db.GroupDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.GroupDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.db.UserDaoJpa.SELECT_ALL;
+import static su.svn.db.UserDaoJpa.SELECT_WHERE_DESC;
+import static su.svn.db.UserDaoJpa.SELECT_WHERE_NAME;
 
-@DisplayName("Class GroupDaoJpaTest")
-class GroupDaoJpaTest
+@DisplayName("Class UserDaoJpaTest")
+class UserDaoJpaTest
 {
-    GroupDaoJpa dao;
+    UserDaoJpa dao;
 
     @Test
-    @DisplayName("is instantiated with new GroupDaoJpa()")
+    @DisplayName("is instantiated with new UserDaoJpa()")
     void isInstantiatedWithNew()
     {
-        new GroupDaoJpa();
+        new UserDaoJpa();
     }
 
     @Nested
@@ -42,11 +42,11 @@ class GroupDaoJpaTest
         @BeforeEach
         void createNew()
         {
-            dao = new GroupDaoJpa();
+            dao = new UserDaoJpa();
         }
 
         @Test
-        @DisplayName("default values in GroupDaoJpa()")
+        @DisplayName("default values in UserDaoJpa()")
         void defaults()
         {
             assertThat(dao).hasFieldOrPropertyWithValue("em", null);
@@ -74,12 +74,12 @@ class GroupDaoJpaTest
         void mockEntityManager()
         {
             entityManager = mock(EntityManager.class);
-            dao = new GroupDaoJpa(entityManager);
+            dao = new UserDaoJpa(entityManager);
             appender = TestAppender.create();
         }
 
         @Test
-        @DisplayName("constructor injected values in GroupDaoJpa()")
+        @DisplayName("constructor injected values in UserDaoJpa()")
         void defaults()
         {
             assertThat(dao).hasFieldOrPropertyWithValue("em", entityManager);
@@ -89,14 +89,14 @@ class GroupDaoJpaTest
         @Test
         void findById_success()
         {
-            Group expected = new Group();
+            User expected = new User();
             expected.setId(TEST_ID1);
             expected.setName(TEST_NAME);
             expected.setDescription(TEST_DESCRIPTION);
 
-            when(entityManager.find(Group.class, TEST_ID1)).thenReturn(expected);
+            when(entityManager.find(User.class, TEST_ID1)).thenReturn(expected);
 
-            Group test = dao.findById(TEST_ID1);
+            User test = dao.findById(TEST_ID1);
             assertEquals(expected, test);
         }
 
@@ -104,9 +104,9 @@ class GroupDaoJpaTest
         @Test
         void findById_null()
         {
-            when(entityManager.find(Group.class, TEST_ID9)).thenReturn(null);
+            when(entityManager.find(User.class, TEST_ID9)).thenReturn(null);
 
-            Group test = dao.findById(TEST_ID9);
+            User test = dao.findById(TEST_ID9);
             assertNull(test);
         }
 
@@ -114,9 +114,9 @@ class GroupDaoJpaTest
         @Test
         void findById_exception()
         {
-            when(entityManager.find(Group.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
+            when(entityManager.find(User.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            Group test = dao.findById(TEST_ID9);
+            User test = dao.findById(TEST_ID9);
             assertNull(test);
             assertTrue(appender.getMessages().size() > 0);
         }
@@ -125,12 +125,12 @@ class GroupDaoJpaTest
         @Test
         void findAll_empty()
         {
-            List<Group> expected = dao.emptyList();
-            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            List<User> expected = dao.emptyList();
+            TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
 
-            List<Group> test = dao.findAll();
+            List<User> test = dao.findAll();
             assertEquals(expected, test);
         }
 
@@ -138,12 +138,12 @@ class GroupDaoJpaTest
         @Test
         void findAll_exception()
         {
-            List<Group> expected = dao.emptyList();
-            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            List<User> expected = dao.emptyList();
+            TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
 
-            List<Group> test = dao.findAll();
+            List<User> test = dao.findAll();
             assertEquals(expected, test);
             assertTrue(appender.getMessages().size() > 0);
         }
@@ -152,13 +152,13 @@ class GroupDaoJpaTest
         @Test
         void findByName_empty()
         {
-            List<Group> expected = new LinkedList<>();
-            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            List<User> expected = new LinkedList<>();
+            TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createQuery(SELECT_WHERE_NAME, User.class)).thenReturn(mockedQuery);
 
-            List<Group> test = dao.findByName(TEST_NAME);
+            List<User> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
         }
 
@@ -166,13 +166,13 @@ class GroupDaoJpaTest
         @Test
         void findByName_exception()
         {
-            List<Group> expected = dao.emptyList();
-            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            List<User> expected = dao.emptyList();
+            TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createQuery(SELECT_WHERE_NAME, User.class)).thenReturn(mockedQuery);
 
-            List<Group> test = dao.findByName(TEST_NAME);
+            List<User> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
             assertTrue(appender.getMessages().size() > 0);
         }
@@ -181,13 +181,13 @@ class GroupDaoJpaTest
         @Test
         void findByDescription_empty()
         {
-            List<Group> expected = new LinkedList<>();
-            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            List<User> expected = new LinkedList<>();
+            TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createQuery(SELECT_WHERE_DESC, User.class)).thenReturn(mockedQuery);
 
-            List<Group> test = dao.findByDescription(TEST_DESCRIPTION);
+            List<User> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
         }
 
@@ -195,13 +195,13 @@ class GroupDaoJpaTest
         @Test
         void findByDescription_exception()
         {
-            List<Group> expected = dao.emptyList();
-            TypedQuery<Group> mockedQuery = mockTypedQuery();
+            List<User> expected = dao.emptyList();
+            TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createQuery(SELECT_WHERE_DESC, User.class)).thenReturn(mockedQuery);
 
-            List<Group> test = dao.findByDescription(TEST_DESCRIPTION);
+            List<User> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
             assertTrue(appender.getMessages().size() > 0);
         }
@@ -210,7 +210,7 @@ class GroupDaoJpaTest
         @Test
         void save_persist_exception()
         {
-            Group expected = new Group();
+            User expected = new User();
             doThrow(PersistenceException.class).when(entityManager).persist(expected);
 
             assertFalse(dao.save(expected));
@@ -223,7 +223,7 @@ class GroupDaoJpaTest
         {
             doThrow(PersistenceException.class).when(entityManager).flush();
 
-            Group expected = new Group();
+            User expected = new User();
             assertFalse(dao.save(expected));
             assertTrue(appender.getMessages().size() > 0);
         }
@@ -232,7 +232,7 @@ class GroupDaoJpaTest
         @Test
         void save_merge_exception()
         {
-            Group expected = TEST_GROUP1;
+            User expected = TEST_USER1;
             doThrow(PersistenceException.class).when(entityManager).merge(expected);
 
             assertFalse(dao.save(expected));
@@ -243,8 +243,8 @@ class GroupDaoJpaTest
         @Test
         void delete_exception()
         {
-            Group expected = TEST_GROUP1;
-            when(entityManager.find(Group.class, expected.getId())).thenReturn(expected);
+            User expected = TEST_USER1;
+            when(entityManager.find(User.class, expected.getId())).thenReturn(expected);
             when(entityManager.merge(expected)).thenReturn(expected);
             doThrow(PersistenceException.class).when(entityManager).remove(expected);
 
@@ -260,17 +260,26 @@ class GroupDaoJpaTest
         @BeforeEach
         void createNew()
         {
-            dao = new GroupDaoJpa(entityManager);
+            dao = new UserDaoJpa(entityManager);
+        }
+
+        private void saveNewGroupAndUser(User test)
+        {
+            test.setId(0L);
+            test.getGroup().setId(0L);
+            runInTransaction(() -> {
+                GroupDao groupDao = new GroupDaoJpa(entityManager);
+                groupDao.save(test.getGroup());
+                dao.save(test);
+            });
         }
 
         @DisplayName("persists new when save")
         @Test
         void save_persists()
         {
-            Group test = new Group();
-            test.setName(TEST_NAME);
-            test.setDescription(TEST_DESCRIPTION);
-            runInTransaction(() -> dao.save(test));
+            User test = createUser1();
+            saveNewGroupAndUser(test);
             assertEquals(test, dao.findById(test.getId()));
         }
 
@@ -278,10 +287,8 @@ class GroupDaoJpaTest
         @Test
         void save_megre()
         {
-            Group test = new Group();
-            test.setName(TEST_NAME);
-            test.setDescription(TEST_DESCRIPTION);
-            runInTransaction(() -> dao.save(test));
+            User test = createUser1(); // will change test user
+            saveNewGroupAndUser(test);
             test.setName(TEST_NAME + TEST_STR1);
             test.setDescription(TEST_DESCRIPTION + TEST_STR2);
             runInTransaction(() -> dao.save(test));
@@ -292,10 +299,8 @@ class GroupDaoJpaTest
         @Test
         void delete()
         {
-            Group test = new Group();
-            test.setName(TEST_NAME);
-            test.setDescription(TEST_DESCRIPTION);
-            runInTransaction(() -> dao.save(test));
+            User test = createUser1();
+            saveNewGroupAndUser(test);
             runInTransaction(() -> dao.delete(test.getId()));
             assertNull(dao.findById(test.getId()));
             assertTrue(dao.findAll().isEmpty());

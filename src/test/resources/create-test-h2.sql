@@ -1,9 +1,13 @@
 --
--- DataSet.java
--- This file was last modified at 2019.01.23 23:59 by Victor N. Skurikhin.
+-- create-test-h2.sql
+-- This file was last modified at 2019.01.25 23:59 by Victor N. Skurikhin.
 -- $Id$
 -- This is free and unencumbered software released into the public domain.
 -- For more information, please refer to <http://unlicense.org>
+--
+--------------------------------------------------------------------------------
+DROP TABLE IF EXISTS cm_user;
+DROP TABLE IF EXISTS cm_group;
 --
 --------------------------------------------------------------------------------
 -- Configuration Management ----------------------------------------------------
@@ -28,8 +32,8 @@ CREATE TABLE IF NOT EXISTS cm_user (
 
 -- Administrators
 CREATE TABLE IF NOT EXISTS cm_admin (
-  admin_user_id            BIGINT REFERENCES cm_user (user_id),
-  admin_group_id           BIGINT REFERENCES cm_group (group_id)
+  admin_user_id     BIGINT REFERENCES cm_user (user_id),
+  admin_group_id    BIGINT REFERENCES cm_group (group_id)
 );
 
 -- Configuration types
@@ -58,8 +62,8 @@ CREATE TABLE IF NOT EXISTS cm_cunit (
 -- Progess Management ----------------------------------------------------------
 -- Messages
 CREATE TABLE IF NOT EXISTS pm_message (
-  message_id               BIGINT       NOT NULL AUTO_INCREMENT,
-  message_text             VARCHAR(254) NOT NULL,
+  message_id        BIGINT       NOT NULL AUTO_INCREMENT,
+  message_text      VARCHAR(254) NOT NULL,
   PRIMARY KEY (message_id)
 );
 

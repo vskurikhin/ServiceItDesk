@@ -1,8 +1,8 @@
 package su.svn;
 
 import lombok.experimental.FieldNameConstants;
-import lombok.AccessLevel;
 import su.svn.models.Group;
+import su.svn.models.User;
 
 import javax.persistence.TypedQuery;
 
@@ -43,4 +43,11 @@ public class TestData
     {
         return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
     }
+    public static final Group TEST_GROUP1 = createGroup1();
+
+    public static User createUser1()
+    {
+        return new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createGroup1());
+    }
+    public static final User TEST_USER1 = createUser1();
 }

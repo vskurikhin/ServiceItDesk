@@ -1,5 +1,5 @@
 /*
- * Group.java
+ * User.java
  * This file was last modified at 2019.01.24 23:59 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
@@ -20,13 +20,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "cm_group")
-public class Group implements DataSet
+@Table(name = "cm_user")
+public class User implements DataSet
 {
     @Id
-    @SequenceGenerator(name = "group_identifier", sequenceName = "group_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "group_identifier")
-    @Column(name = "group_id", nullable = false, unique = true)
+    @SequenceGenerator(name = "user_identifier", sequenceName = "user_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_identifier")
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long id = 0L;
 
     @Basic
@@ -36,6 +36,10 @@ public class Group implements DataSet
     @Basic
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "primary_group_id", nullable = false)
+    private Group group;
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et
