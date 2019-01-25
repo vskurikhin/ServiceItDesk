@@ -1,6 +1,6 @@
 /*
  * TestData.java
- * This file was last modified at 25.01.19 23:30 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-25 23:36 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 @FieldNameConstants
 public class TestData
 {
-    public static final String VERSION = "2";
+    public static final String VERSION = "3";
     public static final String TEST_STR1 = "TEST_STR1";
     public static final String TEST_STR2 = "TEST_STR2";
     public static final String TEST_STR3 = "TEST_STR3";
