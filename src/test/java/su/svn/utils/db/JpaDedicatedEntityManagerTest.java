@@ -1,6 +1,7 @@
 package su.svn.utils.db;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -15,7 +16,6 @@ public class JpaDedicatedEntityManagerTest extends JpaEntityManagerTest
     public static void init()
     {
          emf = Persistence.createEntityManagerFactory("mnf-pu-test");
-         entityManager = emf.createEntityManager();
 
          return;
     }
@@ -26,18 +26,23 @@ public class JpaDedicatedEntityManagerTest extends JpaEntityManagerTest
         return entityManager;
     }
 
-    @SuppressWarnings("Duplicates")
     @BeforeEach
     public void initializeDatabase()
     {
+        entityManager = emf.createEntityManager();
         recreateDatabase();
+    }
+
+    @AfterEach
+    public void closeEntityManager()
+    {
+        entityManager.clear();
+        entityManager.close();
     }
 
     @AfterAll
     public static void tearDown()
     {
-        entityManager.clear();
-        entityManager.close();
         emf.close();
     }
 }

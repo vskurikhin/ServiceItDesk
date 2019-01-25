@@ -57,7 +57,7 @@ class ConfigurationTypeTest
             assertEquals(TEST_STR1, ctype.getDescription());
         }
         @Test
-        @DisplayName("The length of string from Genre::toString is great than zero")
+        @DisplayName("The length of string from toString is great than zero")
         void testToString()
         {
             assertTrue(ctype.toString().length() > 0);

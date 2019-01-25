@@ -1,10 +1,7 @@
 package su.svn;
 
 import lombok.experimental.FieldNameConstants;
-import su.svn.models.ConfigurationType;
-import su.svn.models.ConfigurationUnit;
-import su.svn.models.Group;
-import su.svn.models.User;
+import su.svn.models.*;
 
 import javax.persistence.TypedQuery;
 
@@ -25,6 +22,7 @@ public class TestData
 
     public static final String TEST_NAME = "TEST_NAME";
     public static final String TEST_DESCRIPTION = "TEST_DESCRIPTION";
+    public static final String TEST_TEXT = "TEST_TEXT";
 
     public static final long TEST_ID1 = 1L;
     public static final long TEST_ID2 = 2L;
@@ -67,4 +65,10 @@ public class TestData
         );
     }
     public static final ConfigurationUnit TEST_CONFIGURATION_UNIT1 = createConfigurationUnit1();
+
+    public static Message createMessage1()
+    {
+        return new Message(TEST_ID1, TEST_TEXT);
+    }
+    public static final Message TEST_MESSAGE1 = createMessage1();
 }

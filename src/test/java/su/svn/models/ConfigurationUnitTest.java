@@ -60,7 +60,7 @@ class ConfigurationUnitTest
             assertEquals(TEST_STR1, cunit.getDescription());
         }
         @Test
-        @DisplayName("The length of string from Genre::toString is great than zero")
+        @DisplayName("The length of string from toString is great than zero")
         void testToString()
         {
             assertTrue(cunit.toString().length() > 0);

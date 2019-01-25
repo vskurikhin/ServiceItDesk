@@ -283,6 +283,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void save_persists()
         {
+            System.out.println("save_persist" + dao.findAll());
             ConfigurationUnit test = createConfigurationUnit1();
             saveNewGroupAndConfigurationUnit(test);
             assertEquals(test, dao.findById(test.getId()));
@@ -292,6 +293,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void save_megre()
         {
+            System.out.println("save_megre" + dao.findAll());
             ConfigurationUnit test = createConfigurationUnit1(); // will change test cunit
             saveNewGroupAndConfigurationUnit(test);
             test.setName(TEST_NAME + TEST_STR1);
@@ -304,6 +306,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void delete()
         {
+            System.out.println("delete" + dao.findAll());
             ConfigurationUnit test = createConfigurationUnit1();
             saveNewGroupAndConfigurationUnit(test);
             runInTransaction(() -> dao.delete(test.getId()));

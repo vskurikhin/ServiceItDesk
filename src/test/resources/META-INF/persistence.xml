@@ -12,6 +12,7 @@
         <class>su.svn.models.User</class>
         <class>su.svn.models.ConfigurationType</class>
         <class>su.svn.models.ConfigurationUnit</class>
+        <class>su.svn.models.Message</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.connection.url" value="jdbc:h2:mem:test"/>

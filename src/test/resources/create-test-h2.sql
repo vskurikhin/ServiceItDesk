@@ -11,6 +11,13 @@ DROP TABLE IF EXISTS cm_user;
 DROP TABLE IF EXISTS cm_group;
 DROP TABLE IF EXISTS cm_admin;
 DROP TABLE IF EXISTS cm_ctype;
+DROP TABLE IF EXISTS pm_message;
+ALTER SEQUENCE ctype_id_seq RESTART WITH 1;
+ALTER SEQUENCE cunit_id_seq RESTART WITH 1;
+ALTER SEQUENCE group_id_seq RESTART WITH 1;
+ALTER SEQUENCE message_id_seq RESTART WITH 1;
+ALTER SEQUENCE user_id_seq RESTART WITH 1;
+--DROP ALL OBJECTS;
 --
 --------------------------------------------------------------------------------
 -- Configuration Management ----------------------------------------------------

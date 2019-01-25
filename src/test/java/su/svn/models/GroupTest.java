@@ -57,7 +57,7 @@ class GroupTest
             assertEquals(TEST_STR1, group.getDescription());
         }
         @Test
-        @DisplayName("The length of string from Genre::toString is great than zero")
+        @DisplayName("The length of string from toString is great than zero")
         void testToString()
         {
             assertTrue(group.toString().length() > 0);
