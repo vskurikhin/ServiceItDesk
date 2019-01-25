@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import su.svn.models.Group;
+import su.svn.utils.db.JpaDedicatedEntityManagerTest;
 import su.svn.utils.logging.TestAppender;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
@@ -21,13 +23,15 @@ import static su.svn.db.GroupDaoJpa.SELECT_ALL;
 import static su.svn.db.GroupDaoJpa.SELECT_WHERE_DESC;
 import static su.svn.db.GroupDaoJpa.SELECT_WHERE_NAME;
 
+@DisplayName("Class GroupDaoJpaTest")
 class GroupDaoJpaTest
 {
     GroupDaoJpa dao;
 
     @Test
     @DisplayName("is instantiated with new GroupDaoJpa()")
-    void isInstantiatedWithNew() {
+    void isInstantiatedWithNew()
+    {
         new GroupDaoJpa();
     }
 
@@ -52,11 +56,8 @@ class GroupDaoJpaTest
         @DisplayName("use setter and getter for EntityManager")
         void testGetSetEntityManager()
         {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("mnf-pu-test");
-            EntityManager entityManager = emf.createEntityManager();
-
+            EntityManager entityManager = mock(EntityManager.class);
             dao.setEntityManager(entityManager);
-            assertThat(dao).hasFieldOrPropertyWithValue("em", entityManager);
             assertEquals(entityManager, dao.getEntityManager());
         }
     }
@@ -78,13 +79,13 @@ class GroupDaoJpaTest
         }
 
         @Test
-        @DisplayName("Constructor injected values in GroupDaoJpa()")
+        @DisplayName("constructor injected values in GroupDaoJpa()")
         void defaults()
         {
             assertThat(dao).hasFieldOrPropertyWithValue("em", entityManager);
         }
 
-        @DisplayName("find by id from table with success")
+        @DisplayName("find by id with success")
         @Test
         void findById_success()
         {
@@ -99,7 +100,7 @@ class GroupDaoJpaTest
             assertEquals(expected, test);
         }
 
-        @DisplayName("find by id from table and return null")
+        @DisplayName("find by id return null")
         @Test
         void findById_null()
         {
@@ -109,7 +110,7 @@ class GroupDaoJpaTest
             assertNull(test);
         }
 
-        @DisplayName("find by id from table had throw IllegalArgumentException")
+        @DisplayName("find by id was an IllegalArgumentException")
         @Test
         void findById_exception()
         {
@@ -120,7 +121,7 @@ class GroupDaoJpaTest
             assertTrue(appender.getMessages().size() > 0);
         }
 
-        @DisplayName("find all from empty table")
+        @DisplayName("and find all in empty table")
         @Test
         void findAll_empty()
         {
@@ -133,7 +134,7 @@ class GroupDaoJpaTest
             assertEquals(expected, test);
         }
 
-        @DisplayName("find all had throw IllegalArgumentException")
+        @DisplayName("find all was an IllegalArgumentException")
         @Test
         void findAll_exception()
         {
@@ -147,7 +148,7 @@ class GroupDaoJpaTest
             assertTrue(appender.getMessages().size() > 0);
         }
 
-        @DisplayName("find by name from empty table")
+        @DisplayName("find by name in empty table")
         @Test
         void findByName_empty()
         {
@@ -161,7 +162,7 @@ class GroupDaoJpaTest
             assertEquals(expected, test);
         }
 
-        @DisplayName("find by name had throw IllegalArgumentException")
+        @DisplayName("find by name was an IllegalArgumentException")
         @Test
         void findByName_exception()
         {
@@ -176,7 +177,7 @@ class GroupDaoJpaTest
             assertTrue(appender.getMessages().size() > 0);
         }
 
-        @DisplayName("find by description from empty table")
+        @DisplayName("find by description in empty table")
         @Test
         void findByDescription_empty()
         {
@@ -190,7 +191,7 @@ class GroupDaoJpaTest
             assertEquals(expected, test);
         }
 
-        @DisplayName("find by description had throw IllegalArgumentException")
+        @DisplayName("find by description was an IllegalArgumentException")
         @Test
         void findByDescription_exception()
         {
@@ -204,5 +205,99 @@ class GroupDaoJpaTest
             assertEquals(expected, test);
             assertTrue(appender.getMessages().size() > 0);
         }
+
+        @DisplayName("save with persist entity was a PersistenceException")
+        @Test
+        void save_persist_exception()
+        {
+            Group expected = new Group();
+            doThrow(PersistenceException.class).when(entityManager).persist(expected);
+
+            assertFalse(dao.save(expected));
+            assertTrue(appender.getMessages().size() > 0);
+        }
+
+        @DisplayName("save with flush was a PersistenceException")
+        @Test
+        void save_flush_exception()
+        {
+            doThrow(PersistenceException.class).when(entityManager).flush();
+
+            Group expected = new Group();
+            assertFalse(dao.save(expected));
+            assertTrue(appender.getMessages().size() > 0);
+        }
+
+        @DisplayName("save with merge was a PersistenceException")
+        @Test
+        void save_merge_exception()
+        {
+            Group expected = createGroup1();
+            doThrow(PersistenceException.class).when(entityManager).merge(expected);
+
+            assertFalse(dao.save(expected));
+            assertTrue(appender.getMessages().size() > 0);
+        }
+
+        @DisplayName("delete was a PersistenceException")
+        @Test
+        void delete_exception()
+        {
+            Group expected = createGroup1();
+            when(entityManager.find(Group.class, expected.getId())).thenReturn(expected);
+            when(entityManager.merge(expected)).thenReturn(expected);
+            doThrow(PersistenceException.class).when(entityManager).remove(expected);
+
+            assertFalse(dao.delete(expected.getId()));
+            assertTrue(appender.getMessages().size() > 0);
+        }
+    }
+
+    @Nested
+    @DisplayName("JPA H2 create/update tests")
+    class JpaH2CreateUpdateTests extends JpaDedicatedEntityManagerTest
+    {
+        @BeforeEach
+        void createNew()
+        {
+            dao = new GroupDaoJpa(entityManager);
+        }
+
+        @DisplayName("persists new when save")
+        @Test
+        void save_persists()
+        {
+            Group test = new Group();
+            test.setName(TEST_NAME);
+            test.setDescription(TEST_DESCRIPTION);
+            runInTransaction(() -> dao.save(test));
+            assertEquals(test, dao.findById(test.getId()));
+        }
+
+        @DisplayName("merge the detached object when save")
+        @Test
+        void save_megre()
+        {
+            Group test = new Group();
+            test.setName(TEST_NAME);
+            test.setDescription(TEST_DESCRIPTION);
+            runInTransaction(() -> dao.save(test));
+            test.setName(TEST_NAME + TEST_STR1);
+            test.setDescription(TEST_DESCRIPTION + TEST_STR2);
+            runInTransaction(() -> dao.save(test));
+            assertEquals(test, dao.findById(test.getId()));
+        }
+
+        @Test
+        void delete()
+        {
+            Group test = new Group();
+            test.setName(TEST_NAME);
+            test.setDescription(TEST_DESCRIPTION);
+            runInTransaction(() -> dao.save(test));
+            runInTransaction(() -> dao.delete(test.getId()));
+            assertNull(dao.findById(test.getId()));
+        }
+
     }
 }

@@ -68,7 +68,7 @@ public class GroupDaoJpa implements GroupDao
             return em.createQuery(SELECT_ALL, Group.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception {}", e);
+            LOGGER.error("Can't search all because had the exception ", e);
             return emptyList();
         }
     }
@@ -113,7 +113,7 @@ public class GroupDaoJpa implements GroupDao
                 em.merge(entity);
             }
         }
-        catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
+        catch (IllegalArgumentException | PersistenceException e) {
             LOGGER.error("Can't save group with id: {} because had the exception {}", entity.getId(), e);
             return false;
         }
@@ -126,7 +126,16 @@ public class GroupDaoJpa implements GroupDao
     @TransactionAttribute(REQUIRES_NEW)
     public boolean delete(Long id)
     {
-        return false;
+        try {
+            Group merged = em.merge(findById(id));
+            em.remove(merged);
+            LOGGER.info("Delete genre id: {}", merged.getId());
+            return true;
+        }
+        catch (IllegalArgumentException | PersistenceException e) {
+            LOGGER.error("Can't save group with id: {} because had the exception {}", id, e);
+            return false;
+        }
     }
 
     EntityManager getEntityManager()

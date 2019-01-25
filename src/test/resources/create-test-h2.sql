@@ -5,8 +5,8 @@
 -- This is free and unencumbered software released into the public domain.
 -- For more information, please refer to <http://unlicense.org>
 --
-----------------------------------------------------------------------
--- Configuration Management ------------------------------------------
+--------------------------------------------------------------------------------
+-- Configuration Management ----------------------------------------------------
 -- Groups
 CREATE TABLE IF NOT EXISTS cm_group (
   group_id          BIGINT       NOT NULL AUTO_INCREMENT,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS cm_cunit (
   PRIMARY KEY (cunit_id)
 );
 
--- Progess Management ------------------------------------------------
+-- Progess Management ----------------------------------------------------------
 -- Messages
 CREATE TABLE IF NOT EXISTS pm_message (
   message_id               BIGINT       NOT NULL AUTO_INCREMENT,
@@ -105,4 +105,4 @@ CREATE TABLE IF NOT EXISTS pm_inc_record (
   message_id        BIGINT REFERENCES pm_message (message_id)
 );
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
