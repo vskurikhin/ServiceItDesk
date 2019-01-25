@@ -6,6 +6,7 @@
 -- For more information, please refer to <http://unlicense.org>
 --
 --------------------------------------------------------------------------------
+DROP TABLE IF EXISTS cm_cunit;
 DROP TABLE IF EXISTS cm_user;
 DROP TABLE IF EXISTS cm_group;
 DROP TABLE IF EXISTS cm_admin;
