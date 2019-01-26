@@ -1,6 +1,6 @@
 --
 -- create-test-h2.sql
--- This file was last modified at 2019.01.25 23:59 by Victor N. Skurikhin.
+-- This file was last modified at 2019.01.26 23:59 by Victor N. Skurikhin.
 -- $Id$
 -- This is free and unencumbered software released into the public domain.
 -- For more information, please refer to <http://unlicense.org>
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS cm_group (
   UNIQUE (name),
   PRIMARY KEY (group_id)
 );
-
+--
 -- Users
 CREATE TABLE IF NOT EXISTS cm_user (
   user_id           BIGINT       NOT NULL AUTO_INCREMENT,
@@ -50,19 +50,19 @@ CREATE TABLE IF NOT EXISTS cm_user (
   UNIQUE (user_name),
   PRIMARY KEY (user_id)
 );
-
+--
 -- User group map
 CREATE TABLE IF NOT EXISTS cm_user_group (
   user_id           BIGINT NOT NULL REFERENCES cm_user (user_id),
   group_id          BIGINT NOT NULL REFERENCES cm_group (group_id)
 );
-
+--
 -- Administrators
 CREATE TABLE IF NOT EXISTS cm_admin (
   admin_user_id     BIGINT NOT NULL REFERENCES cm_user (user_id),
   admin_group_id    BIGINT NOT NULL REFERENCES cm_group (group_id)
 );
-
+--
 -- Configuration types
 CREATE TABLE IF NOT EXISTS cm_ctype (
   ctype_id          BIGINT       NOT NULL AUTO_INCREMENT,
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS cm_ctype (
   UNIQUE (ctype_name),
   PRIMARY KEY (ctype_id)
 );
-
+--
 -- Configuration units
 CREATE TABLE IF NOT EXISTS cm_cunit (
   cunit_id          BIGINT       NOT NULL AUTO_INCREMENT,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS cm_cunit (
   UNIQUE (name),
   PRIMARY KEY (cunit_id)
 );
-
+--
 -- Process Management ----------------------------------------------------------
 -- Messages
 CREATE TABLE IF NOT EXISTS pm_message (
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS pm_message (
   message_text      VARCHAR(255) NOT NULL,
   PRIMARY KEY (message_id)
 );
-
+--
 -- Status
 CREATE TABLE IF NOT EXISTS pm_status (
   status_id         BIGINT       NOT NULL AUTO_INCREMENT,
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS pm_status (
   UNIQUE (status),
   PRIMARY KEY (status_id)
 );
-
+--
 -- Tasks
 CREATE TABLE IF NOT EXISTS pm_task (
   task_id           BIGINT       NOT NULL AUTO_INCREMENT,
@@ -112,25 +112,25 @@ CREATE TABLE IF NOT EXISTS pm_task (
   status_id         BIGINT REFERENCES cm_status (status_id),
   PRIMARY KEY (task_id)
 );
-
+--
 -- Task actors
 CREATE TABLE IF NOT EXISTS pm_task_actor (
   task_id           BIGINT REFERENCES pm_task (task_id),
   user_id           BIGINT REFERENCES cm_user (user_id)
 );
-
+--
 -- Task actuaries
 CREATE TABLE IF NOT EXISTS pm_task_actuary (
   task_id           BIGINT REFERENCES pm_task (task_id),
   user_id           BIGINT REFERENCES cm_user (user_id)
 );
-
+--
 -- Task records
 CREATE TABLE IF NOT EXISTS pm_task_record (
   task_id           BIGINT REFERENCES pm_task (task_id),
   message_id        BIGINT REFERENCES pm_message (message_id)
 );
-
+--
 -- Incidents
 CREATE TABLE IF NOT EXISTS pm_incident (
   incident_id       BIGINT       NOT NULL AUTO_INCREMENT,
@@ -140,11 +140,11 @@ CREATE TABLE IF NOT EXISTS pm_incident (
   status_id         BIGINT REFERENCES cm_status (status_id),
   PRIMARY KEY (incident_id)
 );
-
+--
 -- Incident records
 CREATE TABLE IF NOT EXISTS pm_inc_record (
   incident_id       BIGINT REFERENCES pm_incident (incident_id),
   message_id        BIGINT REFERENCES pm_message (message_id)
 );
-
+--
 --------------------------------------------------------------------------------
