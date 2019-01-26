@@ -1,6 +1,6 @@
 /*
  * MessageDaoJpa.java
- * This file was last modified at 2019-01-26 13:51 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 18:10 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -43,11 +43,6 @@ public class MessageDaoJpa implements MessageDao
         em = entityManager;
     }
 
-    public List<Message> emptyList() {
-        //noinspection unchecked
-        return Collections.EMPTY_LIST;
-    }
-
     @Override
     public Message findById(Long id)
     {
@@ -68,7 +63,7 @@ public class MessageDaoJpa implements MessageDao
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
-            return emptyList();
+            return Collections.emptyList();
         }
     }
 
@@ -82,7 +77,7 @@ public class MessageDaoJpa implements MessageDao
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by text: {} because had the exception {}", value, e);
-            return emptyList();
+            return Collections.emptyList();
         }
     }
 

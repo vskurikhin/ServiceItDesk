@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnit.java
- * This file was last modified at 2019-01-26 00:22 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 19:46 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -30,7 +30,7 @@ public class ConfigurationUnit implements DataSet
     private Long id = 0L;
 
     @Basic
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "cunit_name", nullable = false, unique = true)
     private String name;
 
     // TODO private String environ;

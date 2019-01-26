@@ -1,16 +1,24 @@
+/*
+ * ConfigurationUnitDaoJpaTest.java
+ * This file was last modified at 2019-01-26 18:13 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.db;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import su.svn.models.ConfigurationType;
 import su.svn.models.ConfigurationUnit;
 import su.svn.utils.db.JpaDedicatedEntityManagerTest;
 import su.svn.utils.logging.TestAppender;
 
 import javax.persistence.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -126,7 +134,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void findAll_empty()
         {
-            List<ConfigurationUnit> expected = dao.emptyList();
+            List<ConfigurationUnit> expected = Collections.emptyList();
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
             when(entityManager.createQuery(SELECT_ALL, ConfigurationUnit.class)).thenReturn(mockedQuery);
@@ -139,7 +147,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void findAll_exception()
         {
-            List<ConfigurationUnit> expected = dao.emptyList();
+            List<ConfigurationUnit> expected = Collections.emptyList();
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
             when(entityManager.createQuery(SELECT_ALL, ConfigurationUnit.class)).thenReturn(mockedQuery);
@@ -167,7 +175,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void findByName_exception()
         {
-            List<ConfigurationUnit> expected = dao.emptyList();
+            List<ConfigurationUnit> expected = Collections.emptyList();
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
@@ -196,7 +204,7 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void findByDescription_exception()
         {
-            List<ConfigurationUnit> expected = dao.emptyList();
+            List<ConfigurationUnit> expected = Collections.emptyList();
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);

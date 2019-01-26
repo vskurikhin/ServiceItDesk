@@ -1,6 +1,6 @@
 /*
  * TaskDaoJpaTest.java
- * This file was last modified at 2019-01-26 17:32 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 18:15 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -18,6 +18,7 @@ import su.svn.utils.logging.TestAppender;
 
 import javax.persistence.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -133,7 +134,7 @@ class TaskDaoJpaTest
         @Test
         void findAll_empty()
         {
-            List<Task> expected = dao.emptyList();
+            List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
             when(entityManager.createQuery(SELECT_ALL, Task.class)).thenReturn(mockedQuery);
@@ -146,7 +147,7 @@ class TaskDaoJpaTest
         @Test
         void findAll_exception()
         {
-            List<Task> expected = dao.emptyList();
+            List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
             when(entityManager.createQuery(SELECT_ALL, Task.class)).thenReturn(mockedQuery);
@@ -174,7 +175,7 @@ class TaskDaoJpaTest
         @Test
         void findByTitle_exception()
         {
-            List<Task> expected = dao.emptyList();
+            List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("title", TEST_TITLE)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
@@ -203,7 +204,7 @@ class TaskDaoJpaTest
         @Test
         void findByDescription_exception()
         {
-            List<Task> expected = dao.emptyList();
+            List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);

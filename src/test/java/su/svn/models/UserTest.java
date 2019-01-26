@@ -1,6 +1,6 @@
 /*
  * UserTest.java
- * This file was last modified at 2019-01-26 11:35 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 19:33 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -81,10 +81,13 @@ class UserTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
+        Group group = createGroup1();
+
         @BeforeEach
         void createNew()
         {
-            user = new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createGroup1());
+            group.setUsers(null);
+            user = new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
         }
 
         @Test
@@ -101,7 +104,7 @@ class UserTest
         void testEquals()
         {
             assertNotEquals(new User(), user);
-            final User expected = TEST_USER1;
+            User expected = new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
             assertEquals(expected.hashCode(), user.hashCode());
             assertEquals(expected, user);
         }

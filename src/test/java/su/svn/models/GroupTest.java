@@ -1,6 +1,6 @@
 /*
  * GroupTest.java
- * This file was last modified at 2019-01-26 11:31 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 19:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,10 +83,11 @@ class GroupTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
+        Set<User> emptySet = new HashSet<>();
         @BeforeEach
         void createNew()
         {
-            group = new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
+            group = new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, emptySet);
         }
 
         @Test
@@ -101,6 +105,7 @@ class GroupTest
         {
             assertNotEquals(new Group(), group);
             final Group expected = TEST_GROUP1;
+            expected.setUsers(emptySet);
             assertEquals(expected.hashCode(), group.hashCode());
             assertEquals(expected, group);
         }

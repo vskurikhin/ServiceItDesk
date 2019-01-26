@@ -1,3 +1,11 @@
+/*
+ * UserDaoJpaTest.java
+ * This file was last modified at 2019-01-26 18:14 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.db;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +18,7 @@ import su.svn.utils.logging.TestAppender;
 
 import javax.persistence.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -125,7 +134,7 @@ class UserDaoJpaTest
         @Test
         void findAll_empty()
         {
-            List<User> expected = dao.emptyList();
+            List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
             when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
@@ -138,7 +147,7 @@ class UserDaoJpaTest
         @Test
         void findAll_exception()
         {
-            List<User> expected = dao.emptyList();
+            List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
             when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
@@ -166,7 +175,7 @@ class UserDaoJpaTest
         @Test
         void findByName_exception()
         {
-            List<User> expected = dao.emptyList();
+            List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
@@ -195,7 +204,7 @@ class UserDaoJpaTest
         @Test
         void findByDescription_exception()
         {
-            List<User> expected = dao.emptyList();
+            List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);

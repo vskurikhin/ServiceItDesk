@@ -46,21 +46,21 @@ CREATE TABLE IF NOT EXISTS cm_user (
   user_id           BIGINT       NOT NULL AUTO_INCREMENT,
   user_name         VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
-  primary_group_id  BIGINT REFERENCES cm_group (group_id),
+  primary_group_id  BIGINT 	 NOT NULL REFERENCES cm_group (group_id),
   UNIQUE (user_name),
   PRIMARY KEY (user_id)
 );
 
 -- User group map
 CREATE TABLE IF NOT EXISTS cm_user_group (
-  user_id           BIGINT REFERENCES cm_user (user_id),
-  group_id          BIGINT REFERENCES cm_group (group_id)
+  user_id           BIGINT NOT NULL REFERENCES cm_user (user_id),
+  group_id          BIGINT NOT NULL REFERENCES cm_group (group_id)
 );
 
 -- Administrators
 CREATE TABLE IF NOT EXISTS cm_admin (
-  admin_user_id     BIGINT REFERENCES cm_user (user_id),
-  admin_group_id    BIGINT REFERENCES cm_group (group_id)
+  admin_user_id     BIGINT NOT NULL REFERENCES cm_user (user_id),
+  admin_group_id    BIGINT NOT NULL REFERENCES cm_group (group_id)
 );
 
 -- Configuration types
@@ -76,12 +76,12 @@ CREATE TABLE IF NOT EXISTS cm_ctype (
 CREATE TABLE IF NOT EXISTS cm_cunit (
   cunit_id          BIGINT       NOT NULL AUTO_INCREMENT,
   name              VARCHAR(127) NOT NULL,
-  environ           ENUM('prod', 'test', 'dev'),
   description       VARCHAR(255) NOT NULL,
-  admin_user_id     BIGINT REFERENCES cm_admin (admin_user_id),
-  group_id          BIGINT REFERENCES cm_group (group_id),
-  owner_user_id     BIGINT REFERENCES cm_user (user_id),
-  type_id           BIGINT REFERENCES cm_ctype (ctype_id),
+  environ           ENUM('prod', 'test', 'dev'),
+  admin_user_id     BIGINT NOT NULL REFERENCES cm_admin (admin_user_id),
+  owner_user_id     BIGINT NOT NULL REFERENCES cm_user  (user_id),
+  group_id          BIGINT          REFERENCES cm_group (group_id),
+  type_id           BIGINT          REFERENCES cm_ctype (ctype_id),
   UNIQUE (name),
   PRIMARY KEY (cunit_id)
 );

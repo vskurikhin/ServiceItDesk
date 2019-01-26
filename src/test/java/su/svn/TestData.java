@@ -1,6 +1,6 @@
 /*
  * TestData.java
- * This file was last modified at 2019-01-26 17:37 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 19:29 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -13,6 +13,10 @@ import lombok.experimental.FieldNameConstants;
 import su.svn.models.*;
 
 import javax.persistence.TypedQuery;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 
@@ -50,15 +54,19 @@ public class TestData
         return mock(TypedQuery.class);
     }
 
+    public static final Set<User> EMPTY_USER_SET = new HashSet<>();
+
     public static Group createGroup1()
     {
-        return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
+        return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
     }
     public static final Group TEST_GROUP1 = createGroup1();
 
     public static User createUser1()
     {
-        return new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createGroup1());
+        Group group = createGroup1();
+        group.setUsers(null);
+        return new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
     }
     public static final User TEST_USER1 = createUser1();
 

@@ -1,6 +1,6 @@
 /*
  * Group.java
- * This file was last modified at 2019.01.24 23:59 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 19:11 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +38,16 @@ public class Group implements DataSet
     @Basic
     @Column(name = "description")
     private String description;
+
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "cm_user_group",
+        joinColumns = @JoinColumn(name = "group_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Collection<User> users = new HashSet<>();
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

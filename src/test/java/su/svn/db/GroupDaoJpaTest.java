@@ -1,3 +1,11 @@
+/*
+ * GroupDaoJpaTest.java
+ * This file was last modified at 2019-01-26 18:58 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.db;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -5,11 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import su.svn.models.Group;
+import su.svn.models.User;
 import su.svn.utils.db.JpaDedicatedEntityManagerTest;
 import su.svn.utils.logging.TestAppender;
 
 import javax.persistence.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -125,7 +135,7 @@ class GroupDaoJpaTest
         @Test
         void findAll_empty()
         {
-            List<Group> expected = dao.emptyList();
+            List<Group> expected = Collections.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
             when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
@@ -138,7 +148,7 @@ class GroupDaoJpaTest
         @Test
         void findAll_exception()
         {
-            List<Group> expected = dao.emptyList();
+            List<Group> expected = Collections.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
             when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
@@ -166,7 +176,7 @@ class GroupDaoJpaTest
         @Test
         void findByName_exception()
         {
-            List<Group> expected = dao.emptyList();
+            List<Group> expected = Collections.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
@@ -195,7 +205,7 @@ class GroupDaoJpaTest
         @Test
         void findByDescription_exception()
         {
-            List<Group> expected = dao.emptyList();
+            List<Group> expected = Collections.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
@@ -270,8 +280,20 @@ class GroupDaoJpaTest
             Group test = new Group();
             test.setName(TEST_NAME);
             test.setDescription(TEST_DESCRIPTION);
+
+            User user = new User();
+            user.setName(TEST_NAME);
+            user.setDescription(TEST_DESCRIPTION);
+            Group primaryGroup = new Group();
+            primaryGroup.setName("primary");
+            primaryGroup.setDescription("Primary Description");
+            runInTransaction(() -> dao.save(primaryGroup));
+            user.setGroup(primaryGroup);
+
+            test.getUsers().add(user);
             runInTransaction(() -> dao.save(test));
             assertEquals(test, dao.findById(test.getId()));
+            System.out.println("result = " + dao.findById(test.getId()));
         }
 
         @DisplayName("merge the detached object when save")

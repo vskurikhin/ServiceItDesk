@@ -1,6 +1,6 @@
 /*
  * StatusDaoJpa.java
- * This file was last modified at 2019-01-26 13:52 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 18:10 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -45,11 +45,6 @@ public class StatusDaoJpa implements StatusDao
         em = entityManager;
     }
 
-    public List<Status> emptyList() {
-        //noinspection unchecked
-        return Collections.EMPTY_LIST;
-    }
-
     @Override
     public Status findById(Long id)
     {
@@ -70,7 +65,7 @@ public class StatusDaoJpa implements StatusDao
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
-            return emptyList();
+            return Collections.emptyList();
         }
     }
 
@@ -84,7 +79,7 @@ public class StatusDaoJpa implements StatusDao
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by status: {} because had the exception {}", value, e);
-            return emptyList();
+            return Collections.emptyList();
         }
     }
 
@@ -98,7 +93,7 @@ public class StatusDaoJpa implements StatusDao
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by description: {} because had the exception {}", value, e);
-            return emptyList();
+            return Collections.emptyList();
         }
     }
 
