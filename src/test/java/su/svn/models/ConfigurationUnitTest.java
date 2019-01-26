@@ -1,3 +1,11 @@
+/*
+ * ConfigurationUnitTest.java
+ * This file was last modified at 2019-01-26 11:30 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.models;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +20,13 @@ import static su.svn.TestData.*;
 @DisplayName("Class ConfigurationUnit")
 class ConfigurationUnitTest
 {
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+    public static final String GROUP = "group";
+    public static final String OWNER = "owner";
+    public static final String TYPE = "type";
+
     ConfigurationUnit cunit;
 
     @Test
@@ -34,12 +49,12 @@ class ConfigurationUnitTest
         @DisplayName("default values in ConfigurationUnit()")
         void defaults()
         {
-            assertThat(cunit).hasFieldOrPropertyWithValue("id", 0L);
-            assertThat(cunit).hasFieldOrPropertyWithValue("name", null);
-            assertThat(cunit).hasFieldOrPropertyWithValue("description", null);
-            assertThat(cunit).hasFieldOrPropertyWithValue("group", null);
-            assertThat(cunit).hasFieldOrPropertyWithValue("owner", null);
-            assertThat(cunit).hasFieldOrPropertyWithValue("type", null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(ID, 0L);
+            assertThat(cunit).hasFieldOrPropertyWithValue(NAME, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, null);
         }
 
         @Test
@@ -47,7 +62,7 @@ class ConfigurationUnitTest
         void testGetSetName()
         {
             cunit.setName(TEST_STR1);
-            assertThat(cunit).hasFieldOrPropertyWithValue("name", TEST_STR1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(NAME, TEST_STR1);
             assertEquals(TEST_STR1, cunit.getName());
         }
 
@@ -56,7 +71,7 @@ class ConfigurationUnitTest
         void testGetSetDescription()
         {
             cunit.setDescription(TEST_STR1);
-            assertThat(cunit).hasFieldOrPropertyWithValue("description", TEST_STR1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, cunit.getDescription());
         }
         @Test
@@ -71,7 +86,6 @@ class ConfigurationUnitTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
-
         @BeforeEach
         void createNew()
         {
@@ -84,12 +98,12 @@ class ConfigurationUnitTest
         @DisplayName("initialized values in ConfigurationUnit()")
         void defaults()
         {
-            assertThat(cunit).hasFieldOrPropertyWithValue("id", 1L);
-            assertThat(cunit).hasFieldOrPropertyWithValue("name", TEST_NAME);
-            assertThat(cunit).hasFieldOrPropertyWithValue("description", TEST_DESCRIPTION);
-            assertThat(cunit).hasFieldOrPropertyWithValue("group", TEST_GROUP1);
-            assertThat(cunit).hasFieldOrPropertyWithValue("owner", TEST_USER1);
-            assertThat(cunit).hasFieldOrPropertyWithValue("type", TEST_CONFIGURATION_TYPE1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(ID, 1L);
+            assertThat(cunit).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
+            assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
+            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, TEST_GROUP1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, TEST_USER1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, TEST_CONFIGURATION_TYPE1);
         }
 
         @Test

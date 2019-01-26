@@ -6,23 +6,31 @@
 -- For more information, please refer to <http://unlicense.org>
 --
 --------------------------------------------------------------------------------
+--
 DROP TABLE IF EXISTS cm_cunit;
 DROP TABLE IF EXISTS cm_user;
 DROP TABLE IF EXISTS cm_group;
 DROP TABLE IF EXISTS cm_admin;
 DROP TABLE IF EXISTS cm_ctype;
 DROP TABLE IF EXISTS pm_message;
-ALTER SEQUENCE ctype_id_seq RESTART WITH 1;
-ALTER SEQUENCE cunit_id_seq RESTART WITH 1;
-ALTER SEQUENCE group_id_seq RESTART WITH 1;
+DROP TABLE IF EXISTS pm_status;
+DROP TABLE IF EXISTS pm_task;
+--
+ALTER SEQUENCE ctype_id_seq   RESTART WITH 1;
+ALTER SEQUENCE cunit_id_seq   RESTART WITH 1;
+ALTER SEQUENCE group_id_seq   RESTART WITH 1;
 ALTER SEQUENCE message_id_seq RESTART WITH 1;
-ALTER SEQUENCE user_id_seq RESTART WITH 1;
+ALTER SEQUENCE status_id_seq  RESTART WITH 1;
+ALTER SEQUENCE user_id_seq    RESTART WITH 1;
+ALTER SEQUENCE task_id_seq    RESTART WITH 1;
+--
 --DROP ALL OBJECTS;
 --
 --------------------------------------------------------------------------------
 -- Configuration Management ----------------------------------------------------
 -- Groups
 CREATE TABLE IF NOT EXISTS cm_group (
+  --                BIGINT       NOT NULL DEFAULT nextval('group_id_seq')
   group_id          BIGINT       NOT NULL AUTO_INCREMENT,
   name              VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
@@ -33,11 +41,17 @@ CREATE TABLE IF NOT EXISTS cm_group (
 -- Users
 CREATE TABLE IF NOT EXISTS cm_user (
   user_id           BIGINT       NOT NULL AUTO_INCREMENT,
-  name              VARCHAR(127) NOT NULL,
+  user_name         VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
   primary_group_id  BIGINT REFERENCES cm_group (group_id),
-  UNIQUE (name),
+  UNIQUE (user_name),
   PRIMARY KEY (user_id)
+);
+
+-- User group map
+CREATE TABLE IF NOT EXISTS cm_user_group (
+  user_id           BIGINT REFERENCES cm_user (user_id),
+  group_id          BIGINT REFERENCES cm_group (group_id)
 );
 
 -- Administrators
@@ -48,11 +62,11 @@ CREATE TABLE IF NOT EXISTS cm_admin (
 
 -- Configuration types
 CREATE TABLE IF NOT EXISTS cm_ctype (
-  type_id           BIGINT       NOT NULL AUTO_INCREMENT,
-  name              VARCHAR(127) NOT NULL,
+  ctype_id          BIGINT       NOT NULL AUTO_INCREMENT,
+  ctype_name        VARCHAR(127) NOT NULL,
   description       VARCHAR(255) NOT NULL,
-  UNIQUE (name),
-  PRIMARY KEY (type_id)
+  UNIQUE (ctype_name),
+  PRIMARY KEY (ctype_id)
 );
 
 -- Configuration units
@@ -64,12 +78,12 @@ CREATE TABLE IF NOT EXISTS cm_cunit (
   admin_user_id     BIGINT REFERENCES cm_admin (admin_user_id),
   group_id          BIGINT REFERENCES cm_group (group_id),
   owner_user_id     BIGINT REFERENCES cm_user (user_id),
-  type_id           BIGINT REFERENCES cm_ctype (type_id),
+  type_id           BIGINT REFERENCES cm_ctype (ctype_id),
   UNIQUE (name),
   PRIMARY KEY (cunit_id)
 );
 
--- Progess Management ----------------------------------------------------------
+-- Process Management ----------------------------------------------------------
 -- Messages
 CREATE TABLE IF NOT EXISTS pm_message (
   message_id        BIGINT       NOT NULL AUTO_INCREMENT,
@@ -77,12 +91,22 @@ CREATE TABLE IF NOT EXISTS pm_message (
   PRIMARY KEY (message_id)
 );
 
+-- Status
+CREATE TABLE IF NOT EXISTS pm_status (
+  status_id         BIGINT       NOT NULL AUTO_INCREMENT,
+  status            VARCHAR(127) NOT NULL,
+  description       VARCHAR(255) NOT NULL,
+  UNIQUE (status),
+  PRIMARY KEY (status_id)
+);
+
 -- Tasks
 CREATE TABLE IF NOT EXISTS pm_task (
   task_id           BIGINT       NOT NULL AUTO_INCREMENT,
-  title             VARCHAR(127) NOT NULL,
+  task_title        VARCHAR(127) NOT NULL,
   description_text  VARCHAR(255) NOT NULL,
   consumer_user_id  BIGINT REFERENCES cm_user (user_id),
+  status_id         BIGINT REFERENCES cm_status (status_id),
   PRIMARY KEY (task_id)
 );
 
@@ -107,9 +131,10 @@ CREATE TABLE IF NOT EXISTS pm_task_record (
 -- Incidents
 CREATE TABLE IF NOT EXISTS pm_incident (
   incident_id       BIGINT       NOT NULL AUTO_INCREMENT,
-  title             VARCHAR(127) NOT NULL,
+  incident_title    VARCHAR(127) NOT NULL,
   description_text  VARCHAR(254) NOT NULL,
   consumer_user_id  BIGINT REFERENCES cm_user (user_id),
+  status_id         BIGINT REFERENCES cm_status (status_id),
   PRIMARY KEY (incident_id)
 );
 

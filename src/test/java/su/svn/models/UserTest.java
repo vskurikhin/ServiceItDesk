@@ -1,3 +1,11 @@
+/*
+ * UserTest.java
+ * This file was last modified at 2019-01-26 11:35 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.models;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +20,10 @@ import static su.svn.TestData.*;
 @DisplayName("Class User")
 class UserTest
 {
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+
     User user;
 
     @Test
@@ -24,6 +36,7 @@ class UserTest
     @DisplayName("when new with empty constructor")
     class WhenNew
     {
+
         @BeforeEach
         void createNew()
         {
@@ -34,9 +47,9 @@ class UserTest
         @DisplayName("default values in User()")
         void defaults()
         {
-            assertThat(user).hasFieldOrPropertyWithValue("id", 0L);
-            assertThat(user).hasFieldOrPropertyWithValue("name", null);
-            assertThat(user).hasFieldOrPropertyWithValue("description", null);
+            assertThat(user).hasFieldOrPropertyWithValue(ID, 0L);
+            assertThat(user).hasFieldOrPropertyWithValue(NAME, null);
+            assertThat(user).hasFieldOrPropertyWithValue(DESCRIPTION, null);
         }
 
         @Test
@@ -44,7 +57,7 @@ class UserTest
         void testGetSetName()
         {
             user.setName(TEST_STR1);
-            assertThat(user).hasFieldOrPropertyWithValue("name", TEST_STR1);
+            assertThat(user).hasFieldOrPropertyWithValue(NAME, TEST_STR1);
             assertEquals(TEST_STR1, user.getName());
         }
 
@@ -53,7 +66,7 @@ class UserTest
         void testGetSetDescription()
         {
             user.setDescription(TEST_STR1);
-            assertThat(user).hasFieldOrPropertyWithValue("description", TEST_STR1);
+            assertThat(user).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, user.getDescription());
         }
         @Test
@@ -68,7 +81,6 @@ class UserTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
-
         @BeforeEach
         void createNew()
         {
@@ -79,7 +91,7 @@ class UserTest
         @DisplayName("initialized values in User()")
         void defaults()
         {
-            assertThat(user).hasFieldOrPropertyWithValue("id", 1L);
+            assertThat(user).hasFieldOrPropertyWithValue(ID, 1L);
             assertThat(user).hasFieldOrPropertyWithValue("name", TEST_NAME);
             assertThat(user).hasFieldOrPropertyWithValue("description", TEST_DESCRIPTION);
         }

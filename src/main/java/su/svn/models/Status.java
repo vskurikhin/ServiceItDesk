@@ -1,6 +1,6 @@
 /*
- * ConfigurationType.java
- * This file was last modified at 2019-01-26 13:21 by Victor N. Skurikhin.
+ * Status.java
+ * This file was last modified at 2019-01-26 11:04 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,18 +20,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "cm_ctype")
-public class ConfigurationType implements DataSet
+@Table(name = "cm_status")
+public class Status implements DataSet
 {
     @Id
-    @SequenceGenerator(name = "ctype_identifier", sequenceName = "ctype_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ctype_identifier")
-    @Column(name = "ctype_id", nullable = false, unique = true)
+    @SequenceGenerator(name = "status_identifier", sequenceName = "status_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "status_identifier")
+    @Column(name = "status_id", nullable = false, unique = true)
     private Long id = 0L;
 
     @Basic
-    @Column(name = "ctype_name", nullable = false, unique = true)
-    private String name;
+    @Column(name = "status", nullable = false, unique = true)
+    private String status;
 
     @Basic
     @Column(name = "description")

@@ -1,3 +1,11 @@
+/*
+ * GroupTest.java
+ * This file was last modified at 2019-01-26 11:31 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.models;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +20,10 @@ import static su.svn.TestData.*;
 @DisplayName("Class Group")
 class GroupTest
 {
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+
     Group group;
 
     @Test
@@ -34,9 +46,9 @@ class GroupTest
         @DisplayName("default values in Group()")
         void defaults()
         {
-            assertThat(group).hasFieldOrPropertyWithValue("id", 0L);
-            assertThat(group).hasFieldOrPropertyWithValue("name", null);
-            assertThat(group).hasFieldOrPropertyWithValue("description", null);
+            assertThat(group).hasFieldOrPropertyWithValue(ID, 0L);
+            assertThat(group).hasFieldOrPropertyWithValue(NAME, null);
+            assertThat(group).hasFieldOrPropertyWithValue(DESCRIPTION, null);
         }
 
         @Test
@@ -44,7 +56,7 @@ class GroupTest
         void testGetSetName()
         {
             group.setName(TEST_STR1);
-            assertThat(group).hasFieldOrPropertyWithValue("name", TEST_STR1);
+            assertThat(group).hasFieldOrPropertyWithValue(NAME, TEST_STR1);
             assertEquals(TEST_STR1, group.getName());
         }
 
@@ -53,7 +65,7 @@ class GroupTest
         void testGetSetDescription()
         {
             group.setDescription(TEST_STR1);
-            assertThat(group).hasFieldOrPropertyWithValue("description", TEST_STR1);
+            assertThat(group).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, group.getDescription());
         }
         @Test
@@ -68,7 +80,6 @@ class GroupTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
-
         @BeforeEach
         void createNew()
         {
@@ -79,9 +90,9 @@ class GroupTest
         @DisplayName("initialized values in Group()")
         void defaults()
         {
-            assertThat(group).hasFieldOrPropertyWithValue("id", 1L);
-            assertThat(group).hasFieldOrPropertyWithValue("name", TEST_NAME);
-            assertThat(group).hasFieldOrPropertyWithValue("description", TEST_DESCRIPTION);
+            assertThat(group).hasFieldOrPropertyWithValue(ID, 1L);
+            assertThat(group).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
+            assertThat(group).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
         }
 
         @Test

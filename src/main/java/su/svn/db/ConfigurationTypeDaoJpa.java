@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeDaoJpa.java
- * This file was last modified at 2019.01.25 20:05 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 13:52 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -130,7 +130,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
         try {
             ConfigurationType merged = em.merge(findById(id));
             em.remove(merged);
-            LOGGER.info("Delete genre id: {}", merged.getId());
+            LOGGER.info("Delete ctype with id: {}", merged.getId());
             return true;
         }
         catch (IllegalArgumentException | PersistenceException e) {

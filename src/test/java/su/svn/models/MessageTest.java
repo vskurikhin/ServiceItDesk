@@ -1,3 +1,11 @@
+/*
+ * MessageTest.java
+ * This file was last modified at 2019-01-26 11:31 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.models;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +20,9 @@ import static su.svn.TestData.*;
 @DisplayName("Class Message")
 class MessageTest
 {
+    public static final String ID = "id";
+    public static final String TEXT = "text";
+
     Message message;
 
     @Test
@@ -34,8 +45,8 @@ class MessageTest
         @DisplayName("default values in Message()")
         void defaults()
         {
-            assertThat(message).hasFieldOrPropertyWithValue("id", 0L);
-            assertThat(message).hasFieldOrPropertyWithValue("text", null);
+            assertThat(message).hasFieldOrPropertyWithValue(ID, 0L);
+            assertThat(message).hasFieldOrPropertyWithValue(TEXT, null);
         }
 
         @Test
@@ -43,7 +54,7 @@ class MessageTest
         void testGetSetName()
         {
             message.setText(TEST_STR1);
-            assertThat(message).hasFieldOrPropertyWithValue("text", TEST_STR1);
+            assertThat(message).hasFieldOrPropertyWithValue(TEXT, TEST_STR1);
             assertEquals(TEST_STR1, message.getText());
         }
 
@@ -59,7 +70,6 @@ class MessageTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
-
         @BeforeEach
         void createNew()
         {
@@ -70,8 +80,8 @@ class MessageTest
         @DisplayName("initialized values in Message()")
         void defaults()
         {
-            assertThat(message).hasFieldOrPropertyWithValue("id", 1L);
-            assertThat(message).hasFieldOrPropertyWithValue("text", TEST_TEXT);
+            assertThat(message).hasFieldOrPropertyWithValue(ID, 1L);
+            assertThat(message).hasFieldOrPropertyWithValue(TEXT, TEST_TEXT);
         }
 
         @Test

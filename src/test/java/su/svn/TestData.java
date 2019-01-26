@@ -1,6 +1,6 @@
 /*
  * TestData.java
- * This file was last modified at 2019-01-25 23:36 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 15:19 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,6 @@ import static org.mockito.Mockito.mock;
 @FieldNameConstants
 public class TestData
 {
-    public static final String VERSION = "3";
     public static final String TEST_STR1 = "TEST_STR1";
     public static final String TEST_STR2 = "TEST_STR2";
     public static final String TEST_STR3 = "TEST_STR3";
@@ -30,9 +29,11 @@ public class TestData
     public static final String TEST_STR8 = "TEST_STR8";
     public static final String TEST_STR9 = "TEST_STR9";
 
-    public static final String TEST_NAME = "TEST_NAME";
     public static final String TEST_DESCRIPTION = "TEST_DESCRIPTION";
+    public static final String TEST_NAME = "TEST_NAME";
+    public static final String TEST_STATUS = "TEST_STATUS";
     public static final String TEST_TEXT = "TEST_TEXT";
+    public static final String TEST_TITLE = "TEST_TITLE";
 
     public static final long TEST_ID1 = 1L;
     public static final long TEST_ID2 = 2L;
@@ -81,4 +82,16 @@ public class TestData
         return new Message(TEST_ID1, TEST_TEXT);
     }
     public static final Message TEST_MESSAGE1 = createMessage1();
+
+    public static Status createStatus1()
+    {
+        return new Status(TEST_ID1, TEST_STATUS, TEST_DESCRIPTION);
+    }
+    public static final Status TEST_STATUS1 = createStatus1();
+
+    public static Task createTask1()
+    {
+        return new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+    }
+    public static final Task TEST_TASK1 = createTask1();
 }

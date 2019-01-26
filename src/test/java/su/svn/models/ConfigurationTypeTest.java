@@ -1,3 +1,11 @@
+/*
+ * ConfigurationTypeTest.java
+ * This file was last modified at 2019-01-26 11:28 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.models;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +20,10 @@ import static su.svn.TestData.*;
 @DisplayName("Class ConfigurationType")
 class ConfigurationTypeTest
 {
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+
     ConfigurationType ctype;
 
     @Test
@@ -34,9 +46,9 @@ class ConfigurationTypeTest
         @DisplayName("default values in ConfigurationType()")
         void defaults()
         {
-            assertThat(ctype).hasFieldOrPropertyWithValue("id", 0L);
-            assertThat(ctype).hasFieldOrPropertyWithValue("name", null);
-            assertThat(ctype).hasFieldOrPropertyWithValue("description", null);
+            assertThat(ctype).hasFieldOrPropertyWithValue(ID, 0L);
+            assertThat(ctype).hasFieldOrPropertyWithValue(NAME, null);
+            assertThat(ctype).hasFieldOrPropertyWithValue(DESCRIPTION, null);
         }
 
         @Test
@@ -44,7 +56,7 @@ class ConfigurationTypeTest
         void testGetSetName()
         {
             ctype.setName(TEST_STR1);
-            assertThat(ctype).hasFieldOrPropertyWithValue("name", TEST_STR1);
+            assertThat(ctype).hasFieldOrPropertyWithValue(NAME, TEST_STR1);
             assertEquals(TEST_STR1, ctype.getName());
         }
 
@@ -53,7 +65,7 @@ class ConfigurationTypeTest
         void testGetSetDescription()
         {
             ctype.setDescription(TEST_STR1);
-            assertThat(ctype).hasFieldOrPropertyWithValue("description", TEST_STR1);
+            assertThat(ctype).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, ctype.getDescription());
         }
         @Test
@@ -68,7 +80,6 @@ class ConfigurationTypeTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
-
         @BeforeEach
         void createNew()
         {
@@ -79,9 +90,9 @@ class ConfigurationTypeTest
         @DisplayName("initialized values in ConfigurationType()")
         void defaults()
         {
-            assertThat(ctype).hasFieldOrPropertyWithValue("id", 1L);
-            assertThat(ctype).hasFieldOrPropertyWithValue("name", TEST_NAME);
-            assertThat(ctype).hasFieldOrPropertyWithValue("description", TEST_DESCRIPTION);
+            assertThat(ctype).hasFieldOrPropertyWithValue(ID, 1L);
+            assertThat(ctype).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
+            assertThat(ctype).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
         }
 
         @Test

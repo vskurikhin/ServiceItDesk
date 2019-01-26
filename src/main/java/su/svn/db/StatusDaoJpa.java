@@ -1,6 +1,6 @@
 /*
- * ConfigurationUnitDaoJpa.java
- * This file was last modified at 2019-01-26 13:51 by Victor N. Skurikhin.
+ * StatusDaoJpa.java
+ * This file was last modified at 2019-01-26 13:52 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -8,7 +8,7 @@
 
 package su.svn.db;
 
-import su.svn.models.ConfigurationUnit;
+import su.svn.models.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,38 +23,38 @@ import static javax.ejb.TransactionAttributeType.SUPPORTS;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
-public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
+public class StatusDaoJpa implements StatusDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
 
-    public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
+    public static final String SELECT_ALL = "SELECT s FROM Status s";
 
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
+    public static final String SELECT_WHERE_STATUS = SELECT_ALL + " WHERE s.status LIKE :status";
 
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE s.description LIKE :desc";
 
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationUnitDaoJpa.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatusDaoJpa.class);
 
-    public ConfigurationUnitDaoJpa() { /* None */}
+    public StatusDaoJpa() { /* None */}
 
-    public ConfigurationUnitDaoJpa(EntityManager entityManager)
+    public StatusDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
-    public List<ConfigurationUnit> emptyList() {
+    public List<Status> emptyList() {
         //noinspection unchecked
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public ConfigurationUnit findById(Long id)
+    public Status findById(Long id)
     {
         try {
-            return em.find(ConfigurationUnit.class, id);
+            return em.find(Status.class, id);
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
@@ -63,10 +63,10 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    public List<ConfigurationUnit> findAll()
+    public List<Status> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, ConfigurationUnit.class).getResultList();
+            return em.createQuery(SELECT_ALL, Status.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -75,24 +75,24 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    public List<ConfigurationUnit> findByName(String value)
+    public List<Status> findByStatus(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, ConfigurationUnit.class)
-                .setParameter("name", value)
+            return em.createQuery(SELECT_WHERE_STATUS, Status.class)
+                .setParameter("status", value)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by name: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by status: {} because had the exception {}", value, e);
             return emptyList();
         }
     }
 
     @Override
-    public List<ConfigurationUnit> findByDescription(String value)
+    public List<Status> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, ConfigurationUnit.class)
+            return em.createQuery(SELECT_WHERE_DESC, Status.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -104,7 +104,7 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
 
     @Override
     @TransactionAttribute(REQUIRES_NEW)
-    public boolean save(ConfigurationUnit entity)
+    public boolean save(Status entity)
     {
         try {
             if (null == entity.getId() || 0 == entity.getId()) {
@@ -115,11 +115,11 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
             }
         }
         catch (IllegalArgumentException | PersistenceException e) {
-            LOGGER.error("Can't save cunit with id: {} because had the exception {}", entity.getId(), e);
+            LOGGER.error("Can't save status with id: {} because had the exception {}", entity.getId(), e);
             return false;
         }
 
-        LOGGER.info("Save cunit with id: {}", entity.getId());
+        LOGGER.info("Save status with id: {}", entity.getId());
         return true;
     }
 
@@ -128,13 +128,13 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     public boolean delete(Long id)
     {
         try {
-            ConfigurationUnit merged = em.merge(findById(id));
+            Status merged = em.merge(findById(id));
             em.remove(merged);
-            LOGGER.info("Delete cunit with id: {}", merged.getId());
+            LOGGER.info("Delete status with id: {}", merged.getId());
             return true;
         }
         catch (IllegalArgumentException | PersistenceException e) {
-            LOGGER.error("Can't save cunit with id: {} because had the exception {}", id, e);
+            LOGGER.error("Can't save status with id: {} because had the exception {}", id, e);
             return false;
         }
     }
