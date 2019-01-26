@@ -1,6 +1,6 @@
 /*
  * TestData.java
- * This file was last modified at 2019-01-26 15:19 by Victor N. Skurikhin.
+ * This file was last modified at 2019-01-26 17:37 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -94,4 +94,10 @@ public class TestData
         return new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
     }
     public static final Task TEST_TASK1 = createTask1();
+
+    public static Incident createIncident1()
+    {
+        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+    }
+    public static final Incident TEST_INCIDENT1 = createIncident1();
 }
