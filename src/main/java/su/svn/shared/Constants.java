@@ -10,7 +10,7 @@ package su.svn.shared;
 
 public class Constants
 {
-    public class Rest
+    public static class Rest
     {
         public static final String VERSION = "version";
     }

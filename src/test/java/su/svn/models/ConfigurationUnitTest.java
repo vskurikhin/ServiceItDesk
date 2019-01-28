@@ -52,8 +52,9 @@ class ConfigurationUnitTest
             assertThat(cunit).hasFieldOrPropertyWithValue(ID, 0L);
             assertThat(cunit).hasFieldOrPropertyWithValue(NAME, null);
             assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, null);
-            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue("admin", null);
             assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, null);
             assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, null);
         }
 
@@ -86,12 +87,15 @@ class ConfigurationUnitTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
+        User newUser1 = createUser0();
+        User newUser2 = createUser0();
+        Group group = createGroup1();
+        ConfigurationType type = createConfigurationType1();
+
         @BeforeEach
         void createNew()
         {
-            cunit = new ConfigurationUnit(
-                TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createGroup1(), createUser1(), createConfigurationType1()
-            );
+            cunit = new ConfigurationUnit(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, newUser1, newUser2, group, type);
         }
 
         @Test
@@ -101,9 +105,10 @@ class ConfigurationUnitTest
             assertThat(cunit).hasFieldOrPropertyWithValue(ID, 1L);
             assertThat(cunit).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
             assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
-            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, TEST_GROUP1);
-            assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, TEST_USER1);
-            assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, TEST_CONFIGURATION_TYPE1);
+            assertThat(cunit).hasFieldOrPropertyWithValue("admin", newUser1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, newUser2);
+            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, group);
+            assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, type);
         }
 
         @Test
@@ -111,7 +116,9 @@ class ConfigurationUnitTest
         void testEquals()
         {
             assertNotEquals(new ConfigurationUnit(), cunit);
-            final ConfigurationUnit expected = TEST_CONFIGURATION_UNIT1;
+            final ConfigurationUnit expected = new ConfigurationUnit(
+                TEST_ID1, TEST_NAME, TEST_DESCRIPTION, newUser1, newUser2, group, type
+            );
             assertEquals(expected.hashCode(), cunit.hashCode());
             assertEquals(expected, cunit);
         }

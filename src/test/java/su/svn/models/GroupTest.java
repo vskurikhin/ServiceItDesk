@@ -84,6 +84,7 @@ class GroupTest
     class WhenNewAllArgsConstructor
     {
         Set<User> emptySet = new HashSet<>();
+
         @BeforeEach
         void createNew()
         {
@@ -97,6 +98,7 @@ class GroupTest
             assertThat(group).hasFieldOrPropertyWithValue(ID, 1L);
             assertThat(group).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
             assertThat(group).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
+            assertThat(group).hasFieldOrPropertyWithValue("users", emptySet);
         }
 
         @Test
@@ -104,7 +106,7 @@ class GroupTest
         void testEquals()
         {
             assertNotEquals(new Group(), group);
-            final Group expected = TEST_GROUP1;
+            final Group expected = new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, emptySet);
             expected.setUsers(emptySet);
             assertEquals(expected.hashCode(), group.hashCode());
             assertEquals(expected, group);

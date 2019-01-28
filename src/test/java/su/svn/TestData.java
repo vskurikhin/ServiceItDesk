@@ -56,11 +56,26 @@ public class TestData
 
     public static final Set<User> EMPTY_USER_SET = new HashSet<>();
 
+    public static Group createGroup0()
+    {
+        return new Group(0L, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
+    }
+    public static final Group TEST_GROUP0 = createGroup0();
+
+
     public static Group createGroup1()
     {
         return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
     }
     public static final Group TEST_GROUP1 = createGroup1();
+
+    public static User createUser0()
+    {
+        Group group = createGroup0();
+        group.setUsers(null);
+        return new User(0L, TEST_NAME, TEST_DESCRIPTION, group);
+    }
+    public static final User TEST_USER0 = createUser0();
 
     public static User createUser1()
     {
@@ -80,7 +95,7 @@ public class TestData
     public static ConfigurationUnit createConfigurationUnit1()
     {
         return new ConfigurationUnit(
-            TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_GROUP1, TEST_USER1, TEST_CONFIGURATION_TYPE1
+            TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createUser1(), createUser1(), TEST_GROUP1, TEST_CONFIGURATION_TYPE1
         );
     }
     public static final ConfigurationUnit TEST_CONFIGURATION_UNIT1 = createConfigurationUnit1();

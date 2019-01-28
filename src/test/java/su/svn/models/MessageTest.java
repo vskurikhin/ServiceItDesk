@@ -89,7 +89,7 @@ class MessageTest
         void testEquals()
         {
             assertNotEquals(new Message(), message);
-            final Message expected = TEST_MESSAGE1;
+            final Message expected = new Message(TEST_ID1, TEST_TEXT);
             assertEquals(expected.hashCode(), message.hashCode());
             assertEquals(expected, message);
         }
