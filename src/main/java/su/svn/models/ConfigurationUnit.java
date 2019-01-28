@@ -48,11 +48,11 @@ public class ConfigurationUnit implements DataSet
     private User owner;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "type_id", nullable = true)
+    @JoinColumn(name = "type_id", nullable = false)
     private ConfigurationType type;
 }
 

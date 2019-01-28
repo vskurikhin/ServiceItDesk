@@ -20,4 +20,5 @@
 Процесс управления сервисными конфигурациями.
 Эта информация включает в себя описание конфигурации и описание связей между конфигурациями, которая хранится на уровне системы управления конфигурациями (CMS) или на уровне базы данных управления конфигурациями (CMDB).
 
+ * [ ] [Список задач: JavaEE-2018-09-Task_list_v1.4.ods](https://docs.google.com/spreadsheets/d/1IRvdgsItB3VJ5QfzOwMgjVc1QAmqcvVWDssKM7AnuGI/edit#gid=1989280701)
  * [x] [Список задач: JavaEE-2018-09-Task_list_v0.1.ods](https://docs.google.com/spreadsheets/d/1IRvdgsItB3VJ5QfzOwMgjVc1QAmqcvVWDssKM7AnuGI/edit#gid=1989280701)

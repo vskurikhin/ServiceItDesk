@@ -14,6 +14,10 @@ import java.util.List;
 
 public interface UserDao extends Dao<User, Long>
 {
+    List<User> findAllWithDetails();
+
+    User findByIdWithDetails(Long id);
+
     List<User> findByName(String value);
 
     List<User> findByDescription(String value);

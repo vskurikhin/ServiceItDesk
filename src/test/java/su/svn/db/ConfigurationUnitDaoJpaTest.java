@@ -285,12 +285,13 @@ class ConfigurationUnitDaoJpaTest
             test.getOwner().getGroup().setName(TEST_NAME + "_OWNER_GROUP");
             test.getGroup().setId(0L);
             runInTransaction(() -> {
+                PrimaryGroupDao primaryGroupDao = new PrimaryGroupDaoJpa(entityManager);
                 GroupDao groupDao = new GroupDaoJpa(entityManager);
                 UserDao userDao = new UserDaoJpa(entityManager);
                 ConfigurationTypeDao typeDao = new ConfigurationTypeDaoJpa(entityManager);
-                groupDao.save(test.getAdmin().getGroup());
+                primaryGroupDao.save(test.getAdmin().getGroup());
                 userDao.save(test.getAdmin());
-                groupDao.save(test.getOwner().getGroup());
+                primaryGroupDao.save(test.getOwner().getGroup());
                 userDao.save(test.getOwner());
                 groupDao.save(test.getGroup());
                 typeDao.save(test.getType());

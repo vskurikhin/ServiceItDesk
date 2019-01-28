@@ -56,31 +56,27 @@ public class TestData
 
     public static final Set<User> EMPTY_USER_SET = new HashSet<>();
 
-    public static Group createGroup0()
+    public static PrimaryGroup createPrimaryGroup1()
     {
-        return new Group(0L, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
+        return new PrimaryGroup(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
     }
-    public static final Group TEST_GROUP0 = createGroup0();
-
+    public static final Group TEST_GROUP1 = createGroup1();
 
     public static Group createGroup1()
     {
         return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
     }
-    public static final Group TEST_GROUP1 = createGroup1();
 
     public static User createUser0()
     {
-        Group group = createGroup0();
-        group.setUsers(null);
+        PrimaryGroup group = createPrimaryGroup1();
         return new User(0L, TEST_NAME, TEST_DESCRIPTION, group);
     }
     public static final User TEST_USER0 = createUser0();
 
     public static User createUser1()
     {
-        Group group = createGroup1();
-        group.setUsers(null);
+        PrimaryGroup group = createPrimaryGroup1();
         return new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
     }
     public static final User TEST_USER1 = createUser1();
@@ -95,7 +91,8 @@ public class TestData
     public static ConfigurationUnit createConfigurationUnit1()
     {
         return new ConfigurationUnit(
-            TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createUser1(), createUser1(), TEST_GROUP1, TEST_CONFIGURATION_TYPE1
+            TEST_ID1, TEST_NAME, TEST_DESCRIPTION,
+            createUser1(), createUser1(), createGroup1(), createConfigurationType1()
         );
     }
     public static final ConfigurationUnit TEST_CONFIGURATION_UNIT1 = createConfigurationUnit1();
@@ -114,13 +111,13 @@ public class TestData
 
     public static Task createTask1()
     {
-        return new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+        return new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createUser1(), createStatus1());
     }
     public static final Task TEST_TASK1 = createTask1();
 
     public static Incident createIncident1()
     {
-        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, createUser1(), createStatus1());
     }
     public static final Incident TEST_INCIDENT1 = createIncident1();
 }
