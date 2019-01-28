@@ -56,16 +56,20 @@ public class TestData
 
     public static final Set<User> EMPTY_USER_SET = new HashSet<>();
 
+    public static PrimaryGroup createPrimaryGroup1()
+    {
+        return new PrimaryGroup(TEST_ID1, TEST_NAME, TEST_DESCRIPTION);
+    }
+    public static final Group TEST_GROUP1 = createGroup1();
+
     public static Group createGroup1()
     {
         return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
     }
-    public static final Group TEST_GROUP1 = createGroup1();
 
     public static User createUser1()
     {
-        Group group = createGroup1();
-        group.setUsers(null);
+        PrimaryGroup group = createPrimaryGroup1();
         return new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
     }
     public static final User TEST_USER1 = createUser1();

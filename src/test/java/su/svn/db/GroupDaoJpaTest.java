@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import su.svn.models.Group;
+import su.svn.models.PrimaryGroup;
 import su.svn.models.User;
 import su.svn.utils.db.JpaDedicatedEntityManagerTest;
 import su.svn.utils.logging.TestAppender;
@@ -267,10 +268,13 @@ class GroupDaoJpaTest
     @DisplayName("JPA H2 create/update tests")
     class JpaH2CreateUpdateTests extends JpaDedicatedEntityManagerTest
     {
+        private PrimaryGroupDao primaryGroupDao;
+
         @BeforeEach
         void createNew()
         {
             dao = new GroupDaoJpa(entityManager);
+            primaryGroupDao = new PrimaryGroupDaoJpa(entityManager);
         }
 
         @DisplayName("persists new when save")
@@ -284,10 +288,10 @@ class GroupDaoJpaTest
             User user = new User();
             user.setName(TEST_NAME);
             user.setDescription(TEST_DESCRIPTION);
-            Group primaryGroup = new Group();
+            PrimaryGroup primaryGroup = new PrimaryGroup();
             primaryGroup.setName("primary");
             primaryGroup.setDescription("Primary Description");
-            runInTransaction(() -> dao.save(primaryGroup));
+            runInTransaction(() -> primaryGroupDao.save(primaryGroup));
             user.setGroup(primaryGroup);
 
             test.getUsers().add(user);
@@ -321,6 +325,17 @@ class GroupDaoJpaTest
             runInTransaction(() -> dao.delete(test.getId()));
             assertNull(dao.findById(test.getId()));
             assertTrue(dao.findAll().isEmpty());
+        }
+
+        @Test
+        void findAllWithUsers()
+        {
+            Group expected = new Group();
+            expected.setName(TEST_NAME);
+            expected.setDescription(TEST_DESCRIPTION);
+            runInTransaction(() -> dao.save(expected));
+            Group test = dao.findByIdWithUsers(1L);
+            assertEquals(expected, test);
         }
     }
 }

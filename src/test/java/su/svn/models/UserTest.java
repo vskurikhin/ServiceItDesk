@@ -81,12 +81,11 @@ class UserTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
-        Group group = createGroup1();
+        PrimaryGroup group = createPrimaryGroup1();
 
         @BeforeEach
         void createNew()
         {
-            group.setUsers(null);
             user = new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
         }
 

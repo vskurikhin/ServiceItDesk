@@ -279,7 +279,7 @@ class TaskDaoJpaTest
             test.getConsumer().setId(0L);
             test.getConsumer().getGroup().setId(0L);
             runInTransaction(() -> {
-                GroupDao groupDao = new GroupDaoJpa(entityManager);
+                PrimaryGroupDao groupDao = new PrimaryGroupDaoJpa(entityManager);
                 groupDao.save(test.getConsumer().getGroup());
 
                 UserDao userDao = new UserDaoJpa(entityManager);
