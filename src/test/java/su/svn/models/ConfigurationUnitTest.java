@@ -52,8 +52,9 @@ class ConfigurationUnitTest
             assertThat(cunit).hasFieldOrPropertyWithValue(ID, 0L);
             assertThat(cunit).hasFieldOrPropertyWithValue(NAME, null);
             assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, null);
-            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue("admin", null);
             assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, null);
+            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, null);
             assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, null);
         }
 
@@ -90,7 +91,8 @@ class ConfigurationUnitTest
         void createNew()
         {
             cunit = new ConfigurationUnit(
-                TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createGroup1(), createUser1(), createConfigurationType1()
+                TEST_ID1, TEST_NAME, TEST_DESCRIPTION,
+                createUser1(), createUser1(), createGroup1(), createConfigurationType1()
             );
         }
 

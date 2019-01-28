@@ -80,7 +80,8 @@ public class TestData
     public static ConfigurationUnit createConfigurationUnit1()
     {
         return new ConfigurationUnit(
-            TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_GROUP1, TEST_USER1, TEST_CONFIGURATION_TYPE1
+            TEST_ID1, TEST_NAME, TEST_DESCRIPTION,
+            createUser1(), createUser1(), createGroup1(), createConfigurationType1()
         );
     }
     public static final ConfigurationUnit TEST_CONFIGURATION_UNIT1 = createConfigurationUnit1();
@@ -99,13 +100,13 @@ public class TestData
 
     public static Task createTask1()
     {
-        return new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+        return new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, createUser1(), createStatus1());
     }
     public static final Task TEST_TASK1 = createTask1();
 
     public static Incident createIncident1()
     {
-        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, createUser1(), createStatus1());
     }
     public static final Incident TEST_INCIDENT1 = createIncident1();
 }
