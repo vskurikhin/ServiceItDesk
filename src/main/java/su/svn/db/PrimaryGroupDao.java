@@ -9,16 +9,13 @@
 package su.svn.db;
 
 import su.svn.models.Group;
+import su.svn.models.PrimaryGroup;
 
 import java.util.List;
 
-public interface GroupDao extends Dao<Group, Long>
+public interface PrimaryGroupDao extends Dao<PrimaryGroup, Long>
 {
-    Group findByIdWithUsers(Long id);
-
-    List<Group> findByName(String value);
-
-    List<Group> findByDescription(String value);
+    List<PrimaryGroup> findByName(String value);
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

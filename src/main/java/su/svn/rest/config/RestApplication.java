@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
+import su.svn.rest.GroupResource;
+import su.svn.rest.UserResource;
 import su.svn.rest.Version;
 
 import javax.ws.rs.ApplicationPath;
@@ -24,6 +26,10 @@ import static su.svn.rest.config.RestApplication.API_URL;
 public class RestApplication extends ResourceConfig
 {
     public static final String API_URL = "/rest/api";
+
+    public static final String GROUP_RESOURCE = "/groups";
+
+    public static final String USER_RESOURCE = "/users";
 
     private static final String ENCODING_PROPERTY = "encoding";
 
@@ -42,6 +48,8 @@ public class RestApplication extends ResourceConfig
     }
 
     private void registerResourceClasses() {
+        register(GroupResource.class);
+        register(UserResource.class);
         register(Version.class);
     }
 }

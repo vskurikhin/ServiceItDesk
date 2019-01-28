@@ -39,7 +39,7 @@ public class User implements DataSet
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "primary_group_id", nullable = false)
-    private Group group;
+    private PrimaryGroup group;
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

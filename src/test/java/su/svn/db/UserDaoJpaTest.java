@@ -277,7 +277,7 @@ class UserDaoJpaTest
             test.setId(0L);
             test.getGroup().setId(0L);
             runInTransaction(() -> {
-                GroupDao groupDao = new GroupDaoJpa(entityManager);
+                PrimaryGroupDao groupDao = new PrimaryGroupDaoJpa(entityManager);
                 groupDao.save(test.getGroup());
                 dao.save(test);
             });

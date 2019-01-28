@@ -8,15 +8,12 @@
 
 package su.svn.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
 
 @Data
 @NoArgsConstructor
@@ -24,7 +21,7 @@ import java.util.HashSet;
 @EqualsAndHashCode
 @Entity
 @Table(name = "cm_group")
-public class Group implements DataSet
+public class PrimaryGroup implements DataSet
 {
     @Id
     @SequenceGenerator(name = "group_identifier", sequenceName = "group_id_seq", allocationSize = 1)
@@ -39,17 +36,6 @@ public class Group implements DataSet
     @Basic
     @Column(name = "description")
     private String description;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
-    @JoinTable(name = "cm_user_group",
-        joinColumns = @JoinColumn(name = "group_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Collection<User> users = new HashSet<>();
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

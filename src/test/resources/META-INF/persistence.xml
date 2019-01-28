@@ -16,6 +16,7 @@
     <persistence-unit name="mnf-pu-test" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- add classes -->
+        <class>su.svn.models.PrimaryGroup</class>
         <class>su.svn.models.Group</class>
         <class>su.svn.models.User</class>
         <class>su.svn.models.ConfigurationType</class>

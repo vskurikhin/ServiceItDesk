@@ -29,6 +29,10 @@ public class UserDaoJpa implements UserDao
 
     public static final String SELECT_ALL = "SELECT u FROM User u";
 
+    public static final String SELECT_ALL_DETAILS = "SELECT u FROM User u JOIN FETCH u.group";
+
+    public static final String SELECT_BY_ID_DETAILS = "SELECT u FROM User u JOIN FETCH u.group WHERE user_id = :id";
+
     public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE u.name LIKE :name";
 
     public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE u.description LIKE :desc";
@@ -66,6 +70,32 @@ public class UserDaoJpa implements UserDao
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public List<User> findAllWithDetails()
+    {
+        try {
+            return em.createQuery(SELECT_ALL_DETAILS, User.class).getResultList();
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search all because had the exception ", e);
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public User findByIdWithDetails(Long id)
+    {
+        try {
+            return em.createQuery(SELECT_BY_ID_DETAILS, User.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
+            return null;
         }
     }
 
