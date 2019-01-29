@@ -10,6 +10,7 @@ package su.svn.rest;
 
 import su.svn.db.GroupDao;
 import su.svn.models.Group;
+import su.svn.services.ResponseStorageService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,8 +19,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import java.util.stream.Collectors;
 
 import static su.svn.exceptions.ExceptionsFabric.getWebApplicationException;
 import static su.svn.rest.config.RestApplication.GROUP_RESOURCE;
@@ -34,6 +33,9 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
 
     @EJB
     private GroupDao dao;
+
+    @EJB
+    private ResponseStorageService storage;
 
     @Override
     public GroupDao getDao()
@@ -50,32 +52,20 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
     @POST
     public Response create(Group entity)
     {
-        return createSave(entity);
+        return storage.create(servletRequest.getRequestURL(), entity);
     }
 
     @GET
     public Response readAll()
     {
-        return Response.ok(
-            getDao().findAll()
-                .stream()
-                .peek(g -> g.setUsers(null))
-                .collect(Collectors.toList())
-        ).build();
+        return storage.readAllGroups();
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        Group entity = getDao().findById(id.longValue());
-
-        if (null != entity) {
-            entity.setUsers(null);
-            return Response.ok(entity).build();
-        }
-
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        return storage.readGroupById(id.longValue());
     }
 
     @GET
@@ -94,14 +84,14 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
     @PUT
     public Response update(Group entity)
     {
-        return updateSave(entity);
+        return storage.update(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {
-        return deleteById(id);
+        return storage.deleteGroup(id.longValue());
     }
 }
 
