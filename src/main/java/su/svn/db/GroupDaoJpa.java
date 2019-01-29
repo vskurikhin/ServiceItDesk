@@ -25,8 +25,6 @@ import static javax.ejb.TransactionAttributeType.SUPPORTS;
 @TransactionAttribute(SUPPORTS)
 public class GroupDaoJpa implements GroupDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
     public static final String SELECT_ALL = "SELECT g FROM Group g";
 
     public static final String SELECT_WITH_USERS =
@@ -39,6 +37,7 @@ public class GroupDaoJpa implements GroupDao
 
     public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE g.description LIKE :desc";
 
+    public static final String PERSISTENCE_UNIT_NAME = "jpa";
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 

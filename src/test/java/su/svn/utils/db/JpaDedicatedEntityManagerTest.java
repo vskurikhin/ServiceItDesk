@@ -16,8 +16,6 @@ public class JpaDedicatedEntityManagerTest extends JpaEntityManagerTest
     public static void init()
     {
          emf = Persistence.createEntityManagerFactory("mnf-pu-test");
-
-         return;
     }
 
     @Override
