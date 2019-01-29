@@ -275,13 +275,25 @@ class ConfigurationUnitDaoJpaTest
         private void saveNewGroupAndConfigurationUnit(ConfigurationUnit test)
         {
             test.setId(0L);
+            test.getAdmin().setId(0L);
+            test.getAdmin().setName(TEST_NAME + "_ADMIN");
+            test.getAdmin().getGroup().setId(0L);
+            test.getAdmin().getGroup().setName(TEST_NAME + "_ADMINS");
+            test.getOwner().setId(0L);
+            test.getOwner().setName(TEST_NAME + "_OWNER");
+            test.getOwner().getGroup().setId(0L);
+            test.getOwner().getGroup().setName(TEST_NAME + "_OWNER_GROUP");
             test.getGroup().setId(0L);
             runInTransaction(() -> {
+                PrimaryGroupDao primaryGroupDao = new PrimaryGroupDaoJpa(entityManager);
                 GroupDao groupDao = new GroupDaoJpa(entityManager);
                 UserDao userDao = new UserDaoJpa(entityManager);
                 ConfigurationTypeDao typeDao = new ConfigurationTypeDaoJpa(entityManager);
-                groupDao.save(test.getGroup());
+                primaryGroupDao.save(test.getAdmin().getGroup());
+                userDao.save(test.getAdmin());
+                primaryGroupDao.save(test.getOwner().getGroup());
                 userDao.save(test.getOwner());
+                groupDao.save(test.getGroup());
                 typeDao.save(test.getType());
                 dao.save(test);
             });

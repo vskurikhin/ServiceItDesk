@@ -67,6 +67,13 @@ public class TestData
         return new Group(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, EMPTY_USER_SET);
     }
 
+    public static User createUser0()
+    {
+        PrimaryGroup group = createPrimaryGroup1();
+        return new User(0L, TEST_NAME, TEST_DESCRIPTION, group);
+    }
+    public static final User TEST_USER0 = createUser0();
+
     public static User createUser1()
     {
         PrimaryGroup group = createPrimaryGroup1();

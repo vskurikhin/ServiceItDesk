@@ -35,7 +35,7 @@ ALTER SEQUENCE incident_id_seq RESTART WITH 1;
 CREATE TABLE IF NOT EXISTS cm_group (
   group_id          BIGINT       NOT NULL AUTO_INCREMENT,
   name              VARCHAR(127) NOT NULL,
-  description       VARCHAR(255) NOT NULL,
+  description       VARCHAR(255),
   UNIQUE (name),
   PRIMARY KEY (group_id)
 );
@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS cm_group (
 CREATE TABLE IF NOT EXISTS cm_user (
   user_id           BIGINT       NOT NULL AUTO_INCREMENT,
   user_name         VARCHAR(127) NOT NULL,
-  description       VARCHAR(255) NOT NULL,
-  primary_group_id  BIGINT       NOT NULL REFERENCES cm_group (group_id),
+  description       VARCHAR(255),
+  primary_group_id  BIGINT 	 NOT NULL REFERENCES cm_group (group_id),
   UNIQUE (user_name),
   PRIMARY KEY (user_id)
 );
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS cm_admin (
 CREATE TABLE IF NOT EXISTS cm_ctype (
   ctype_id          BIGINT       NOT NULL AUTO_INCREMENT,
   ctype_name        VARCHAR(127) NOT NULL,
-  description       VARCHAR(255) NOT NULL,
+  description       VARCHAR(255),
   UNIQUE (ctype_name),
   PRIMARY KEY (ctype_id)
 );
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS cm_ctype (
 CREATE TABLE IF NOT EXISTS cm_cunit (
   cunit_id          BIGINT       NOT NULL AUTO_INCREMENT,
   cunit_name        VARCHAR(127) NOT NULL,
-  description       VARCHAR(255) NOT NULL,
+  description       VARCHAR(255),
   environ           ENUM('prod', 'test', 'dev'),
   admin_user_id     BIGINT NOT NULL REFERENCES cm_user  (user_id),
   owner_user_id     BIGINT NOT NULL REFERENCES cm_user  (user_id),

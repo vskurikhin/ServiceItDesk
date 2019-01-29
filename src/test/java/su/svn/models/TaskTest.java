@@ -123,7 +123,7 @@ class TaskTest
         void testEquals()
         {
             assertNotEquals(new Task(), task);
-            final Task expected = TEST_TASK1;
+            final Task expected = new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
             assertEquals(expected.hashCode(), task.hashCode());
             assertEquals(expected, task);
         }

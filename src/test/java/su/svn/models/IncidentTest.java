@@ -123,7 +123,7 @@ class IncidentTest
         void testEquals()
         {
             assertNotEquals(new Incident(), incident);
-            final Incident expected = TEST_INCIDENT1;
+            final Incident expected = new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
             assertEquals(expected.hashCode(), incident.hashCode());
             assertEquals(expected, incident);
         }

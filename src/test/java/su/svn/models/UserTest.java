@@ -36,7 +36,6 @@ class UserTest
     @DisplayName("when new with empty constructor")
     class WhenNew
     {
-
         @BeforeEach
         void createNew()
         {
@@ -50,6 +49,7 @@ class UserTest
             assertThat(user).hasFieldOrPropertyWithValue(ID, 0L);
             assertThat(user).hasFieldOrPropertyWithValue(NAME, null);
             assertThat(user).hasFieldOrPropertyWithValue(DESCRIPTION, null);
+            assertThat(user).hasFieldOrPropertyWithValue("group", null);
         }
 
         @Test
@@ -69,6 +69,7 @@ class UserTest
             assertThat(user).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, user.getDescription());
         }
+
         @Test
         @DisplayName("The length of string from Genre::toString is great than zero")
         void testToString()
@@ -94,8 +95,9 @@ class UserTest
         void defaults()
         {
             assertThat(user).hasFieldOrPropertyWithValue(ID, 1L);
-            assertThat(user).hasFieldOrPropertyWithValue("name", TEST_NAME);
-            assertThat(user).hasFieldOrPropertyWithValue("description", TEST_DESCRIPTION);
+            assertThat(user).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
+            assertThat(user).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
+            assertThat(user).hasFieldOrPropertyWithValue("group", group);
         }
 
         @Test

@@ -68,6 +68,7 @@ class StatusTest
             assertThat(status).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, status.getDescription());
         }
+
         @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
@@ -100,7 +101,7 @@ class StatusTest
         void testEquals()
         {
             assertNotEquals(new Status(), status);
-            final Status expected = TEST_STATUS1;
+            final Status expected = new Status(TEST_ID1, TEST_STATUS, TEST_DESCRIPTION);
             assertEquals(expected.hashCode(), status.hashCode());
             assertEquals(expected, status);
         }
