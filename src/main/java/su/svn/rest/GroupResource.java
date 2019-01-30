@@ -72,13 +72,14 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
     @Path("/{id}/users")
     public Response readWithUsers(@PathParam("id") Integer id)
     {
-        Group entity = getDao().findByIdWithUsers(id.longValue());
+        return Response.ok(getDao().findByIdWithUsers(id.longValue()).orElseThrow(
+            () -> getWebApplicationException(new Throwable("Not Found!"))
+        )).build();
+        /* Group entity = getDao().findByIdWithUsers(id.longValue());
 
         if (null != entity) {
             return Response.ok(entity).build();
-        }
-
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        } */
     }
 
     @PUT

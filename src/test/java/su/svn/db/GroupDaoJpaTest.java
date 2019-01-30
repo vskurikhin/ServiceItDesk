@@ -31,6 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
 import static su.svn.db.GroupDaoJpa.SELECT_ALL;
+import static su.svn.db.GroupDaoJpa.SELECT_ALL;
 import static su.svn.db.GroupDaoJpa.SELECT_WHERE_DESC;
 import static su.svn.db.GroupDaoJpa.SELECT_WHERE_NAME;
 

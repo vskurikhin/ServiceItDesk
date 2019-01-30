@@ -17,25 +17,28 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Group.*;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class GroupDaoJpa implements GroupDao
 {
-    public static final String SELECT_ALL = "SELECT g FROM Group g";
+    // public static final String SELECT_ALL = "SELECT g FROM Group g";
 
+    /*
     public static final String SELECT_WITH_USERS =
         "SELECT DISTINCT g" +
         " FROM Group g" +
         " LEFT JOIN FETCH g.users" +
-        " WHERE g.id = :id";
+        " WHERE g.id = :id"; */
 
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
+    // public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
 
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE g.description LIKE :desc";
+    // public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE g.description LIKE :desc";
 
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
@@ -66,7 +69,7 @@ public class GroupDaoJpa implements GroupDao
     public List<Group> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Group.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Group.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -75,12 +78,14 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    public Group findByIdWithUsers(Long id)
+    public Optional<Group> findByIdWithUsers(Long id)
     {
         try {
-            return em.createQuery(SELECT_WITH_USERS, Group.class)
-                .setParameter("id", id)
-                .getSingleResult();
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_USERS, Group.class)
+                  .setParameter("id", id)
+                  .getSingleResult()
+            );
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
@@ -92,7 +97,7 @@ public class GroupDaoJpa implements GroupDao
     public List<Group> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, Group.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, Group.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -106,7 +111,7 @@ public class GroupDaoJpa implements GroupDao
     public List<Group> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Group.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Group.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
