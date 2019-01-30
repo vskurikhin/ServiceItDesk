@@ -18,14 +18,39 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static su.svn.models.Group.*;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name = "cm_group")
+@NamedQueries({
+    @NamedQuery(
+        name = FIND_ALL,
+        query = "SELECT g FROM Group g"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_NAME,
+        query = "SELECT g FROM Group g WHERE g.name LIKE :name"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_DESC,
+        query = "SELECT g FROM Group g WHERE g.name LIKE :name"
+    ),
+    @NamedQuery(
+        name = FIND_BY_ID_WITH_USERS,
+        query = "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.users WHERE g.id = :id"
+    ),
+})
 public class Group implements DataSet
 {
+    public static final String FIND_ALL = "Group.findAll";
+    public static final String FIND_ALL_WHERE_NAME = "Group.findAllWhereName";
+    public static final String FIND_ALL_WHERE_DESC = "Group.findAllWhereDescription";
+    public static final String FIND_BY_ID_WITH_USERS = "Group.findByIdWithUsers";
+
     @Id
     @SequenceGenerator(name = "group_identifier", sequenceName = "group_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "group_identifier")

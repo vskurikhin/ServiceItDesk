@@ -107,13 +107,15 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
 
     public Response readGroupByIdWithUsers(Long id)
     {
-        Group entity = groupDao.findByIdWithUsers(id);
-
+        return Response.ok(groupDao.findByIdWithUsers(id).orElseThrow(
+            () -> getWebApplicationException(new Throwable("Not Found!"))
+        )).build();
+        /* Group entity = groupDao.findByIdWithUsers(id);
         if (null != entity) {
             return Response.ok(entity).build();
         }
 
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        throw getWebApplicationException(new Throwable("Not Found!")); */
     }
 
     @Override

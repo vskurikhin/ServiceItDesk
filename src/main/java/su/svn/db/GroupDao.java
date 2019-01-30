@@ -11,10 +11,11 @@ package su.svn.db;
 import su.svn.models.Group;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupDao extends Dao<Group, Long>
 {
-    Group findByIdWithUsers(Long id);
+    Optional<Group> findByIdWithUsers(Long id);
 
     List<Group> findByName(String value);
 
