@@ -8,10 +8,8 @@
 
 package su.svn.rest;
 
-import su.svn.db.PrimaryGroupDao;
-import su.svn.db.UserDao;
-import su.svn.models.PrimaryGroup;
 import su.svn.models.User;
+import su.svn.services.ResponseStorageService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,89 +19,49 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.exceptions.ExceptionsFabric.getWebApplicationException;
 import static su.svn.rest.config.RestApplication.USER_RESOURCE;
 
 @Stateless
 @Path("/v1" + USER_RESOURCE)
 @Produces(MediaType.APPLICATION_JSON)
-public class UserResource extends CRUDResource<User, UserDao>
+public class UserResource
 {
     @Context
     private HttpServletRequest servletRequest;
 
     @EJB
-    private UserDao dao;
-
-    @EJB
-    private PrimaryGroupDao groupDao;
-
-    @Override
-    public UserDao getDao()
-    {
-        return dao;
-    }
-
-    @Override
-    public HttpServletRequest getHttpServletRequest()
-    {
-        return servletRequest;
-    }
+    private ResponseStorageService storage;
 
     @POST
     public Response create(User entity)
     {
-        PrimaryGroup group = entity.getGroup();
-
-        if (0 == group.getId()) {
-            groupDao.save(group);
-        }
-        else {
-            entity.setGroup(groupDao.findById(group.getId()));
-        }
-
-        return createSave(entity);
+        return storage.create(servletRequest.getRequestURL(), entity);
     }
 
     @GET
     public Response readAll()
     {
-        return Response.ok(getDao().findAllWithDetails()).build();
+        return storage.readAllUsers();
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        User entity = getDao().findByIdWithDetails(id.longValue());
-
-        if (null != entity) {
-            return Response.ok(entity).build();
-        }
-
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        return storage.readGroupById(id.longValue());
     }
 
     @PUT
     public Response update(User entity)
     {
-        PrimaryGroup group = entity.getGroup();
-
-        if (0 == group.getId()) {
-            groupDao.save(group);
-        }
-        else {
-            entity.setGroup(groupDao.findById(group.getId()));
-        }
-
-        return updateSave(entity);
+        return storage.update(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {
-        return deleteById(id);
+        return storage.delete(User.class, id.longValue());
     }
 }
 

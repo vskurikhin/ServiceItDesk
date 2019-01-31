@@ -53,6 +53,7 @@ class ResponseStorageServiceImplTest
         mockedQuery = mock(Query.class);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(Collections.emptyList());
+        when(mockedQuery.getSingleResult()).thenReturn(dataSetSupplier);
     }
 
     @SuppressWarnings("unchecked") // still needed :( but just once :)
@@ -60,6 +61,7 @@ class ResponseStorageServiceImplTest
         TypedQuery<T> typedQuery = mock(TypedQuery.class);
         when(typedQuery.setParameter(anyString(), any())).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(Collections.emptyList());
+        when(typedQuery.getSingleResult()).thenReturn((T) dataSetSupplier);
 
         return typedQuery;
     }
@@ -105,8 +107,31 @@ class ResponseStorageServiceImplTest
     @Test
     void readGroupById(ResponseStorageService storage)
     {
-        dataSetSupplier = createDataSetGroupSupplier();
+        dataSetSupplier = Group::new;
         Response response = storage.readGroupById(0L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readGroupByIdWithUsers(ResponseStorageService storage)
+    {
+        dataSetSupplier = Group::new;
+        Response response = storage.readGroupByIdWithUsers(0L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllUsers(ResponseStorageService storage)
+    {
+        Response response = storage.readAllUsers();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readUserById(ResponseStorageService storage)
+    {
+        dataSetSupplier = User::new;
+        Response response = storage.readUserById(0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -359,7 +384,7 @@ class ResponseStorageServiceImplTest
 
             @Override
             public <T> TypedQuery<T> createNamedQuery(String name, Class<T> resultClass) {
-                return null;
+                return mockTypedQuery();
             }
 
             @Override

@@ -37,7 +37,7 @@ import static su.svn.models.Group.*;
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT g FROM Group g WHERE g.name LIKE :name"
+        query = "SELECT g FROM Group g WHERE g.description LIKE :desc"
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_USERS,

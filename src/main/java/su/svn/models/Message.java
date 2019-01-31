@@ -15,14 +15,30 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static su.svn.models.Message.FIND_ALL;
+import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name = "pm_message")
+@NamedQueries({
+    @NamedQuery(
+        name = FIND_ALL,
+        query = "SELECT m FROM Message m"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_TEXT,
+        query = "SELECT m FROM Message m WHERE m.text LIKE :text"
+    ),
+})
 public class Message implements DataSet
 {
+    public static final String FIND_ALL = "Message.findAll";
+    public static final String FIND_ALL_WHERE_TEXT = "Message.findAllWhereName";
+
     @Id
     @SequenceGenerator(name = "message_identifier", sequenceName = "message_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "message_identifier")

@@ -20,21 +20,21 @@ import java.util.List;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Message.FIND_ALL;
+import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class MessageDaoJpa implements MessageDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT m FROM Message m";
-
-    public static final String SELECT_WHERE_TEXT = SELECT_ALL + " WHERE m.text LIKE :text";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageDaoJpa.class);
+
+    /* public static final String SELECT_ALL = "SELECT m FROM Message m";
+    public static final String SELECT_WHERE_TEXT = SELECT_ALL + " WHERE m.text LIKE :text"; */
 
     public MessageDaoJpa() { /* None */}
 
@@ -59,7 +59,7 @@ public class MessageDaoJpa implements MessageDao
     public List<Message> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Message.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Message.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -71,7 +71,7 @@ public class MessageDaoJpa implements MessageDao
     public List<Message> findByText(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_TEXT, Message.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_TEXT, Message.class)
                 .setParameter("text", value)
                 .getResultList();
         }

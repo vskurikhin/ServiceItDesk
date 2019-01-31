@@ -26,28 +26,13 @@ import static su.svn.rest.config.RestApplication.GROUP_RESOURCE;
 @Stateless
 @Path("/v1" + GROUP_RESOURCE)
 @Produces(MediaType.APPLICATION_JSON)
-public class GroupResource extends CRUDResource<Group, GroupDao>
+public class GroupResource
 {
     @Context
     private HttpServletRequest servletRequest;
 
     @EJB
-    private GroupDao dao;
-
-    @EJB
     private ResponseStorageService storage;
-
-    @Override
-    public GroupDao getDao()
-    {
-        return dao;
-    }
-
-    @Override
-    public HttpServletRequest getHttpServletRequest()
-    {
-        return servletRequest;
-    }
 
     @POST
     public Response create(Group entity)
@@ -72,14 +57,7 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
     @Path("/{id}/users")
     public Response readWithUsers(@PathParam("id") Integer id)
     {
-        return Response.ok(getDao().findByIdWithUsers(id.longValue()).orElseThrow(
-            () -> getWebApplicationException(new Throwable("Not Found!"))
-        )).build();
-        /* Group entity = getDao().findByIdWithUsers(id.longValue());
-
-        if (null != entity) {
-            return Response.ok(entity).build();
-        } */
+        return storage.readGroupById(id.longValue());
     }
 
     @PUT
@@ -92,7 +70,7 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {
-        return storage.deleteGroup(id.longValue());
+        return storage.delete(Group.class, id.longValue());
     }
 }
 

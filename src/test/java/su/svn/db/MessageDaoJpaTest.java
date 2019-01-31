@@ -28,8 +28,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.MessageDaoJpa.SELECT_ALL;
-import static su.svn.db.MessageDaoJpa.SELECT_WHERE_TEXT;
+import static su.svn.models.Message.FIND_ALL;
+import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
+//import static su.svn.db.MessageDaoJpa.SELECT_ALL;
+//import static su.svn.db.MessageDaoJpa.SELECT_WHERE_TEXT;
 
 @DisplayName("Class MessageDaoJpaTest")
 class MessageDaoJpaTest
@@ -135,7 +137,7 @@ class MessageDaoJpaTest
             List<Message> expected = Collections.emptyList();
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findAll();
             assertEquals(expected, test);
@@ -148,7 +150,7 @@ class MessageDaoJpaTest
             List<Message> expected = Collections.emptyList();
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findAll();
             assertEquals(expected, test);
@@ -163,7 +165,7 @@ class MessageDaoJpaTest
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("text", TEST_TEXT)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findByText(TEST_TEXT);
             assertEquals(expected, test);
@@ -177,7 +179,7 @@ class MessageDaoJpaTest
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("text", TEST_TEXT)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findByText(TEST_TEXT);
             assertEquals(expected, test);

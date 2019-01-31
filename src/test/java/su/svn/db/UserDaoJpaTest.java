@@ -28,9 +28,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.UserDaoJpa.SELECT_ALL;
-import static su.svn.db.UserDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.UserDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.models.User.FIND_ALL;
+import static su.svn.models.User.FIND_ALL_WHERE_DESC;
+import static su.svn.models.User.FIND_ALL_WHERE_NAME;
 
 @DisplayName("Class UserDaoJpaTest")
 class UserDaoJpaTest
@@ -137,7 +137,7 @@ class UserDaoJpaTest
             List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findAll();
             assertEquals(expected, test);
@@ -150,7 +150,7 @@ class UserDaoJpaTest
             List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findAll();
             assertEquals(expected, test);
@@ -165,7 +165,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -179,7 +179,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -194,7 +194,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -208,7 +208,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
