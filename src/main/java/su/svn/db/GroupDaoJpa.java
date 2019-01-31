@@ -27,19 +27,6 @@ import static su.svn.models.Group.*;
 @TransactionAttribute(SUPPORTS)
 public class GroupDaoJpa implements GroupDao
 {
-    // public static final String SELECT_ALL = "SELECT g FROM Group g";
-
-    /*
-    public static final String SELECT_WITH_USERS =
-        "SELECT DISTINCT g" +
-        " FROM Group g" +
-        " LEFT JOIN FETCH g.users" +
-        " WHERE g.id = :id"; */
-
-    // public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
-
-    // public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE g.description LIKE :desc";
-
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
@@ -89,7 +76,7 @@ public class GroupDaoJpa implements GroupDao
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 

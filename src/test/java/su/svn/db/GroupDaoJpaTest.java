@@ -23,6 +23,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,10 +31,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.GroupDaoJpa.SELECT_ALL;
-import static su.svn.db.GroupDaoJpa.SELECT_ALL;
-import static su.svn.db.GroupDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.GroupDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.models.Group.*;
 
 @DisplayName("Class GroupDaoJpaTest")
 class GroupDaoJpaTest
@@ -140,7 +138,7 @@ class GroupDaoJpaTest
             List<Group> expected = Collections.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findAll();
             assertEquals(expected, test);
@@ -153,7 +151,7 @@ class GroupDaoJpaTest
             List<Group> expected = Collections.emptyList();
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findAll();
             assertEquals(expected, test);
@@ -168,7 +166,7 @@ class GroupDaoJpaTest
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -182,7 +180,7 @@ class GroupDaoJpaTest
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -197,7 +195,7 @@ class GroupDaoJpaTest
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -211,7 +209,7 @@ class GroupDaoJpaTest
             TypedQuery<Group> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Group.class)).thenReturn(mockedQuery);
 
             List<Group> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -335,8 +333,9 @@ class GroupDaoJpaTest
             expected.setName(TEST_NAME);
             expected.setDescription(TEST_DESCRIPTION);
             runInTransaction(() -> dao.save(expected));
-            Group test = dao.findByIdWithUsers(1L);
-            assertEquals(expected, test);
+            Optional<Group> test = dao.findByIdWithUsers(1L);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
     }
 }

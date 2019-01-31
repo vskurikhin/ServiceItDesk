@@ -44,7 +44,7 @@ class ResponseStorageServiceImplTest
 
     private static Supplier<DataSet> createDataSetGroupSupplier()
     {
-        return () -> new Group();
+        return Group::new;
     }
 
     @BeforeAll
@@ -60,6 +60,7 @@ class ResponseStorageServiceImplTest
         TypedQuery<T> typedQuery = mock(TypedQuery.class);
         when(typedQuery.setParameter(anyString(), any())).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(Collections.emptyList());
+        when(typedQuery.getSingleResult()).thenReturn((T) dataSetSupplier);
 
         return typedQuery;
     }
@@ -104,6 +105,14 @@ class ResponseStorageServiceImplTest
 
     @Test
     void readGroupById(ResponseStorageService storage)
+    {
+        dataSetSupplier = createDataSetGroupSupplier();
+        Response response = storage.readGroupById(0L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readGroupByIdWithUsers(ResponseStorageService storage)
     {
         dataSetSupplier = createDataSetGroupSupplier();
         Response response = storage.readGroupById(0L);
@@ -359,12 +368,12 @@ class ResponseStorageServiceImplTest
 
             @Override
             public <T> TypedQuery<T> createNamedQuery(String name, Class<T> resultClass) {
-                return null;
+                return mockTypedQuery();
             }
 
             @Override
             public Query createNamedQuery(String name) {
-                return null;
+                return mockedQuery;
             }
 
             @Override

@@ -22,17 +22,17 @@ import java.util.List;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Group.*;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class PrimaryGroupDaoJpa implements PrimaryGroupDao
 {
+    // public static final String SELECT_ALL = "SELECT g FROM PrimaryGroup g";
+
+    // public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
+
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT g FROM PrimaryGroup g";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -61,7 +61,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     public List<PrimaryGroup> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, PrimaryGroup.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, PrimaryGroup.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -73,7 +73,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     public List<PrimaryGroup> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, PrimaryGroup.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, PrimaryGroup.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -96,7 +96,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
             }
         }
         catch (IllegalArgumentException | PersistenceException e) {
-            LOGGER.error("Can't save group with id: {} because had the exception {}", entity.getId(), e);
+            LOGGER.error("Can't save primary group with id: {} because had the exception {}", entity.getId(), e);
             return false;
         }
 

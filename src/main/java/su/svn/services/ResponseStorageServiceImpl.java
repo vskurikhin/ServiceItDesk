@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static su.svn.exceptions.ExceptionsFabric.getWebApplicationException;
@@ -107,15 +108,14 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
 
     public Response readGroupByIdWithUsers(Long id)
     {
-        return Response.ok(groupDao.findByIdWithUsers(id).orElseThrow(
-            () -> getWebApplicationException(new Throwable("Not Found!"))
-        )).build();
-        /* Group entity = groupDao.findByIdWithUsers(id);
-        if (null != entity) {
-            return Response.ok(entity).build();
+        Optional<Group> optionalGroup = groupDao.findByIdWithUsers(id);
+
+        if (optionalGroup.isPresent()) {
+            return Response.ok(optionalGroup.get()).build();
         }
 
-        throw getWebApplicationException(new Throwable("Not Found!")); */
+        LOGGER.warn("Not found Group with id == {}", id);
+        throw getWebApplicationException(new Throwable("Not Found!"));
     }
 
     @Override

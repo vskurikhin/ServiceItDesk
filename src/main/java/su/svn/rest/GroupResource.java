@@ -20,7 +20,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.exceptions.ExceptionsFabric.getWebApplicationException;
 import static su.svn.rest.config.RestApplication.GROUP_RESOURCE;
 
 @Stateless
@@ -72,14 +71,8 @@ public class GroupResource extends CRUDResource<Group, GroupDao>
     @Path("/{id}/users")
     public Response readWithUsers(@PathParam("id") Integer id)
     {
-        return Response.ok(getDao().findByIdWithUsers(id.longValue()).orElseThrow(
-            () -> getWebApplicationException(new Throwable("Not Found!"))
-        )).build();
-        /* Group entity = getDao().findByIdWithUsers(id.longValue());
-
-        if (null != entity) {
-            return Response.ok(entity).build();
-        } */
+        return storage.readGroupById(id.longValue());
+        // return Response.ok(getDao().findByIdWithUsers(id.longValue())).build();
     }
 
     @PUT
