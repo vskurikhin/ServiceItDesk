@@ -21,6 +21,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,8 +29,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.MessageDaoJpa.SELECT_ALL;
-import static su.svn.db.MessageDaoJpa.SELECT_WHERE_TEXT;
+import static su.svn.models.Message.FIND_ALL;
+import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
 
 @DisplayName("Class MessageDaoJpaTest")
 class MessageDaoJpaTest
@@ -103,8 +104,9 @@ class MessageDaoJpaTest
 
             when(entityManager.find(Message.class, TEST_ID1)).thenReturn(expected);
 
-            Message test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<Message> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
@@ -113,8 +115,8 @@ class MessageDaoJpaTest
         {
             when(entityManager.find(Message.class, TEST_ID9)).thenReturn(null);
 
-            Message test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Message> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
@@ -123,8 +125,8 @@ class MessageDaoJpaTest
         {
             when(entityManager.find(Message.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            Message test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Message> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -135,7 +137,7 @@ class MessageDaoJpaTest
             List<Message> expected = Collections.emptyList();
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findAll();
             assertEquals(expected, test);
@@ -148,7 +150,7 @@ class MessageDaoJpaTest
             List<Message> expected = Collections.emptyList();
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findAll();
             assertEquals(expected, test);
@@ -163,7 +165,7 @@ class MessageDaoJpaTest
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("text", TEST_TEXT)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findByText(TEST_TEXT);
             assertEquals(expected, test);
@@ -177,7 +179,7 @@ class MessageDaoJpaTest
             TypedQuery<Message> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("text", TEST_TEXT)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TEXT, Message.class)).thenReturn(mockedQuery);
 
             List<Message> test = dao.findByText(TEST_TEXT);
             assertEquals(expected, test);
@@ -245,10 +247,12 @@ class MessageDaoJpaTest
         @Test
         void save_persists()
         {
-            Message test = new Message();
-            test.setText(TEST_TEXT);
-            runInTransaction(() -> dao.save(test));
-            assertEquals(test, dao.findById(test.getId()));
+            Message expected = new Message();
+            expected.setText(TEST_TEXT);
+            runInTransaction(() -> dao.save(expected));
+            Optional<Message> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -271,7 +275,8 @@ class MessageDaoJpaTest
             test.setText(TEST_TEXT);
             runInTransaction(() -> dao.save(test));
             runInTransaction(() -> dao.delete(test.getId()));
-            assertNull(dao.findById(test.getId()));
+            Optional<Message> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
     }

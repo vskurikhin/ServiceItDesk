@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
@@ -46,14 +47,14 @@ public class StatusDaoJpa implements StatusDao
     }
 
     @Override
-    public Status findById(Long id)
+    public Optional<Status> findById(Long id)
     {
         try {
-            return em.find(Status.class, id);
+            return Optional.ofNullable(em.find(Status.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -123,7 +124,7 @@ public class StatusDaoJpa implements StatusDao
     public boolean delete(Long id)
     {
         try {
-            Status merged = em.merge(findById(id));
+            Status merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete status with id: {}", merged.getId());
             return true;

@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
@@ -46,14 +47,14 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    public ConfigurationUnit findById(Long id)
+    public Optional<ConfigurationUnit> findById(Long id)
     {
         try {
-            return em.find(ConfigurationUnit.class, id);
+            return Optional.ofNullable(em.find(ConfigurationUnit.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -123,7 +124,7 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     public boolean delete(Long id)
     {
         try {
-            ConfigurationUnit merged = em.merge(findById(id));
+            ConfigurationUnit merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete cunit with id: {}", merged.getId());
             return true;

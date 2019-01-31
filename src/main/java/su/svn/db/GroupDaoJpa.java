@@ -41,14 +41,14 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    public Group findById(Long id)
+    public Optional<Group> findById(Long id)
     {
         try {
-            return em.find(Group.class, id);
+            return Optional.ofNullable(em.find(Group.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -134,7 +134,7 @@ public class GroupDaoJpa implements GroupDao
     public boolean delete(Long id)
     {
         try {
-            Group merged = em.merge(findById(id));
+            Group merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete group with id: {}", merged.getId());
             return true;

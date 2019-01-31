@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
@@ -46,14 +47,14 @@ public class TaskDaoJpa implements TaskDao
     }
 
     @Override
-    public Task findById(Long id)
+    public Optional<Task> findById(Long id)
     {
         try {
-            return em.find(Task.class, id);
+            return Optional.ofNullable(em.find(Task.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -123,7 +124,7 @@ public class TaskDaoJpa implements TaskDao
     public boolean delete(Long id)
     {
         try {
-            Task merged = em.merge(findById(id));
+            Task merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete task with id: {}", merged.getId());
             return true;

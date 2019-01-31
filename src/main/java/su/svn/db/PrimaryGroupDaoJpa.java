@@ -15,10 +15,12 @@ import su.svn.models.PrimaryGroup;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
@@ -46,14 +48,14 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     }
 
     @Override
-    public PrimaryGroup findById(Long id)
+    public Optional<PrimaryGroup> findById(Long id)
     {
         try {
-            return em.find(PrimaryGroup.class, id);
+            return Optional.ofNullable(em.find(PrimaryGroup.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -109,7 +111,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     public boolean delete(Long id)
     {
         try {
-            PrimaryGroup merged = em.merge(findById(id));
+            PrimaryGroup merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete group with id: {}", merged.getId());
             return true;

@@ -31,7 +31,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.models.Group.*;
+import static su.svn.models.Group.FIND_ALL;
+import static su.svn.models.Group.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Group.FIND_ALL_WHERE_NAME;
 
 @DisplayName("Class GroupDaoJpaTest")
 class GroupDaoJpaTest
@@ -106,8 +108,9 @@ class GroupDaoJpaTest
 
             when(entityManager.find(Group.class, TEST_ID1)).thenReturn(expected);
 
-            Group test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<Group> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
@@ -116,8 +119,8 @@ class GroupDaoJpaTest
         {
             when(entityManager.find(Group.class, TEST_ID9)).thenReturn(null);
 
-            Group test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Group> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
@@ -126,8 +129,8 @@ class GroupDaoJpaTest
         {
             when(entityManager.find(Group.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            Group test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Group> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -280,9 +283,9 @@ class GroupDaoJpaTest
         @Test
         void save_persists()
         {
-            Group test = new Group();
-            test.setName(TEST_NAME);
-            test.setDescription(TEST_DESCRIPTION);
+            Group expected = new Group();
+            expected.setName(TEST_NAME);
+            expected.setDescription(TEST_DESCRIPTION);
 
             User user = new User();
             user.setName(TEST_NAME);
@@ -293,10 +296,11 @@ class GroupDaoJpaTest
             runInTransaction(() -> primaryGroupDao.save(primaryGroup));
             user.setGroup(primaryGroup);
 
-            test.getUsers().add(user);
-            runInTransaction(() -> dao.save(test));
-            assertEquals(test, dao.findById(test.getId()));
-            System.out.println("result = " + dao.findById(test.getId()));
+            expected.getUsers().add(user);
+            runInTransaction(() -> dao.save(expected));
+            Optional<Group> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -322,7 +326,8 @@ class GroupDaoJpaTest
             test.setDescription(TEST_DESCRIPTION);
             runInTransaction(() -> dao.save(test));
             runInTransaction(() -> dao.delete(test.getId()));
-            assertNull(dao.findById(test.getId()));
+            Optional<Group> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
 

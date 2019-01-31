@@ -17,22 +17,19 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.ConfigurationType.FIND_ALL;
+import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_DESC;
+import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT ct FROM ConfigurationType ct";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE ct.name LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE ct.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -46,14 +43,14 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     }
 
     @Override
-    public ConfigurationType findById(Long id)
+    public Optional<ConfigurationType> findById(Long id)
     {
         try {
-            return em.find(ConfigurationType.class, id);
+            return Optional.ofNullable(em.find(ConfigurationType.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -61,7 +58,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     public List<ConfigurationType> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, ConfigurationType.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, ConfigurationType.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -73,7 +70,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     public List<ConfigurationType> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, ConfigurationType.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationType.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -87,7 +84,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     public List<ConfigurationType> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, ConfigurationType.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationType.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -123,7 +120,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     public boolean delete(Long id)
     {
         try {
-            ConfigurationType merged = em.merge(findById(id));
+            ConfigurationType merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete ctype with id: {}", merged.getId());
             return true;

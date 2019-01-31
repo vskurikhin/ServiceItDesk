@@ -47,12 +47,18 @@ class ResponseStorageServiceImplTest
         return Group::new;
     }
 
+    private static Supplier<DataSet> createDataSetUserSupplier()
+    {
+        return User::new;
+    }
+
     @BeforeAll
     static void setMockedQuery()
     {
         mockedQuery = mock(Query.class);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(Collections.emptyList());
+        when(mockedQuery.getSingleResult()).thenReturn(dataSetSupplier);
     }
 
     @SuppressWarnings("unchecked") // still needed :( but just once :)
@@ -60,7 +66,7 @@ class ResponseStorageServiceImplTest
         TypedQuery<T> typedQuery = mock(TypedQuery.class);
         when(typedQuery.setParameter(anyString(), any())).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(Collections.emptyList());
-        when(typedQuery.getSingleResult()).thenReturn((T) dataSetSupplier);
+        when(typedQuery.getSingleResult()).thenReturn((T) dataSetSupplier.get());
 
         return typedQuery;
     }
@@ -106,7 +112,7 @@ class ResponseStorageServiceImplTest
     @Test
     void readGroupById(ResponseStorageService storage)
     {
-        dataSetSupplier = createDataSetGroupSupplier();
+        dataSetSupplier = Group::new;
         Response response = storage.readGroupById(0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
@@ -114,8 +120,23 @@ class ResponseStorageServiceImplTest
     @Test
     void readGroupByIdWithUsers(ResponseStorageService storage)
     {
-        dataSetSupplier = createDataSetGroupSupplier();
-        Response response = storage.readGroupById(0L);
+        dataSetSupplier = Group::new;
+        Response response = storage.readGroupByIdWithUsers(0L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllUsers(ResponseStorageService storage)
+    {
+        Response response = storage.readAllUsers();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readUserById(ResponseStorageService storage)
+    {
+        dataSetSupplier = createDataSetUserSupplier();
+        Response response = storage.readUserById(0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -373,7 +394,7 @@ class ResponseStorageServiceImplTest
 
             @Override
             public Query createNamedQuery(String name) {
-                return mockedQuery;
+                return null;
             }
 
             @Override

@@ -21,6 +21,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,8 +106,9 @@ class ConfigurationUnitDaoJpaTest
 
             when(entityManager.find(ConfigurationUnit.class, TEST_ID1)).thenReturn(expected);
 
-            ConfigurationUnit test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<ConfigurationUnit> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
@@ -115,8 +117,8 @@ class ConfigurationUnitDaoJpaTest
         {
             when(entityManager.find(ConfigurationUnit.class, TEST_ID9)).thenReturn(null);
 
-            ConfigurationUnit test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<ConfigurationUnit> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
@@ -125,8 +127,8 @@ class ConfigurationUnitDaoJpaTest
         {
             when(entityManager.find(ConfigurationUnit.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            ConfigurationUnit test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<ConfigurationUnit> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -303,10 +305,11 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void save_persists()
         {
-            System.out.println("save_persist" + dao.findAll());
-            ConfigurationUnit test = createConfigurationUnit1();
-            saveNewGroupAndConfigurationUnit(test);
-            assertEquals(test, dao.findById(test.getId()));
+            ConfigurationUnit expected = createConfigurationUnit1();
+            saveNewGroupAndConfigurationUnit(expected);
+            Optional<ConfigurationUnit> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -326,11 +329,13 @@ class ConfigurationUnitDaoJpaTest
         @Test
         void delete()
         {
-            System.out.println("delete" + dao.findAll());
-            ConfigurationUnit test = createConfigurationUnit1();
-            saveNewGroupAndConfigurationUnit(test);
+            ConfigurationUnit test = new ConfigurationUnit();
+            test.setName(TEST_NAME);
+            test.setDescription(TEST_DESCRIPTION);
+            runInTransaction(() -> dao.save(test));
             runInTransaction(() -> dao.delete(test.getId()));
-            assertNull(dao.findById(test.getId()));
+            Optional<ConfigurationUnit> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
     }

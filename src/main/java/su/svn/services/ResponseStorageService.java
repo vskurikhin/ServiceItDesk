@@ -12,9 +12,13 @@ public interface ResponseStorageService
 
     Response readGroupById(Long id);
 
+    Response readGroupByIdWithUsers(Long id);
+
+    Response readAllUsers();
+
+    Response readUserById(Long id);
+
     <E extends DataSet> Response update(StringBuffer requestURL, E entity);
 
-    Response deleteGroup(Long id);
-
-    Response deleteUser(Long id);
+    <E extends DataSet> Response delete(Class<E> clazz, Long id);
 }

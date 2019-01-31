@@ -21,6 +21,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,8 +106,9 @@ class TaskDaoJpaTest
 
             when(entityManager.find(Task.class, TEST_ID1)).thenReturn(expected);
 
-            Task test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<Task> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
@@ -115,8 +117,8 @@ class TaskDaoJpaTest
         {
             when(entityManager.find(Task.class, TEST_ID9)).thenReturn(null);
 
-            Task test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Task> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
@@ -125,8 +127,8 @@ class TaskDaoJpaTest
         {
             when(entityManager.find(Task.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            Task test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Task> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -296,9 +298,11 @@ class TaskDaoJpaTest
         @Test
         void save_persists()
         {
-            Task test = createTask1();
-            saveNewTask(test);
-            assertEquals(test, dao.findById(test.getId()));
+            Task expected = createTask1();
+            saveNewTask(expected);
+            Optional<Task> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -324,8 +328,8 @@ class TaskDaoJpaTest
             Task test = createTask1();
             saveNewTask(test);
             runInTransaction(() -> dao.delete(test.getId()));
-
-            assertNull(dao.findById(test.getId()));
+            Optional<Task> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
     }

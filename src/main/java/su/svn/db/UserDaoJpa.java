@@ -17,26 +17,18 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.User.*;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class UserDaoJpa implements UserDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT u FROM User u";
-
-    public static final String SELECT_ALL_DETAILS = "SELECT u FROM User u JOIN FETCH u.group";
-
-    public static final String SELECT_BY_ID_DETAILS = "SELECT u FROM User u JOIN FETCH u.group WHERE user_id = :id";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE u.name LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE u.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -50,22 +42,16 @@ public class UserDaoJpa implements UserDao
     }
 
     @Override
-    public User findById(Long id)
+    public Optional<User> findById(Long id)
     {
-        try {
-            return em.find(User.class, id);
-        }
-        catch (IllegalArgumentException e) {
-            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
-        }
+        return findByIdWithDetails(id); // TODO Optional
     }
 
     @Override
     public List<User> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, User.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, User.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -74,28 +60,20 @@ public class UserDaoJpa implements UserDao
     }
 
     @Override
-    public List<User> findAllWithDetails()
+    public Optional<User> findByIdWithDetails(Long id)
     {
         try {
-            return em.createQuery(SELECT_ALL_DETAILS, User.class).getResultList();
-        }
-        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
-            return Collections.emptyList();
-        }
-    }
-
-    @Override
-    public User findByIdWithDetails(Long id)
-    {
-        try {
-            return em.createQuery(SELECT_BY_ID_DETAILS, User.class)
-                .setParameter("id", id)
-                .getSingleResult();
+            User entity =
+                em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, User.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            System.out.println("entity = " + entity);
+            return Optional.of(entity
+            );
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -103,7 +81,7 @@ public class UserDaoJpa implements UserDao
     public List<User> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, User.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, User.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -117,7 +95,7 @@ public class UserDaoJpa implements UserDao
     public List<User> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, User.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, User.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -153,7 +131,7 @@ public class UserDaoJpa implements UserDao
     public boolean delete(Long id)
     {
         try {
-            User merged = em.merge(findById(id));
+            User merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete user with id: {}", merged.getId());
             return true;

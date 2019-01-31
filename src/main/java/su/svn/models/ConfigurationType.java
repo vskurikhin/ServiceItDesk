@@ -15,14 +15,36 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static su.svn.models.ConfigurationType.FIND_ALL;
+import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_DESC;
+import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_NAME;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name = "cm_ctype")
+@NamedQueries({
+    @NamedQuery(
+        name = FIND_ALL,
+        query = "SELECT ct FROM ConfigurationType ct"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_NAME,
+        query = "SELECT ct FROM ConfigurationType ct WHERE ct.name LIKE :name"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_DESC,
+        query = "SELECT ct FROM ConfigurationType ct WHERE ct.description LIKE :desc"
+    ),
+})
 public class ConfigurationType implements DataSet
 {
+    public static final String FIND_ALL = "ConfigurationType.findAll";
+    public static final String FIND_ALL_WHERE_NAME = "ConfigurationType.findAllWhereName";
+    public static final String FIND_ALL_WHERE_DESC = "ConfigurationType.findAllWhereDescription";
+
     @Id
     @SequenceGenerator(name = "ctype_identifier", sequenceName = "ctype_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ctype_identifier")
