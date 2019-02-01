@@ -15,14 +15,46 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static su.svn.models.Incident.*;
+
+/* public static final String SELECT_ALL = "SELECT i FROM Incident i";
+public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE i.title LIKE :name";
+public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.description LIKE :desc"; */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name = "pm_incident")
+@NamedQueries({
+    @NamedQuery(
+        name = FIND_ALL,
+        query = "SELECT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_TITLE,
+        query = "SELECT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status WHERE i.title LIKE :title"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_DESC,
+        query = "SELECT i FROM Incident i"
+              + " JOIN FETCH i.consumer"
+              + " JOIN FETCH i.status"
+              + " WHERE i.description LIKE :desc"
+    ),
+    @NamedQuery(
+        name = FIND_BY_ID_WITH_DETAILS,
+        query = "SELECT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status WHERE i.id = :id"
+    ),
+})
 public class Incident implements DataSet
 {
+    public static final String FIND_ALL = "Incident.findAll";
+    public static final String FIND_ALL_WHERE_TITLE = "Incident.findAllWhereTitle";
+    public static final String FIND_ALL_WHERE_DESC = "Incident.findAllWhereDescription";
+    public static final String FIND_BY_ID_WITH_DETAILS = "Incident.findByIdWithDetails";
+
     @Id
     @SequenceGenerator(name = "incident_identifier", sequenceName = "incident_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "incident_identifier")

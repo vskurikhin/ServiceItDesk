@@ -13,9 +13,11 @@ import su.svn.models.User;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -64,14 +66,20 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     @Override
     public <E extends DataSet> Response create(StringBuffer requestURL, E entity)
     {
-        if (0 != entity.getId()) {
-            LOGGER.warn("Try create {} with id != 0", entity.getClass().getCanonicalName());
-        }
-        else if (getDao(entity).save(entity)) {
+        try {
+            if (0 != entity.getId()) {
+                throw new PersistenceException("id isn't equal 0!");
+            }
+            if ( ! getDao(entity).save(entity)) {
+                throw new PersistenceException("can't save it!");
+            }
+
             return Response.created(getLocation(requestURL, entity.getId())).build();
         }
-        LOGGER.warn("Error create DataSet with id == {}", entity.getId());
-        throw getWebApplicationException(new Throwable("Error create!"));
+        catch (RuntimeException e) {
+            LOGGER.error("Try create {}: {} ", entity.getClass().getCanonicalName(), e);
+            return Response.notAcceptable(Collections.emptyList()).build();
+        }
     }
 
     private <E extends DataSet> Response readAll(Class<E> clazz)
@@ -93,29 +101,40 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     @Override
     public Response readGroupById(Long id)
     {
-        Optional<Group> optionalEntity = groupDao.findById(id);
+        try {
+            Optional<Group> optionalEntity = groupDao.findById(id);
 
-        if (optionalEntity.isPresent()) {
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
             Group entity = optionalEntity.get();
             entity.setUsers(null);
+
             return Response.ok(entity).build();
         }
-
-        LOGGER.warn("Not found Group with id == {}", id);
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the Group with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @Override
     public Response readGroupByIdWithUsers(Long id)
     {
-        Optional<Group> optionalEntity = groupDao.findByIdWithUsers(id);
+        try {
+            Optional<Group> optionalEntity = groupDao.findByIdWithUsers(id);
 
-        if (optionalEntity.isPresent()) {
-            return Response.ok(optionalEntity).build();
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
+
+            Group entity = optionalEntity.get();
+            return Response.ok(entity).build();
         }
-
-        LOGGER.warn("Not found Group with id == {}", id);
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the Group with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @Override
@@ -127,39 +146,48 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     @Override
     public Response readUserById(Long id)
     {
-        Optional<User> optionalEntity = userDao.findById(id);
+        try {
+            Optional<User> optionalEntity = userDao.findById(id);
 
-        System.out.println("optionalEntity = " + optionalEntity);
-
-        if (optionalEntity.isPresent()) {
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
             User entity = optionalEntity.get();
+
             return Response.ok(entity).build();
         }
-
-        LOGGER.warn("Not found User with id == {}", id);
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the User with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @Override
     public <E extends DataSet> Response update(StringBuffer requestURL, E entity)
     {
-        if (0 == entity.getId()) {
-            LOGGER.warn("Try update {} with id == 0", entity.getClass().getCanonicalName());
-        }
-        else if (getDao(entity).save(entity)) {
+        try {
+            if (0 == entity.getId()) {
+                throw new PersistenceException("id is equal 0!");
+            }
+            if ( ! getDao(entity).save(entity)) {
+                throw new PersistenceException("can't save it!");
+            }
+
             return Response.ok(getLocation(requestURL, entity.getId())).build();
         }
-        LOGGER.warn("Error update DataSet with id == {}", entity.getId());
-        throw getWebApplicationException(new Throwable("Error update!"));
+        catch (RuntimeException e) {
+            LOGGER.error("Try update {}: {} ", entity.getClass().getCanonicalName(), e);
+            return Response.notAcceptable(Collections.emptyList()).build();
+        }
     }
 
     @Override
     public  <E extends DataSet> Response delete(Class<E> clazz, Long id)
     {
-        if (getDao(clazz).delete(id)) {
-            return Response.status(Response.Status.NO_CONTENT).build();
+        if ( ! getDao(clazz).delete(id)) {
+            LOGGER.warn("Error delete {} with id == {}", clazz.getCanonicalName(), id);
         }
-        LOGGER.warn("Error delete DataSet with id == {}", id);
-        throw getWebApplicationException(new Throwable("Error delete!"));
+
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

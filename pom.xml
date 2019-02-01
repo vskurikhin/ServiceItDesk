@@ -17,7 +17,7 @@
 
     <groupId>su.svn</groupId>
     <artifactId>ServiceItDesk</artifactId>
-    <version>1.2-23</version>
+    <version>1.2-24</version>
     <packaging>war</packaging>
 
     <name>JavaEE-09-2018 Service It Desk Webapp</name>
@@ -263,6 +263,7 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-junit5</artifactId>
             <version>${weld-junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -299,12 +300,6 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>2.28</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.test-framework.providers/jersey-test-framework-provider-jdk-http -->

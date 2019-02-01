@@ -29,9 +29,12 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.ConfigurationUnitDaoJpa.SELECT_ALL;
-import static su.svn.db.ConfigurationUnitDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.ConfigurationUnitDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.models.ConfigurationUnit.FIND_ALL;
+import static su.svn.models.ConfigurationUnit.FIND_ALL_WHERE_DESC;
+import static su.svn.models.ConfigurationUnit.FIND_ALL_WHERE_NAME;
+//import static su.svn.db.ConfigurationUnitDaoJpa.SELECT_ALL;
+//import static su.svn.db.ConfigurationUnitDaoJpa.SELECT_WHERE_DESC;
+//import static su.svn.db.ConfigurationUnitDaoJpa.SELECT_WHERE_NAME;
 
 @DisplayName("Class ConfigurationUnitDaoJpaTest")
 class ConfigurationUnitDaoJpaTest
@@ -139,7 +142,7 @@ class ConfigurationUnitDaoJpaTest
             List<ConfigurationUnit> expected = Collections.emptyList();
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, ConfigurationUnit.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, ConfigurationUnit.class)).thenReturn(mockedQuery);
 
             List<ConfigurationUnit> test = dao.findAll();
             assertEquals(expected, test);
@@ -152,7 +155,7 @@ class ConfigurationUnitDaoJpaTest
             List<ConfigurationUnit> expected = Collections.emptyList();
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, ConfigurationUnit.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, ConfigurationUnit.class)).thenReturn(mockedQuery);
 
             List<ConfigurationUnit> test = dao.findAll();
             assertEquals(expected, test);
@@ -167,7 +170,7 @@ class ConfigurationUnitDaoJpaTest
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, ConfigurationUnit.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationUnit.class)).thenReturn(mockedQuery);
 
             List<ConfigurationUnit> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -181,7 +184,7 @@ class ConfigurationUnitDaoJpaTest
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, ConfigurationUnit.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationUnit.class)).thenReturn(mockedQuery);
 
             List<ConfigurationUnit> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -196,7 +199,7 @@ class ConfigurationUnitDaoJpaTest
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, ConfigurationUnit.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationUnit.class)).thenReturn(mockedQuery);
 
             List<ConfigurationUnit> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -210,7 +213,7 @@ class ConfigurationUnitDaoJpaTest
             TypedQuery<ConfigurationUnit> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, ConfigurationUnit.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationUnit.class)).thenReturn(mockedQuery);
 
             List<ConfigurationUnit> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);

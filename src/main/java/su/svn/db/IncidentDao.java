@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface IncidentDao extends Dao<Incident, Long>
 {
-    List<Incident> findByName(String value);
+    List<Incident> findByTitle(String value);
 
     List<Incident> findByDescription(String value);
 }

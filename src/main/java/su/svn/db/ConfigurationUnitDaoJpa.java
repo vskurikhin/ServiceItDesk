@@ -21,23 +21,23 @@ import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.ConfigurationUnit.FIND_ALL;
+import static su.svn.models.ConfigurationUnit.FIND_ALL_WHERE_DESC;
+import static su.svn.models.ConfigurationUnit.FIND_ALL_WHERE_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationUnitDaoJpa.class);
+
+    /* public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
+    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc"; */
 
     public ConfigurationUnitDaoJpa() { /* None */}
 
@@ -62,7 +62,7 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     public List<ConfigurationUnit> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, ConfigurationUnit.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, ConfigurationUnit.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -71,29 +71,29 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    public List<ConfigurationUnit> findByName(String value)
+    public List<ConfigurationUnit> findByName(String name)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, ConfigurationUnit.class)
-                .setParameter("name", value)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationUnit.class)
+                .setParameter("name", name)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by name: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by name: {} because had the exception {}", name, e);
             return Collections.emptyList();
         }
     }
 
     @Override
-    public List<ConfigurationUnit> findByDescription(String value)
+    public List<ConfigurationUnit> findByDescription(String desc)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, ConfigurationUnit.class)
-                .setParameter("desc", value)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationUnit.class)
+                .setParameter("desc", desc)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by description: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by description: {} because had the exception {}", desc, e);
             return Collections.emptyList();
         }
     }

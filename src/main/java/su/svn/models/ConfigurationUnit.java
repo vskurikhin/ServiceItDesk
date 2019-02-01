@@ -15,14 +15,64 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static su.svn.models.ConfigurationUnit.*;
+
+/*  public static final String PERSISTENCE_UNIT_NAME = "jpa";
+    public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
+    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc";
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name = "cm_cunit")
+@NamedQueries({
+    @NamedQuery(
+        name = FIND_ALL,
+        query = "SELECT cu FROM ConfigurationUnit cu"
+              + " JOIN FETCH cu.admin"
+              + " JOIN FETCH cu.owner"
+              + " JOIN FETCH cu.group"
+              + " JOIN FETCH cu.type"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_NAME,
+        query = "SELECT cu FROM ConfigurationUnit cu"
+              + " JOIN FETCH cu.admin"
+              + " JOIN FETCH cu.owner"
+              + " JOIN FETCH cu.group"
+              + " JOIN FETCH cu.type"
+              + " WHERE cu.name LIKE :name"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_DESC,
+        query = "SELECT cu FROM ConfigurationUnit cu"
+              + " JOIN FETCH cu.admin"
+              + " JOIN FETCH cu.owner"
+              + " JOIN FETCH cu.group"
+              + " JOIN FETCH cu.type"
+              + " WHERE cu.description LIKE :desc"
+    ),
+    @NamedQuery(
+        name = FIND_BY_ID_WITH_DETAILS,
+        query = "SELECT cu FROM ConfigurationUnit cu"
+              + " JOIN FETCH cu.admin"
+              + " JOIN FETCH cu.owner"
+              + " JOIN FETCH cu.group"
+              + " JOIN FETCH cu.type"
+              + " WHERE cu.id = :id"
+    ),
+})
 public class ConfigurationUnit implements DataSet
 {
+    public static final String FIND_ALL = "ConfigurationUnit.findAll";
+    public static final String FIND_ALL_WHERE_NAME = "ConfigurationUnit.findAllWhereName";
+    public static final String FIND_ALL_WHERE_DESC = "ConfigurationUnit.findAllWhereDescription";
+    public static final String FIND_BY_ID_WITH_DETAILS = "ConfigurationUnit.findByIdWithDetails";
+
     @Id
     @SequenceGenerator(name = "cunit_identifier", sequenceName = "cunit_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "cunit_identifier")

@@ -21,23 +21,23 @@ import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Incident.FIND_ALL;
+import static su.svn.models.Incident.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Incident.FIND_ALL_WHERE_TITLE;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class IncidentDaoJpa implements IncidentDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT i FROM Incident i";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE i.title LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IncidentDaoJpa.class);
+
+    /* public static final String SELECT_ALL = "SELECT i FROM Incident i";
+    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE i.title LIKE :name";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.description LIKE :desc"; */
 
     public IncidentDaoJpa() { /* None */}
 
@@ -62,7 +62,7 @@ public class IncidentDaoJpa implements IncidentDao
     public List<Incident> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Incident.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Incident.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -71,15 +71,15 @@ public class IncidentDaoJpa implements IncidentDao
     }
 
     @Override
-    public List<Incident> findByName(String value)
+    public List<Incident> findByTitle(String title)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, Incident.class)
-                .setParameter("name", value)
+            return em.createNamedQuery(FIND_ALL_WHERE_TITLE, Incident.class)
+                .setParameter("title", title)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by name: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by name: {} because had the exception {}", title, e);
             return Collections.emptyList();
         }
     }
@@ -88,7 +88,7 @@ public class IncidentDaoJpa implements IncidentDao
     public List<Incident> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Incident.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Incident.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
