@@ -1,6 +1,6 @@
 /*
  * IncidentResource.java
- * This file was last modified at 2019-02-03 13:53 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 16:10 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -48,14 +48,14 @@ public class IncidentResource
     @GET
     public Response readAll()
     {
-        return storage.readAllIncidents();
+        return storage.readAll(Incident.class);
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readIncidentById(id.longValue());
+        return storage.readById(Incident.class, id.longValue());
     }
 
     @PUT

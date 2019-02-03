@@ -1,6 +1,6 @@
 /*
  * ResponseStorageServiceImplTest.java
- * This file was last modified at 2019-02-03 15:21 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 16:14 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -205,7 +205,7 @@ class ResponseStorageServiceImplTest
     void readAllConfigurationType(ResponseStorageService storage)
     {
         dataSetSupplier = ConfigurationType::new;
-        Response response = storage.readAllConfigurationTypes();
+        Response response = storage.readAll(ConfigurationType.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -213,7 +213,7 @@ class ResponseStorageServiceImplTest
     void readAllConfigurationUnit(ResponseStorageService storage)
     {
         dataSetSupplier = ConfigurationUnit::new;
-        Response response = storage.readAllConfigurationUnits();
+        Response response = storage.readAll(ConfigurationUnit.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -229,7 +229,7 @@ class ResponseStorageServiceImplTest
     void readAllIncidents(ResponseStorageService storage)
     {
         dataSetSupplier = Incident::new;
-        Response response = storage.readAllIncidents();
+        Response response = storage.readAll(Incident.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -237,7 +237,7 @@ class ResponseStorageServiceImplTest
     void readAllMessages(ResponseStorageService storage)
     {
         dataSetSupplier = Message::new;
-        Response response = storage.readAllMessages();
+        Response response = storage.readAll(Message.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -245,7 +245,7 @@ class ResponseStorageServiceImplTest
     void readAllStatuses(ResponseStorageService storage)
     {
         dataSetSupplier = Status::new;
-        Response response = storage.readAllStatuses();
+        Response response = storage.readAll(Status.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -253,7 +253,7 @@ class ResponseStorageServiceImplTest
     void readAllTasks(ResponseStorageService storage)
     {
         dataSetSupplier = Task::new;
-        Response response = storage.readAllTasks();
+        Response response = storage.readAll(Task.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -261,7 +261,7 @@ class ResponseStorageServiceImplTest
     void readAllUsers(ResponseStorageService storage)
     {
         dataSetSupplier = User::new;
-        Response response = storage.readAllUsers();
+        Response response = storage.readAll(User.class);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -269,7 +269,7 @@ class ResponseStorageServiceImplTest
     void readConfigurationTypeById(ResponseStorageService storage)
     {
         dataSetSupplier = ConfigurationType::new;
-        Response response = storage.readConfigurationTypeById(0L);
+        Response response = storage.readById(ConfigurationType.class, 1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -277,7 +277,7 @@ class ResponseStorageServiceImplTest
     void readConfigurationTypeById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readConfigurationTypeById(0L);
+        Response response = storage.readById(ConfigurationType.class, 0L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -285,7 +285,7 @@ class ResponseStorageServiceImplTest
     void readConfigurationUnitById(ResponseStorageService storage)
     {
         dataSetSupplier = ConfigurationUnit::new;
-        Response response = storage.readConfigurationUnitById(0L);
+        Response response = storage.readById(ConfigurationUnit.class, 0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -293,7 +293,7 @@ class ResponseStorageServiceImplTest
     void readConfigurationUnitById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readConfigurationUnitById(0L);
+        Response response = storage.readById(ConfigurationUnit.class, 0L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -301,7 +301,7 @@ class ResponseStorageServiceImplTest
     void readGroupById(ResponseStorageService storage)
     {
         dataSetSupplier = Group::new;
-        Response response = storage.readGroupById(0L);
+        Response response = storage.readById(Group.class, 0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -309,7 +309,7 @@ class ResponseStorageServiceImplTest
     void readGroupById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readGroupById(0L);
+        Response response = storage.readById(Group.class, 0L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -333,7 +333,7 @@ class ResponseStorageServiceImplTest
     void readIncidentById(ResponseStorageService storage)
     {
         dataSetSupplier = Incident::new;
-        Response response = storage.readIncidentById(1L);
+        Response response = storage.readById(Incident.class, 1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -341,7 +341,7 @@ class ResponseStorageServiceImplTest
     void readIncidentById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readIncidentById(1L);
+        Response response = storage.readById(Incident.class, 1L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -349,7 +349,7 @@ class ResponseStorageServiceImplTest
     void readMessageById(ResponseStorageService storage)
     {
         dataSetSupplier = Message::new;
-        Response response = storage.readMessageById(1L);
+        Response response = storage.readById(Message.class, 1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -357,7 +357,7 @@ class ResponseStorageServiceImplTest
     void readMessageById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readMessageById(1L);
+        Response response = storage.readById(Message.class, 1L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -365,7 +365,7 @@ class ResponseStorageServiceImplTest
     void readStatusById(ResponseStorageService storage)
     {
         dataSetSupplier = Status::new;
-        Response response = storage.readStatusById(1L);
+        Response response = storage.readById(Status.class, 1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -373,7 +373,7 @@ class ResponseStorageServiceImplTest
     void  readStatusById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readStatusById(1L);
+        Response response = storage.readById(Status.class, 1L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -381,7 +381,7 @@ class ResponseStorageServiceImplTest
     void readTaskById(ResponseStorageService storage)
     {
         dataSetSupplier = Task::new;
-        Response response = storage.readTaskById(1L);
+        Response response = storage.readById(Task.class, 1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -389,7 +389,7 @@ class ResponseStorageServiceImplTest
     void  readTaskById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readTaskById(1L);
+        Response response = storage.readById(Task.class, 1L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -397,7 +397,7 @@ class ResponseStorageServiceImplTest
     void readUserById(ResponseStorageService storage)
     {
         dataSetSupplier = User::new;
-        Response response = storage.readUserById(1L);
+        Response response = storage.readById(User.class, 1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -405,7 +405,7 @@ class ResponseStorageServiceImplTest
     void readUserByIdZero(ResponseStorageService storage)
     {
         dataSetSupplier = User::new;
-        Response response = storage.readUserById(0L);
+        Response response = storage.readById(User.class, 0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
@@ -413,7 +413,7 @@ class ResponseStorageServiceImplTest
     void readUserById_null(ResponseStorageService storage)
     {
         dataSetSupplier = () -> null;
-        Response response = storage.readUserById(1L);
+        Response response = storage.readById(User.class, 1L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
@@ -421,7 +421,7 @@ class ResponseStorageServiceImplTest
     void readUserById_ButReturnStatus(ResponseStorageService storage)
     {
         dataSetSupplier = Status::new;
-        Response response = storage.readUserById(1L);
+        Response response = storage.readById(User.class, 1L);
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 

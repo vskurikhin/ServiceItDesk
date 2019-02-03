@@ -1,6 +1,6 @@
 /*
  * GroupResource.java
- * This file was last modified at 2019-02-02 13:09 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 16:03 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -48,14 +48,14 @@ public class GroupResource
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readGroupById(id.longValue());
+        return storage.readById(Group.class, id.longValue());
     }
 
     @GET
     @Path("/{id}/users")
     public Response readWithUsers(@PathParam("id") Integer id)
     {
-        return storage.readGroupById(id.longValue());
+        return storage.readGroupByIdWithUsers(id.longValue());
     }
 
     @PUT

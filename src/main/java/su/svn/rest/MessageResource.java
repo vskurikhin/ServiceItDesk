@@ -1,6 +1,6 @@
 /*
  * MessageResource.java
- * This file was last modified at 2019-02-03 14:02 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 16:11 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -48,14 +48,14 @@ public class MessageResource
     @GET
     public Response readAll()
     {
-        return storage.readAllMessages();
+        return storage.readAll(Message.class);
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readMessageById(id.longValue());
+        return storage.readById(Message.class, id.longValue());
     }
 
     @PUT

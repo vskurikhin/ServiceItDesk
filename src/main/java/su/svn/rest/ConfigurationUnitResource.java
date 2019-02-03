@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitResource.java
- * This file was last modified at 2019-02-03 11:46 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 15:57 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -48,14 +48,14 @@ public class ConfigurationUnitResource
     @GET
     public Response readAll()
     {
-        return storage.readAllConfigurationUnits();
+        return storage.readAll(ConfigurationUnit.class);
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readConfigurationUnitById(id.longValue());
+        return storage.readById(ConfigurationUnit.class, id.longValue());
     }
 
     @PUT

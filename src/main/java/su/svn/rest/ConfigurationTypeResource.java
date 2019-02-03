@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeResource.java
- * This file was last modified at 2019-02-03 15:27 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 15:55 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -41,14 +41,14 @@ public class ConfigurationTypeResource
     @GET
     public Response readAll()
     {
-        return storage.readAllConfigurationTypes();
+        return storage.readAll(ConfigurationType.class);
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readConfigurationTypeById(id.longValue());
+        return storage.readById(ConfigurationType.class, id.longValue());
     }
 
     @PUT
