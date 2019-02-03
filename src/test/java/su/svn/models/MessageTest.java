@@ -1,6 +1,6 @@
 /*
  * MessageTest.java
- * This file was last modified at 2019-01-26 11:31 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:24 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,10 +20,10 @@ import static su.svn.TestData.*;
 @DisplayName("Class Message")
 class MessageTest
 {
-    public static final String ID = "id";
-    public static final String TEXT = "text";
+    private static final String ID = "id";
+    private static final String TEXT = "text";
 
-    Message message;
+    private Message message;
 
     @Test
     @DisplayName("is instantiated with new Message()")
@@ -56,6 +56,12 @@ class MessageTest
             message.setText(TEST_STR1);
             assertThat(message).hasFieldOrPropertyWithValue(TEXT, TEST_STR1);
             assertEquals(TEST_STR1, message.getText());
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertFalse(Message.isValidForSave(message));
         }
 
         @Test
@@ -92,6 +98,12 @@ class MessageTest
             final Message expected = new Message(TEST_ID1, TEST_TEXT);
             assertEquals(expected.hashCode(), message.hashCode());
             assertEquals(expected, message);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(Message.isValidForSave(message));
         }
     }
 }

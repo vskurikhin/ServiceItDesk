@@ -1,6 +1,6 @@
 /*
  * StatusTest.java
- * This file was last modified at 2019-01-26 11:32 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:23 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,11 +20,11 @@ import static su.svn.TestData.*;
 @DisplayName("Class Status")
 class StatusTest
 {
-    public static final String ID = "id";
-    public static final String STATUS = "status";
-    public static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String STATUS = "status";
+    private static final String DESCRIPTION = "description";
 
-    Status status;
+    private Status status;
 
     @Test
     @DisplayName("is instantiated with new Status()")
@@ -70,6 +70,12 @@ class StatusTest
         }
 
         @Test
+        void isValidForSave()
+        {
+            assertFalse(Status.isValidForSave(status));
+        }
+
+        @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
         {
@@ -104,6 +110,12 @@ class StatusTest
             final Status expected = new Status(TEST_ID1, TEST_STATUS, TEST_DESCRIPTION);
             assertEquals(expected.hashCode(), status.hashCode());
             assertEquals(expected, status);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(Status.isValidForSave(status));
         }
     }
 }

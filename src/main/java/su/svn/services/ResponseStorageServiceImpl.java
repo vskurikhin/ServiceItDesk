@@ -1,6 +1,6 @@
 /*
  * ResponseStorageServiceImpl.java
- * This file was last modified at 2019-02-03 16:05 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 16:21 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -172,6 +172,7 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
+    @TransactionAttribute(REQUIRES_NEW)
     public Response createTask(StringBuffer requestURL, Task task)
     {
         try {
@@ -215,27 +216,8 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     @Override
     public <E extends DataSet> Response readAll(Class<E> clazz)
     {
-        /* TODO
-        System.out.println("clazz = " + clazz);
-        Dao<E, Long> dao = getDao(clazz);
-        System.out.println("dao = " + dao);
-        List<E> list = dao.findAll();
-        System.out.println("entity = " + list); */
-
         return Response.ok(getDao(clazz).findAll()).build();
     }
-//TODO
-//    @Override
-//    public Response readAllConfigurationTypes()
-//    {
-//        return readAll(ConfigurationType.class);
-//    }
-//TODO
-//    @Override
-//    public Response readAllConfigurationUnits()
-//    {
-//        return readAll(ConfigurationUnit.class);
-//    }
 
     @Override
     public Response readAllGroups()
@@ -247,36 +229,6 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
                 .collect(Collectors.toList())
         ).build();
     }
-//
-//    @Override
-//    public Response readAllIncidents()
-//    {
-//        return readAll(Incident.class);
-//    }
-//
-//    @Override
-//    public Response readAllMessages()
-//    {
-//        return readAll(Message.class);
-//    }
-//
-//    @Override
-//    public Response readAllStatuses()
-//    {
-//        return readAll(Status.class);
-//    }
-//
-//    @Override
-//    public Response readAllTasks()
-//    {
-//        return readAll(Task.class);
-//    }
-//
-//    @Override
-//    public Response readAllUsers()
-//    {
-//        return readAll(User.class);
-//    }
 
     @Override
     public  <E extends DataSet> Response readById(Class<E> clazz, Long id)
@@ -300,24 +252,6 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
-//TODO
-//    @Override
-//    public Response readConfigurationTypeById(Long id)
-//    {
-//        return readById(ConfigurationType.class, id);
-//    }
-//TODO
-//    @Override
-//    public Response readConfigurationUnitById(Long id)
-//    {
-//        return readById(ConfigurationUnit.class, id);
-//    }
-//TODO
-//    @Override
-//    public Response readGroupById(Long id)
-//    {
-//        return readById(Group.class, id);
-//    }
 
     @Override
     public Response readGroupByIdWithUsers(Long id)
@@ -337,36 +271,6 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
-//
-//    @Override
-//    public Response readIncidentById(Long id)
-//    {
-//        return readById(Incident.class, id);
-//    }
-//
-//    @Override
-//    public Response readMessageById(Long id)
-//    {
-//        return readById(Message.class, id);
-//    }
-//
-//    @Override
-//    public Response readStatusById(Long id)
-//    {
-//        return readById(Status.class, id);
-//    }
-//
-//    @Override
-//    public Response readTaskById(Long id)
-//    {
-//        return readById(Task.class, id);
-//    }
-//
-//    @Override
-//    public Response readUserById(Long id)
-//    {
-//        return readById(User.class, id);
-//    }
 
     @Override
     public <E extends DataSet> Response update(StringBuffer requestURL, E entity)

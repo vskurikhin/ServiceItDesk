@@ -1,6 +1,6 @@
 /*
  * IncidentTest.java
- * This file was last modified at 2019-01-26 17:43 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:24 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,11 +20,11 @@ import static su.svn.TestData.*;
 @DisplayName("Class Incident")
 class IncidentTest
 {
-    public static final String ID = "id";
-    public static final String TITLE = "title";
-    public static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String TITLE = "title";
+    private static final String DESCRIPTION = "description";
 
-    Incident incident;
+    private Incident incident;
 
     @Test
     @DisplayName("is instantiated with new Incident()")
@@ -90,6 +90,12 @@ class IncidentTest
         }
 
         @Test
+        void isValidForSave()
+        {
+            assertFalse(Incident.isValidForSave(incident));
+        }
+
+        @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
         {
@@ -126,6 +132,12 @@ class IncidentTest
             final Incident expected = new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
             assertEquals(expected.hashCode(), incident.hashCode());
             assertEquals(expected, incident);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(Incident.isValidForSave(incident));
         }
     }
 }

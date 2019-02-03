@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeDaoJpa.java
- * This file was last modified at 2019-02-03 12:43 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:08 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -24,12 +24,12 @@ import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static su.svn.models.ConfigurationType.FIND_ALL;
 import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_DESC;
 import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_NAME;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -37,7 +37,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
 
     public ConfigurationTypeDaoJpa() { /* None */}
 
-    public ConfigurationTypeDaoJpa(EntityManager entityManager)
+    ConfigurationTypeDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
