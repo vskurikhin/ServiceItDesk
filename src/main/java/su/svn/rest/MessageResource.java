@@ -1,6 +1,6 @@
 /*
- * GroupResource.java
- * This file was last modified at 2019-02-02 13:09 by Victor N. Skurikhin.
+ * MessageResource.java
+ * This file was last modified at 2019-02-03 14:02 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -8,7 +8,7 @@
 
 package su.svn.rest;
 
-import su.svn.models.Group;
+import su.svn.models.Message;
 import su.svn.services.ResponseStorageService;
 
 import javax.ejb.EJB;
@@ -19,12 +19,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.rest.config.RestApplication.GROUP_RESOURCE;
+import static su.svn.rest.config.RestApplication.MESSAGE_RESOURCE;
 
 @Stateless
-@Path("/v1" + GROUP_RESOURCE)
+@Path("/v1" + MESSAGE_RESOURCE)
 @Produces(MediaType.APPLICATION_JSON)
-public class GroupResource
+public class MessageResource
 {
     @Context
     private HttpServletRequest servletRequest;
@@ -33,7 +33,14 @@ public class GroupResource
     private ResponseStorageService storage;
 
     @POST
-    public Response create(Group entity)
+    public Response create(Message entity)
+    {
+        return storage.create(servletRequest.getRequestURL(), entity);
+    }
+
+    @POST
+    @Path("/admin/owner")
+    public Response createWithAdminAndOwner(Message entity)
     {
         return storage.create(servletRequest.getRequestURL(), entity);
     }
@@ -41,25 +48,18 @@ public class GroupResource
     @GET
     public Response readAll()
     {
-        return storage.readAllGroups();
+        return storage.readAllMessages();
     }
 
     @GET
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readGroupById(id.longValue());
-    }
-
-    @GET
-    @Path("/{id}/users")
-    public Response readWithUsers(@PathParam("id") Integer id)
-    {
-        return storage.readGroupById(id.longValue());
+        return storage.readMessageById(id.longValue());
     }
 
     @PUT
-    public Response update(Group entity)
+    public Response update(Message entity)
     {
         return storage.update(servletRequest.getRequestURL(), entity);
     }
@@ -68,7 +68,7 @@ public class GroupResource
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {
-        return storage.delete(Group.class, id.longValue());
+        return storage.delete(Message.class, id.longValue());
     }
 }
 

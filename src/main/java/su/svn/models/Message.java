@@ -1,6 +1,6 @@
 /*
  * Message.java
- * This file was last modified at 2019.01.24 23:59 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-02 19:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.util.Objects;
 
 import static su.svn.models.Message.FIND_ALL;
 import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
@@ -48,6 +50,17 @@ public class Message implements DataSet
     @Basic
     @Column(name = "message_text", nullable = false)
     private String text;
+
+    public static boolean isValidForSave(Message message)
+    {
+        if (Objects.isNull(message)) {
+            return false;
+        }
+        if (Objects.isNull(message.id)) {
+            return false;
+        }
+        return !Objects.isNull(message.text);
+    }
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

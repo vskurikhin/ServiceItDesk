@@ -1,6 +1,6 @@
 /*
  * ConfigurationType.java
- * This file was last modified at 2019-01-26 13:21 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-02 19:10 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.util.Objects;
 
 import static su.svn.models.ConfigurationType.FIND_ALL;
 import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_DESC;
@@ -58,6 +60,17 @@ public class ConfigurationType implements DataSet
     @Basic
     @Column(name = "description")
     private String description;
+
+    public static boolean isValidForSave(ConfigurationType configurationType)
+    {
+        if (Objects.isNull(configurationType)) {
+            return false;
+        }
+        if (Objects.isNull(configurationType.id)) {
+            return false;
+        }
+        return !Objects.isNull(configurationType.name);
+    }
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

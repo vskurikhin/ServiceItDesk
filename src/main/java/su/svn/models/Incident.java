@@ -1,6 +1,6 @@
 /*
  * Incident.java
- * This file was last modified at 2019-01-26 17:23 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:57 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -15,11 +15,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static su.svn.models.Incident.*;
+import java.util.Objects;
 
-/* public static final String SELECT_ALL = "SELECT i FROM Incident i";
-public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE i.title LIKE :name";
-public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.description LIKE :desc"; */
+import static su.svn.models.Incident.*;
 
 @Data
 @NoArgsConstructor
@@ -45,7 +43,7 @@ public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.descriptio
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_DETAILS,
-        query = "SELECT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status WHERE i.id = :id"
+        query = "SELECT DISTINCT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status WHERE i.id = :id"
     ),
 })
 public class Incident implements DataSet
@@ -66,7 +64,7 @@ public class Incident implements DataSet
     private String title;
 
     @Basic
-    @Column(name = "description_text")
+    @Column(name = "description_text", nullable = false)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -76,6 +74,26 @@ public class Incident implements DataSet
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
+
+    public static boolean isValidForSave(Incident incident)
+    {
+        if (Objects.isNull(incident)) {
+            return false;
+        }
+        if (Objects.isNull(incident.id)) {
+            return false;
+        }
+        if (Objects.isNull(incident.consumer)) {
+            return false;
+        }
+        if (Objects.isNull(incident.status)) {
+            return false;
+        }
+        if (Objects.isNull(incident.description)) {
+            return false;
+        }
+        return !Objects.isNull(incident.title);
+    }
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

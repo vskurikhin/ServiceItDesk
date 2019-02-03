@@ -1,3 +1,11 @@
+/*
+ * ResponseStorageServiceImplTest.java
+ * This file was last modified at 2019-02-03 15:21 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn.services;
 
 import org.jboss.weld.junit5.WeldInitiator;
@@ -6,13 +14,9 @@ import org.jboss.weld.junit5.WeldSetup;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import su.svn.db.GroupDaoJpa;
-import su.svn.db.PrimaryGroupDaoJpa;
-import su.svn.db.UserDaoJpa;
-import su.svn.models.DataSet;
-import su.svn.models.Group;
-import su.svn.models.PrimaryGroup;
-import su.svn.models.User;
+import su.svn.db.*;
+import su.svn.models.*;
+import su.svn.utils.logging.TestAppender;
 
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.*;
@@ -26,6 +30,7 @@ import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -38,19 +43,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(WeldJunit5Extension.class)
 class ResponseStorageServiceImplTest
 {
+    private TestAppender appender; // TODO
+
     private static Query mockedQuery;
 
     private static Supplier<DataSet> dataSetSupplier;
-
-    private static Supplier<DataSet> createDataSetGroupSupplier()
-    {
-        return Group::new;
-    }
-
-    private static Supplier<DataSet> createDataSetUserSupplier()
-    {
-        return User::new;
-    }
 
     @BeforeAll
     static void setMockedQuery()
@@ -78,10 +75,25 @@ class ResponseStorageServiceImplTest
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator
-        .from(ResponseStorageServiceImpl.class, GroupDaoJpa.class, UserDaoJpa.class, PrimaryGroupDaoJpa.class)
+        .from(ResponseStorageServiceImpl.class, ConfigurationTypeDaoJpa.class, ConfigurationUnitDaoJpa.class,
+            GroupDaoJpa.class, IncidentDaoJpa.class, MessageDaoJpa.class, PrimaryGroupDaoJpa.class, StatusDaoJpa.class,
+            TaskDaoJpa.class, UserDaoJpa.class)
         .setEjbFactory(getEjbFactory())
         .setPersistenceContextFactory(getPCFactory())
         .build();
+
+    @Test
+    void createConfigurationUnit(ResponseStorageService storage)
+    {
+        User user = new User();
+        user.setName("test");
+        ConfigurationUnit entity = new ConfigurationUnit();
+        entity.setName("test");
+        entity.setAdmin(user);
+        entity.setOwner(user);
+        Response response = storage.createConfigurationUnit(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.CREATED, response.getStatusInfo());
+    }
 
     @Test
     void createGroup(ResponseStorageService storage)
@@ -89,6 +101,47 @@ class ResponseStorageServiceImplTest
         Group entity = new Group();
         entity.setName("test");
         Response response = storage.create(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.CREATED, response.getStatusInfo());
+    }
+
+    @Test
+    void createExistingGroup(ResponseStorageService storage)
+    {
+        Group entity = new Group();
+        entity.setId(1L);
+        Response response = storage.create(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.NOT_ACCEPTABLE, response.getStatusInfo());
+    }
+
+    @Test
+    void createIncident(ResponseStorageService storage)
+    {
+        User user = new User();
+        user.setName("test");
+        Status status = new Status();
+        status.setStatus("test");
+        Incident entity = new Incident();
+        entity.setTitle("test");
+        entity.setDescription("test");
+        entity.setConsumer(user);
+        entity.setStatus(status);
+        Response response = storage.createIncident(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.CREATED, response.getStatusInfo());
+    }
+
+    @Test
+    void createTask(ResponseStorageService storage)
+    {
+        User user = new User();
+        user.setName("test");
+        Status status = new Status();
+        status.setStatus("test");
+        Task entity = new Task();
+        entity.setTitle("test");
+        entity.setDescription("test");
+        entity.setConsumer(user);
+        entity.setStatus(status);
+        Response response = storage.createTask(new StringBuffer("test"), entity);
         assertEquals(Response.Status.CREATED, response.getStatusInfo());
     }
 
@@ -103,10 +156,145 @@ class ResponseStorageServiceImplTest
     }
 
     @Test
+    void createUserAndGroup(ResponseStorageService storage)
+    {
+        User entity = new User();
+        PrimaryGroup group = new PrimaryGroup();
+        group.setName("test");
+        entity.setGroup(group);
+        entity.setName("test");
+        Response response = storage.createUser(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.CREATED, response.getStatusInfo());
+    }
+
+    @Test
+    void createExistingUser(ResponseStorageService storage)
+    {
+        PrimaryGroup group = new PrimaryGroup();
+        group.setName("test");
+        User entity = new User();
+        entity.setId(1L);
+        entity.setName("test");
+        entity.setGroup(group);
+        Response response = storage.createUser(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.NOT_ACCEPTABLE, response.getStatusInfo());
+    }
+
+    @Test
+    void createUserNullGroup(ResponseStorageService storage)
+    {
+        appender = TestAppender.create();
+        User entity = new User();
+        entity.setName("test");
+        Response response = storage.createUser(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.NOT_ACCEPTABLE, response.getStatusInfo());
+        assertTrue(appender.getMessages().size() > 0);
+    }
+
+    @Test
+    void createUserGroupNullName(ResponseStorageService storage)
+    {
+        User entity = new User();
+        PrimaryGroup group = new PrimaryGroup();
+        entity.setGroup(group);
+        Response response = storage.createUser(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.NOT_ACCEPTABLE, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllConfigurationType(ResponseStorageService storage)
+    {
+        dataSetSupplier = ConfigurationType::new;
+        Response response = storage.readAllConfigurationTypes();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllConfigurationUnit(ResponseStorageService storage)
+    {
+        dataSetSupplier = ConfigurationUnit::new;
+        Response response = storage.readAllConfigurationUnits();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
     void readAllGroups(ResponseStorageService storage)
     {
+        dataSetSupplier = Group::new;
         Response response = storage.readAllGroups();
         assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllIncidents(ResponseStorageService storage)
+    {
+        dataSetSupplier = Incident::new;
+        Response response = storage.readAllIncidents();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllMessages(ResponseStorageService storage)
+    {
+        dataSetSupplier = Message::new;
+        Response response = storage.readAllMessages();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllStatuses(ResponseStorageService storage)
+    {
+        dataSetSupplier = Status::new;
+        Response response = storage.readAllStatuses();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllTasks(ResponseStorageService storage)
+    {
+        dataSetSupplier = Task::new;
+        Response response = storage.readAllTasks();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readAllUsers(ResponseStorageService storage)
+    {
+        dataSetSupplier = User::new;
+        Response response = storage.readAllUsers();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readConfigurationTypeById(ResponseStorageService storage)
+    {
+        dataSetSupplier = ConfigurationType::new;
+        Response response = storage.readConfigurationTypeById(0L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readConfigurationTypeById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readConfigurationTypeById(0L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
+    void readConfigurationUnitById(ResponseStorageService storage)
+    {
+        dataSetSupplier = ConfigurationUnit::new;
+        Response response = storage.readConfigurationUnitById(0L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readConfigurationUnitById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readConfigurationUnitById(0L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
     @Test
@@ -118,6 +306,14 @@ class ResponseStorageServiceImplTest
     }
 
     @Test
+    void readGroupById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readGroupById(0L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
     void readGroupByIdWithUsers(ResponseStorageService storage)
     {
         dataSetSupplier = Group::new;
@@ -126,18 +322,107 @@ class ResponseStorageServiceImplTest
     }
 
     @Test
-    void readAllUsers(ResponseStorageService storage)
+    void readGroupByIdWithUsers_null(ResponseStorageService storage)
     {
-        Response response = storage.readAllUsers();
+        dataSetSupplier = () -> null;
+        Response response = storage.readGroupByIdWithUsers(0L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
+    void readIncidentById(ResponseStorageService storage)
+    {
+        dataSetSupplier = Incident::new;
+        Response response = storage.readIncidentById(1L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readIncidentById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readIncidentById(1L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
+    void readMessageById(ResponseStorageService storage)
+    {
+        dataSetSupplier = Message::new;
+        Response response = storage.readMessageById(1L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readMessageById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readMessageById(1L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
+    void readStatusById(ResponseStorageService storage)
+    {
+        dataSetSupplier = Status::new;
+        Response response = storage.readStatusById(1L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void  readStatusById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readStatusById(1L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
+    void readTaskById(ResponseStorageService storage)
+    {
+        dataSetSupplier = Task::new;
+        Response response = storage.readTaskById(1L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void  readTaskById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readTaskById(1L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
     @Test
     void readUserById(ResponseStorageService storage)
     {
-        dataSetSupplier = createDataSetUserSupplier();
+        dataSetSupplier = User::new;
+        Response response = storage.readUserById(1L);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readUserByIdZero(ResponseStorageService storage)
+    {
+        dataSetSupplier = User::new;
         Response response = storage.readUserById(0L);
         assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    void readUserById_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.readUserById(1L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+    }
+
+    @Test
+    void readUserById_ButReturnStatus(ResponseStorageService storage)
+    {
+        dataSetSupplier = Status::new;
+        Response response = storage.readUserById(1L);
+        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
 
     @Test
@@ -151,6 +436,16 @@ class ResponseStorageServiceImplTest
     }
 
     @Test
+    void updateNotExistingGroup(ResponseStorageService storage)
+    {
+        Group entity = new Group();
+        entity.setId(0L);
+        entity.setName("test");
+        Response response = storage.update(new StringBuffer("test"), entity);
+        assertEquals(Response.Status.NOT_ACCEPTABLE, response.getStatusInfo());
+    }
+
+    @Test
     void updateUser(ResponseStorageService storage)
     {
         User entity = new User();
@@ -161,16 +456,44 @@ class ResponseStorageServiceImplTest
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
+    @Test
+    void delete(ResponseStorageService storage)
+    {
+        dataSetSupplier = Group::new;
+        Response response = storage.delete(Group.class, 0L);
+        assertEquals(Response.Status.NO_CONTENT, response.getStatusInfo());
+    }
+
+    @Test
+    void delete_null(ResponseStorageService storage)
+    {
+        dataSetSupplier = () -> null;
+        Response response = storage.delete(Group.class, 0L);
+        assertEquals(Response.Status.NO_CONTENT, response.getStatusInfo());
+    }
+
     private Function<InjectionPoint, Object> getEjbFactory()
     {
         return ip -> {
             switch (ip.getAnnotated().getBaseType().getTypeName()) {
+                case "su.svn.db.ConfigurationTypeDao":
+                    return weld.select(ConfigurationTypeDaoJpa.class).get();
+                case "su.svn.db.ConfigurationUnitDao":
+                    return weld.select(ConfigurationUnitDaoJpa.class).get();
                 case "su.svn.db.GroupDao":
                     return weld.select(GroupDaoJpa.class).get();
-                case "su.svn.db.UserDao":
-                    return weld.select(UserDaoJpa.class).get();
+                case "su.svn.db.IncidentDao":
+                    return weld.select(IncidentDaoJpa.class).get();
+                case "su.svn.db.MessageDao":
+                    return weld.select(MessageDaoJpa.class).get();
                 case "su.svn.db.PrimaryGroupDao":
                     return weld.select(PrimaryGroupDaoJpa.class).get();
+                case "su.svn.db.StatusDao":
+                    return weld.select(StatusDaoJpa.class).get();
+                case "su.svn.db.TaskDao":
+                    return weld.select(TaskDaoJpa.class).get();
+                case "su.svn.db.UserDao":
+                    return weld.select(UserDaoJpa.class).get();
                 default:
                     return null;
             }
@@ -215,11 +538,14 @@ class ResponseStorageServiceImplTest
 
             @Override
             public void persist(Object entity) {
+                if (Objects.isNull(entity)) {
+                    throw new IllegalArgumentException("attempt to create event with null entity");
+                }
             }
 
             @Override
             public <T> T merge(T entity) {
-                return null;
+                return entity;
             }
 
             @Override

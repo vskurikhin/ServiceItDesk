@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnit.java
- * This file was last modified at 2019-01-26 19:46 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-02 19:13 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -15,13 +15,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static su.svn.models.ConfigurationUnit.*;
+import java.util.Objects;
 
-/*  public static final String PERSISTENCE_UNIT_NAME = "jpa";
-    public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc";
- */
+import static su.svn.models.ConfigurationUnit.*;
 
 @Data
 @NoArgsConstructor
@@ -58,7 +54,7 @@ import static su.svn.models.ConfigurationUnit.*;
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_DETAILS,
-        query = "SELECT cu FROM ConfigurationUnit cu"
+        query = "SELECT DISTINCT cu FROM ConfigurationUnit cu"
               + " JOIN FETCH cu.admin"
               + " JOIN FETCH cu.owner"
               + " JOIN FETCH cu.group"
@@ -104,6 +100,23 @@ public class ConfigurationUnit implements DataSet
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "type_id", nullable = false)
     private ConfigurationType type;
+
+    public static boolean isValidForSave(ConfigurationUnit configurationUnit)
+    {
+        if (Objects.isNull(configurationUnit)) {
+            return false;
+        }
+        if (Objects.isNull(configurationUnit.id)) {
+            return false;
+        }
+        if (Objects.isNull(configurationUnit.admin)) {
+            return false;
+        }
+        if (Objects.isNull(configurationUnit.owner)) {
+            return false;
+        }
+        return !Objects.isNull(configurationUnit.name);
+    }
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

@@ -1,6 +1,6 @@
 /*
  * StatusDaoJpaTest.java
- * This file was last modified at 2019-01-26 18:15 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 10:53 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -29,7 +29,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.StatusDaoJpa.*;
+import static su.svn.models.Status.FIND_ALL;
+import static su.svn.models.Status.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Status.FIND_ALL_WHERE_STATUS;
 
 @DisplayName("Class StatusDaoJpaTest")
 class StatusDaoJpaTest
@@ -137,7 +139,7 @@ class StatusDaoJpaTest
             List<Status> expected = Collections.emptyList();
             TypedQuery<Status> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Status.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Status.class)).thenReturn(mockedQuery);
 
             List<Status> test = dao.findAll();
             assertEquals(expected, test);
@@ -150,7 +152,7 @@ class StatusDaoJpaTest
             List<Status> expected = Collections.emptyList();
             TypedQuery<Status> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Status.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Status.class)).thenReturn(mockedQuery);
 
             List<Status> test = dao.findAll();
             assertEquals(expected, test);
@@ -165,7 +167,7 @@ class StatusDaoJpaTest
             TypedQuery<Status> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("status", TEST_STATUS)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_STATUS, Status.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_STATUS, Status.class)).thenReturn(mockedQuery);
 
             List<Status> test = dao.findByStatus(TEST_STATUS);
             assertEquals(expected, test);
@@ -179,7 +181,7 @@ class StatusDaoJpaTest
             TypedQuery<Status> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("status", TEST_STATUS)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_STATUS, Status.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_STATUS, Status.class)).thenReturn(mockedQuery);
 
             List<Status> test = dao.findByStatus(TEST_STATUS);
             assertEquals(expected, test);
@@ -194,7 +196,7 @@ class StatusDaoJpaTest
             TypedQuery<Status> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Status.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Status.class)).thenReturn(mockedQuery);
 
             List<Status> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -208,7 +210,7 @@ class StatusDaoJpaTest
             TypedQuery<Status> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Status.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Status.class)).thenReturn(mockedQuery);
 
             List<Status> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);

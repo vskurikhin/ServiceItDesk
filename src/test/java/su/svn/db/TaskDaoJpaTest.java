@@ -1,6 +1,6 @@
 /*
  * TaskDaoJpaTest.java
- * This file was last modified at 2019-01-26 18:15 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-02 11:39 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -29,9 +29,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.TaskDaoJpa.SELECT_ALL;
-import static su.svn.db.TaskDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.TaskDaoJpa.SELECT_WHERE_TITLE;
+import static su.svn.models.Task.FIND_ALL;
+import static su.svn.models.Task.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Task.FIND_ALL_WHERE_TITLE;
 
 @DisplayName("Class TaskDaoJpaTest")
 class TaskDaoJpaTest
@@ -139,7 +139,7 @@ class TaskDaoJpaTest
             List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findAll();
             assertEquals(expected, test);
@@ -152,7 +152,7 @@ class TaskDaoJpaTest
             List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findAll();
             assertEquals(expected, test);
@@ -167,7 +167,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("title", TEST_TITLE)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByTitle(TEST_TITLE);
             assertEquals(expected, test);
@@ -181,7 +181,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("title", TEST_TITLE)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByTitle(TEST_TITLE);
             assertEquals(expected, test);
@@ -196,7 +196,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -210,7 +210,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);

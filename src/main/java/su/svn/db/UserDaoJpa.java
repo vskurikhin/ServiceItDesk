@@ -1,6 +1,6 @@
 /*
  * UserDaoJpa.java
- * This file was last modified at 2019-01-26 18:09 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:48 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,10 +17,9 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static su.svn.models.User.*;
 
@@ -44,7 +43,7 @@ public class UserDaoJpa implements UserDao
     @Override
     public Optional<User> findById(Long id)
     {
-        return findByIdWithDetails(id); // TODO Optional
+        return findByIdWithDetails(id);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class UserDaoJpa implements UserDao
             return em.createNamedQuery(FIND_ALL, User.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
@@ -63,16 +62,14 @@ public class UserDaoJpa implements UserDao
     public Optional<User> findByIdWithDetails(Long id)
     {
         try {
-            User entity =
+            return Optional.of(
                 em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, User.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-            System.out.println("entity = " + entity);
-            return Optional.of(entity
+                  .setParameter("id", id)
+                  .getSingleResult()
             );
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e.toString());
             return Optional.empty();
         }
     }
@@ -106,7 +103,7 @@ public class UserDaoJpa implements UserDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(User entity)
     {
         try {
@@ -127,7 +124,7 @@ public class UserDaoJpa implements UserDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {

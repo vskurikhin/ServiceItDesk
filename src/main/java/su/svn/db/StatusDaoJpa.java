@@ -1,6 +1,6 @@
 /*
  * StatusDaoJpa.java
- * This file was last modified at 2019-01-26 18:10 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:47 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,25 +19,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Status.FIND_ALL;
+import static su.svn.models.Status.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Status.FIND_ALL_WHERE_STATUS;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class StatusDaoJpa implements StatusDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT s FROM Status s";
-
-    public static final String SELECT_WHERE_STATUS = SELECT_ALL + " WHERE s.status LIKE :status";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE s.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusDaoJpa.class);
+
+    /* TODO
+    public static final String SELECT_ALL = "SELECT s FROM Status s";
+    public static final String SELECT_WHERE_STATUS = SELECT_ALL + " WHERE s.status LIKE :status";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE s.description LIKE :desc";
+    */
 
     public StatusDaoJpa() { /* None */}
 
@@ -62,10 +64,10 @@ public class StatusDaoJpa implements StatusDao
     public List<Status> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Status.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Status.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
@@ -74,7 +76,7 @@ public class StatusDaoJpa implements StatusDao
     public List<Status> findByStatus(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_STATUS, Status.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_STATUS, Status.class)
                 .setParameter("status", value)
                 .getResultList();
         }
@@ -88,7 +90,7 @@ public class StatusDaoJpa implements StatusDao
     public List<Status> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Status.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Status.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -99,7 +101,7 @@ public class StatusDaoJpa implements StatusDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Status entity)
     {
         try {
@@ -120,7 +122,7 @@ public class StatusDaoJpa implements StatusDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {

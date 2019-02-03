@@ -1,6 +1,6 @@
 /*
  * MessageDaoJpa.java
- * This file was last modified at 2019-01-26 18:10 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:46 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static su.svn.models.Message.FIND_ALL;
 import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
@@ -34,7 +34,8 @@ public class MessageDaoJpa implements MessageDao
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageDaoJpa.class);
 
-    /* public static final String SELECT_ALL = "SELECT m FROM Message m";
+    /* TODO
+    public static final String SELECT_ALL = "SELECT m FROM Message m";
     public static final String SELECT_WHERE_TEXT = SELECT_ALL + " WHERE m.text LIKE :text"; */
 
     public MessageDaoJpa() { /* None */}
@@ -63,7 +64,7 @@ public class MessageDaoJpa implements MessageDao
             return em.createNamedQuery(FIND_ALL, Message.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
@@ -83,7 +84,7 @@ public class MessageDaoJpa implements MessageDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Message entity)
     {
         try {
@@ -104,7 +105,7 @@ public class MessageDaoJpa implements MessageDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {

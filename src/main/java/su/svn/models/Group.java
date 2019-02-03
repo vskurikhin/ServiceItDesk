@@ -1,6 +1,6 @@
 /*
  * Group.java
- * This file was last modified at 2019-01-26 19:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-02 19:14 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 import static su.svn.models.Group.*;
 
@@ -75,6 +76,17 @@ public class Group implements DataSet
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Collection<User> users = new HashSet<>();
+
+    public static boolean isValidForSave(Group group)
+    {
+        if (Objects.isNull(group)) {
+            return false;
+        }
+        if (Objects.isNull(group.id)) {
+            return false;
+        }
+        return !Objects.isNull(group.name);
+    }
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

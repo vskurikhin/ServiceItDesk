@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS cm_user (
   PRIMARY KEY (user_id)
 );
 --
--- User group map
+-- User to group map
 CREATE TABLE IF NOT EXISTS cm_user_group (
   user_id           BIGINT NOT NULL REFERENCES cm_user (user_id),
   group_id          BIGINT NOT NULL REFERENCES cm_group (group_id)
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS pm_message (
 CREATE TABLE IF NOT EXISTS pm_status (
   status_id         BIGINT       NOT NULL AUTO_INCREMENT,
   status            VARCHAR(127) NOT NULL,
-  description       VARCHAR(255) NOT NULL,
+  description       VARCHAR(255),
   UNIQUE (status),
   PRIMARY KEY (status_id)
 );
@@ -107,27 +107,27 @@ CREATE TABLE IF NOT EXISTS pm_task (
   task_id           BIGINT       NOT NULL AUTO_INCREMENT,
   task_title        VARCHAR(127) NOT NULL,
   description_text  VARCHAR(255) NOT NULL,
-  consumer_user_id  BIGINT REFERENCES cm_user (user_id),
-  status_id         BIGINT REFERENCES cm_status (status_id),
+  consumer_user_id  BIGINT 	 NOT NULL REFERENCES cm_user (user_id),
+  status_id         BIGINT       NOT NULL REFERENCES pm_status (status_id),
   PRIMARY KEY (task_id)
 );
 --
 -- Task actors
 CREATE TABLE IF NOT EXISTS pm_task_actor (
-  task_id           BIGINT REFERENCES pm_task (task_id),
-  user_id           BIGINT REFERENCES cm_user (user_id)
+  task_id           BIGINT NOT NULL REFERENCES pm_task (task_id),
+  user_id           BIGINT NOT NULL REFERENCES cm_user (user_id)
 );
 --
 -- Task actuaries
 CREATE TABLE IF NOT EXISTS pm_task_actuary (
-  task_id           BIGINT REFERENCES pm_task (task_id),
-  user_id           BIGINT REFERENCES cm_user (user_id)
+  task_id           BIGINT NOT NULL REFERENCES pm_task (task_id),
+  user_id           BIGINT NOT NULL REFERENCES cm_user (user_id)
 );
 --
 -- Task records
 CREATE TABLE IF NOT EXISTS pm_task_record (
-  task_id           BIGINT REFERENCES pm_task (task_id),
-  message_id        BIGINT REFERENCES pm_message (message_id)
+  task_id           BIGINT NOT NULL REFERENCES pm_task (task_id),
+  message_id        BIGINT NOT NULL REFERENCES pm_message (message_id)
 );
 --
 -- Incidents
@@ -135,15 +135,15 @@ CREATE TABLE IF NOT EXISTS pm_incident (
   incident_id       BIGINT       NOT NULL AUTO_INCREMENT,
   incident_title    VARCHAR(127) NOT NULL,
   description_text  VARCHAR(254) NOT NULL,
-  consumer_user_id  BIGINT REFERENCES cm_user (user_id),
-  status_id         BIGINT REFERENCES cm_status (status_id),
+  consumer_user_id  BIGINT       NOT NULL REFERENCES cm_user (user_id),
+  status_id         BIGINT       NOT NULL REFERENCES pm_status (status_id),
   PRIMARY KEY (incident_id)
 );
 --
 -- Incident records
 CREATE TABLE IF NOT EXISTS pm_inc_record (
-  incident_id       BIGINT REFERENCES pm_incident (incident_id),
-  message_id        BIGINT REFERENCES pm_message (message_id)
+  incident_id       BIGINT NOT NULL REFERENCES pm_incident (incident_id),
+  message_id        BIGINT NOT NULL REFERENCES pm_message (message_id)
 );
 --
 --------------------------------------------------------------------------------

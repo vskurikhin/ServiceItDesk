@@ -1,6 +1,6 @@
 /*
  * TaskDaoJpa.java
- * This file was last modified at 2019-01-26 18:09 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:47 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,25 +19,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Task.FIND_ALL;
+import static su.svn.models.Task.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Task.FIND_ALL_WHERE_TITLE;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class TaskDaoJpa implements TaskDao
 {
     public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT t FROM Task t";
-
-    public static final String SELECT_WHERE_TITLE = SELECT_ALL + " WHERE t.title LIKE :title";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE t.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskDaoJpa.class);
+
+    /* public static final String SELECT_ALL = "SELECT t FROM Task t";
+    public static final String SELECT_WHERE_TITLE = SELECT_ALL + " WHERE t.title LIKE :title";
+    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE t.description LIKE :desc"; */
 
     public TaskDaoJpa() { /* None */}
 
@@ -62,10 +62,10 @@ public class TaskDaoJpa implements TaskDao
     public List<Task> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Task.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Task.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
@@ -74,7 +74,7 @@ public class TaskDaoJpa implements TaskDao
     public List<Task> findByTitle(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_TITLE, Task.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_TITLE, Task.class)
                 .setParameter("title", value)
                 .getResultList();
         }
@@ -88,7 +88,7 @@ public class TaskDaoJpa implements TaskDao
     public List<Task> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Task.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Task.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -99,7 +99,7 @@ public class TaskDaoJpa implements TaskDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Task entity)
     {
         try {
@@ -120,7 +120,7 @@ public class TaskDaoJpa implements TaskDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {

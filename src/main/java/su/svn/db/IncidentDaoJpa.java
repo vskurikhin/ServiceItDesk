@@ -1,6 +1,6 @@
 /*
  * IncidentDaoJpa.java
- * This file was last modified at 2019-01-26 18:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:45 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static su.svn.models.Incident.FIND_ALL;
@@ -35,7 +36,8 @@ public class IncidentDaoJpa implements IncidentDao
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IncidentDaoJpa.class);
 
-    /* public static final String SELECT_ALL = "SELECT i FROM Incident i";
+    /* TODO
+    public static final String SELECT_ALL = "SELECT i FROM Incident i";
     public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE i.title LIKE :name";
     public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.description LIKE :desc"; */
 
@@ -65,7 +67,7 @@ public class IncidentDaoJpa implements IncidentDao
             return em.createNamedQuery(FIND_ALL, Incident.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
@@ -99,7 +101,7 @@ public class IncidentDaoJpa implements IncidentDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Incident entity)
     {
         try {
@@ -120,7 +122,7 @@ public class IncidentDaoJpa implements IncidentDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {

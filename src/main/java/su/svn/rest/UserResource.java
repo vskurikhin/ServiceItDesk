@@ -1,6 +1,6 @@
 /*
  * UserResource.java
- * This file was last modified at 2018.12.03 20:05 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 11:39 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -38,6 +38,13 @@ public class UserResource
         return storage.create(servletRequest.getRequestURL(), entity);
     }
 
+    @POST
+    @Path("/group")
+    public Response createWithGroup(User entity)
+    {
+        return storage.createUser(servletRequest.getRequestURL(), entity);
+    }
+
     @GET
     public Response readAll()
     {
@@ -48,7 +55,7 @@ public class UserResource
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
-        return storage.readGroupById(id.longValue());
+        return storage.readUserById(id.longValue());
     }
 
     @PUT

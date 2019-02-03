@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitDaoJpa.java
- * This file was last modified at 2019-01-26 18:12 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:44 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,11 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
-import static su.svn.models.ConfigurationUnit.FIND_ALL;
-import static su.svn.models.ConfigurationUnit.FIND_ALL_WHERE_DESC;
-import static su.svn.models.ConfigurationUnit.FIND_ALL_WHERE_NAME;
+import static su.svn.models.ConfigurationUnit.*;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
@@ -35,10 +33,6 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationUnitDaoJpa.class);
 
-    /* public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc"; */
-
     public ConfigurationUnitDaoJpa() { /* None */}
 
     public ConfigurationUnitDaoJpa(EntityManager entityManager)
@@ -49,13 +43,7 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     @Override
     public Optional<ConfigurationUnit> findById(Long id)
     {
-        try {
-            return Optional.ofNullable(em.find(ConfigurationUnit.class, id));
-        }
-        catch (IllegalArgumentException e) {
-            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return Optional.empty();
-        }
+        return findByIdWithDetails(id);
     }
 
     @Override
@@ -65,8 +53,24 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
             return em.createNamedQuery(FIND_ALL, ConfigurationUnit.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public Optional<ConfigurationUnit> findByIdWithDetails(Long id)
+    {
+        try {
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, ConfigurationUnit.class)
+                    .setParameter("id", id)
+                    .getSingleResult()
+            );
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e.toString());
+            return Optional.empty();
         }
     }
 
@@ -99,7 +103,7 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(ConfigurationUnit entity)
     {
         try {
@@ -120,7 +124,7 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {

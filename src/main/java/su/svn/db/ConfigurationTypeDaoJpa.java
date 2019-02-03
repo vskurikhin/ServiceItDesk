@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeDaoJpa.java
- * This file was last modified at 2019-01-26 18:12 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 12:43 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static su.svn.models.ConfigurationType.FIND_ALL;
 import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_DESC;
@@ -61,7 +61,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
             return em.createNamedQuery(FIND_ALL, ConfigurationType.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {} ", e.toString());
             return Collections.emptyList();
         }
     }
@@ -95,7 +95,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(ConfigurationType entity)
     {
         try {
@@ -116,7 +116,7 @@ public class ConfigurationTypeDaoJpa implements ConfigurationTypeDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
