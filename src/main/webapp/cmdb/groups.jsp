@@ -1,9 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import = "java.io.*,java.util.*" %>
+<%@ page import = "su.svn.shared.Constants" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
-  ~ welcome.jsp
-  ~ This file was last modified at 2019-02-03 20:51 by Victor N. Skurikhin.
+  ~ groups.jsp
+  ~ This file was last modified at 2019-02-03 20:47 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -16,8 +17,8 @@
 <html lang=ru>
 <head>
     <meta charset=UTF-8>
-    <title id="title">Service It Desk | JavaEE-09-2018 welcome</title>
-    <link rel="stylesheet" href="<c:out value="${baseURL}/"/>css/style-all.min.css"/>
+    <title id="title">Service It Desk CMDB Console Группы | JavaEE-09-2018 welcome</title>
+    <link rel="stylesheet" href="<c:out value="${baseURL}"/>/css/style-all.min.css"/>
 </head>
 
 <body class="body">
@@ -27,7 +28,13 @@
         <tr>
             <td class="tg-0lax my-left">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
-                    <div id="main-container"></div>
+                    <ol>
+                        <c:forEach var="group" items="${groups}">
+                            <li>
+                                    <a href="${baseURL}<%= Constants.Servlet.CMDB_GROUP_SERVLET %>?id=${group.id}">${group.id} - ${group.name} - ${group.description}</a>
+                            </li>
+                        </c:forEach>
+                    </ol>
                 </main>
             </td>
             <td class="tg-0lax my-right" style="border-left: 2px dotted black;" colspan="2">
