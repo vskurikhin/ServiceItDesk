@@ -1,6 +1,6 @@
 /*
  * UserResource.java
- * This file was last modified at 2019-02-03 16:12 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-04 23:36 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -23,7 +23,6 @@ import static su.svn.rest.config.RestApplication.USER_RESOURCE;
 
 @Stateless
 @Path("/v1" + USER_RESOURCE)
-@Produces(MediaType.APPLICATION_JSON)
 public class UserResource
 {
     @Context
@@ -33,6 +32,8 @@ public class UserResource
     private ResponseStorageService storage;
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response create(User entity)
     {
         return storage.create(servletRequest.getRequestURL(), entity);
@@ -40,12 +41,15 @@ public class UserResource
 
     @POST
     @Path("/group")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response createWithGroup(User entity)
     {
         return storage.createUser(servletRequest.getRequestURL(), entity);
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readAll()
     {
         return storage.readAll(User.class);
@@ -53,12 +57,15 @@ public class UserResource
 
     @GET
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response read(@PathParam("id") Integer id)
     {
         return storage.readById(User.class, id.longValue());
     }
 
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(User entity)
     {
         return storage.update(servletRequest.getRequestURL(), entity);
@@ -66,6 +73,7 @@ public class UserResource
 
     @DELETE
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response delete(@PathParam("id") Integer id)
     {
         return storage.delete(User.class, id.longValue());

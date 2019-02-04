@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--
-  ~ groups.jsp
-  ~ This file was last modified at 2019-02-04 22:58 by Victor N. Skurikhin.
+  ~ users.jsp
+  ~ This file was last modified at 2019-02-04 23:50 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,11 +17,11 @@
 <html lang=ru>
 <head>
     <meta charset=UTF-8>
-    <title id="title">Service It Desk CMDB Console Группы | JavaEE-09-2018 welcome</title>
+    <title id="title">Service It Desk CMDB Console Пользователи | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>'
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>'
     </script>
 </head>
 
@@ -32,37 +32,43 @@
         <tr>
             <td class="tg-0lax my-left">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
-                    <form id="groupForm">
+                    <form id="userForm">
                         <table class="tg2">
                             <tr>
-                                <th class="tg2-0laxl" rowspan="3">
+                                <th class="tg2-0laxl" rowspan="4">
                                     <div class="leftArea">
-                                        <ul id="groupList"></ul>
+                                        <ul id="userList"></ul>
                                     </div>
                                 </th>
                                 <th class="tg2-0lax">
                                     <label>Id:</label><br/>
-                                    <input form="groupForm" id="groupId" name="id" type="text" disabled title=""/>
+                                    <input form="userForm" id="userId" name="id" type="text" disabled title=""/>
                                 </th>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Name:</label><br/>
-                                    <input form="groupForm" type="text" id="name" name="name" required title=""/>
+                                    <input form="userForm" type="text" id="name" name="name" required title=""/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tg2-0lax">
+                                    <label>Group:</label><br/>
+                                    <input form="userForm" type="text" id="group" name="group" required title=""/>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Notes:</label><br/>
-                                    <textarea form="groupForm" id="description" name="description" title=""></textarea>
+                                    <textarea form="userForm" id="description" name="description" title=""></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="tg2-baqh" colspan="2">
-                                    <button form="groupForm" id="btnAdd">Clear</button>
-                                    <button form="groupForm" id="btnSave">Add</button>
-                                    <button form="groupForm" id="btnDelete">Delete</button>
-                                    <button form="groupForm" id="btnSearch" hidden>Search</button>
+                                    <button form="userForm" id="btnAdd">Clear</button>
+                                    <button form="userForm" id="btnSave">Add</button>
+                                    <button form="userForm" id="btnDelete">Delete</button>
+                                    <button form="userForm" id="btnSearch" hidden>Search</button>
                                 </td>
                             </tr>
                         </table>
@@ -75,7 +81,7 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/groups.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/users.js"></script>
     </body>
 </html>
 

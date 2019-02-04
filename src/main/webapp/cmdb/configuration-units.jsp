@@ -2,8 +2,8 @@
 <%@ page import = "java.io.*,java.util.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
-  ~ index.configuration-types.jsp
-  ~ This file was last modified at 2019-02-03 18:01 by Victor N. Skurikhin.
+  ~ configuration-units.jsp
+  ~ This file was last modified at 2019-02-04 23:44 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>

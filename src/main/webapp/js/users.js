@@ -1,15 +1,15 @@
 /*
- * groups.js
- * This file was last modified at 2019-02-04 23:31 by Victor N. Skurikhin.
+ * users.js
+ * This file was last modified at 2019-02-04 23:55 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
 // rootURL - The root URL for the RESTful services
-// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/groups";
+// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/users";
 
-var currentGroup;
+var currentUser;
 
 function setTriggers() {
     // Nothing to delete in initial application state
@@ -31,24 +31,24 @@ function setTriggers() {
     });
 
     $('#btnAdd').click(function() {
-        newGroup();
+        newUser();
         return false;
     });
 
     $('#btnSave').click(function() {
-        if ($('#groupId').val() === '')
-            addGroup();
+        if ($('#userId').val() === '')
+            addUser();
         else
-            updateGroup();
+            updateUser();
         return false;
     });
 
     $('#btnDelete').click(function() {
-        deleteGroup();
+        deleteUser();
         return false;
     });
 
-    $('#groupList a').click(function() {
+    $('#userList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -60,11 +60,11 @@ function search(searchKey) {
 		findByName(searchKey);
 }
 
-function newGroup() {
+function newUser() {
 	$('#btnDelete').hide();
     $('#btnSave').html('Add');
-	currentGroup = {};
-	renderDetails(currentGroup); // Display empty form
+	currentUser = {};
+	renderDetails(currentUser); // Display empty form
 }
 
 function findAll() {
@@ -97,14 +97,14 @@ function findById(id) {
             $('#btnDelete').show();
             $('#btnSave').html('Save');
 			console.log('findById success: ' + data.name);
-			currentGroup = data;
-			renderDetails(currentGroup);
+			currentUser = data;
+			renderDetails(currentUser);
 		}
 	});
 }
 
-function addGroup() {
-	console.log('addGroup');
+function addUser() {
+	console.log('addUser');
 	$.ajax({
 		type: 'POST',
 		contentType: 'application/json',
@@ -113,27 +113,27 @@ function addGroup() {
 		data: formToJSON(),
         statusCode: {
 		    201: function(data, textStatus, jqXHR){
-                console.log("Group created successfully" + textStatus);
+                console.log("User created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
-                $('#groupId').val(data.id);
+                $('#userId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
 		    },
             406: function(data, textStatus, jqXHR){
-                alert('addGroup error: ' + textStatus);
+                alert('addUser error: ' + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
-                $('#groupId').val(data.id);
+                $('#userId').val(data.id);
             },
             500: function(data, textStatus, jqXHR){
-                alert('addGroup FATAL error: ' + textStatus);
+                alert('addUser FATAL error: ' + textStatus);
             }
         }
 	});
 }
 
-function updateGroup() {
-	console.log('updateGroup');
+function updateUser() {
+	console.log('updateUser');
 	$.ajax({
 		type: 'PUT',
 		contentType: 'application/json',
@@ -141,27 +141,27 @@ function updateGroup() {
 		dataType: "json",
 		data: formToJSON(),
 		success: function(data, textStatus, jqXHR){
-            console.log("Group updated successfully: " + textStatus);
+            console.log("User updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateGroup error: ' + textStatus);
+			alert('updateUser error: ' + textStatus);
 		}
 	});
 }
 
-function deleteGroup() {
-	console.log('deleteGroup');
+function deleteUser() {
+	console.log('deleteUser');
 	$.ajax({
 		type: 'DELETE',
-		url: rootURL + '/' + $('#groupId').val(),
+		url: rootURL + '/' + $('#userId').val(),
 		success: function(data, textStatus, jqXHR){
-			alert('Group deleted successfully');
+			alert('User deleted successfully');
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteGroup error');
+			alert('deleteUser error');
 		}
 	});
 }
@@ -170,29 +170,31 @@ function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
 	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#groupList li').remove();
-	$.each(list, function(index, group) {
-		$('#groupList').append('<li><a href="#" data-identity="' + group.id + '">'+group.name+'</a></li>');
+	$('#userList li').remove();
+	$.each(list, function(index, user) {
+		$('#userList').append('<li><a href="#" data-identity="' + user.id + '">'+user.name+'</a></li>');
 	});
 	setTriggers();
 }
 
-function renderDetails(group) {
-	$('#groupId').val(group.id);
-	$('#name').val(group.name);
-	$('#description').val(group.description);
+function renderDetails(user) {
+	$('#userId').val(user.id);
+	$('#name').val(user.name);
+    $('#group').val(user.group.name);
+	$('#description').val(user.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var groupId = $('#groupId').val();
+	var userId = $('#userId').val();
 	return JSON.stringify({
-		"id": groupId === "" ? Number("0") : Number(groupId),
+		"id": userId === "" ? Number("0") : Number(userId),
 		"name": $('#name').val(),
+        "group": $('#group').val(),
 		"description": $('#description').val()
 		});
 }
 
-// Retrieve group list when application starts
+// Retrieve user list when application starts
 jQuery(document).ready(findAll());
 

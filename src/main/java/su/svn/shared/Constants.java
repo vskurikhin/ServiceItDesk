@@ -1,6 +1,6 @@
 /*
  * Constants.java
- * This file was last modified at 2019-02-03 20:08 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-04 21:38 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,6 +17,22 @@ public class Constants
 
     public static class Rest
     {
+        public static final String API_URL = "/rest/api";
+
+        public static final String CONFIGURATION_TYPE_RESOURCE = "/configuration-types";
+
+        public static final String CONFIGURATION_UNIT_RESOURCE = "/configuration-units";
+
+        public static final String GROUP_RESOURCE = "/groups";
+
+        public static final String INCIDENT_RESOURCE = "/incidents";
+
+        public static final String MESSAGE_RESOURCE = "/messages";
+
+        public static final String STATUS_RESOURCE = "/statuses";
+
+        public static final String USER_RESOURCE = "/users";
+
         public static final String VERSION = "version";
     }
 

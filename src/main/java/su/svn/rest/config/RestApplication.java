@@ -1,6 +1,6 @@
 /*
  * RestApplication.java
- * This file was last modified at 2019-02-03 15:28 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-04 23:33 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -12,9 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
-import su.svn.rest.GroupResource;
-import su.svn.rest.UserResource;
-import su.svn.rest.Version;
+import su.svn.rest.*;
 
 import javax.ws.rs.ApplicationPath;
 
@@ -58,6 +56,8 @@ public class RestApplication extends ResourceConfig
     }
 
     private void registerResourceClasses() {
+        register(ConfigurationTypeResource.class);
+        register(ConfigurationUnitResource.class);
         register(GroupResource.class);
         register(UserResource.class);
         register(Version.class);

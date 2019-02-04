@@ -1,6 +1,6 @@
 /*
  * GroupResource.java
- * This file was last modified at 2019-02-03 16:03 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-04 23:32 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -67,7 +67,6 @@ public class GroupResource
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(Group entity)
     {
-        System.err.println("entity = " + entity);
         return storage.update(servletRequest.getRequestURL(), entity);
     }
 
