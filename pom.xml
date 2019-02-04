@@ -17,7 +17,7 @@
 
     <groupId>su.svn</groupId>
     <artifactId>ServiceItDesk</artifactId>
-    <version>1.2-27</version>
+    <version>1.2-28</version>
     <packaging>war</packaging>
 
     <name>JavaEE-09-2018 Service It Desk Webapp</name>
@@ -214,6 +214,14 @@
             </exclusions>
         </dependency>
 
+        <!--
+        <dependency>
+            <groupId>org.ebaysf.web</groupId>
+            <artifactId>cors-filter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        -->
+
         <!-- logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -326,14 +334,14 @@
         <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-core</artifactId>
-            <version>2.28</version>
+            <version>${jersey.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-            <version>2.28</version>
+            <version>${jersey.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -431,13 +439,17 @@
                     <!-- CSS minimization -->
                     <cssSourceDir>css</cssSourceDir>
                     <cssSourceFiles>
+                        <cssSourceFile>mystyle.css</cssSourceFile>
+                        <cssSourceFile>styles.css</cssSourceFile>
                         <cssSourceFile>w3.css</cssSourceFile>
                     </cssSourceFiles>
                     <cssFinalFile>style-all.css</cssFinalFile>
                     <!-- JS minimization -->
                     <jsSourceDir>js</jsSourceDir>
                     <jsSourceFiles>
+                        <jsSourceFile>jquery-3.3.1.min.js</jsSourceFile>
                         <jsSourceFile>login.js</jsSourceFile>
+                        <!-- jsSourceFile>groups.js</jsSourceFile -->
                     </jsSourceFiles>
                     <jsFinalFile>script-all.js</jsFinalFile>
                     <jsEngine>CLOSURE</jsEngine>

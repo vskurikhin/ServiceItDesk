@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import su.svn.db.*;
 import su.svn.models.Group;
-import su.svn.utils.services.TestWeldService;
+import su.svn.utils.services.TestPersistenceContextFactory;
 
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(WeldJunit5Extension.class)
-class CmdbManagementServiceImplTest extends TestWeldService
+class CmdbManagementServiceImplTest extends TestPersistenceContextFactory
 {
     private HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 

@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -44,7 +45,13 @@ public class GroupDaoJpa implements GroupDao
     public Optional<Group> findById(Long id)
     {
         try {
-            return Optional.ofNullable(em.find(Group.class, id));
+            Group group;
+
+            if ( ! Objects.isNull(group = em.find(Group.class, id))) {
+                group.setUsers(null);
+            }
+
+            return Optional.ofNullable(group);
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);

@@ -1,5 +1,5 @@
 /*
- * TestWeldService.java
+ * TestPersistenceContextFactory.java
  * This file was last modified at 2019-02-04 00:03 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
@@ -8,13 +8,7 @@
 
 package su.svn.utils.services;
 
-import org.jboss.weld.junit5.WeldInitiator;
-import org.jboss.weld.junit5.WeldJunit5Extension;
-import org.jboss.weld.junit5.WeldSetup;
-import org.junit.jupiter.api.extension.ExtendWith;
-import su.svn.db.*;
 import su.svn.models.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.*;
@@ -35,7 +29,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestWeldService
+public class TestPersistenceContextFactory
 {
     protected static Query mockedQuery;
 
@@ -71,7 +65,7 @@ public class TestWeldService
         return ip -> new EntityManager() {
             @Override
             public <T> T unwrap(Class<T> cls) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
@@ -138,57 +132,57 @@ public class TestWeldService
 
             @Override
             public EntityTransaction getTransaction() {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getTransaction in getPCFactory");
             }
 
             @Override
             public <T> T getReference(Class<T> entityClass, Object primaryKey) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getReference in getPCFactory");
             }
 
             @Override
             public Map<String, Object> getProperties() {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getProperties in getPCFactory");
             }
 
             @Override
             public Metamodel getMetamodel() {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getMetamodel in getPCFactory");
             }
 
             @Override
             public LockModeType getLockMode(Object entity) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getLockMode in getPCFactory");
             }
 
             @Override
             public FlushModeType getFlushMode() {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getFlushMode in getPCFactory");
             }
 
             @Override
             public EntityManagerFactory getEntityManagerFactory() {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getEntityManagerFactory in getPCFactory");
             }
 
             @Override
             public <T> List<EntityGraph<? super T>> getEntityGraphs(Class<T> entityClass) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getEntityGraphs in getPCFactory");
             }
 
             @Override
             public EntityGraph<?> getEntityGraph(String graphName) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getEntityGraph in getPCFactory");
             }
 
             @Override
             public Object getDelegate() {
-                return null;
+                throw new UnsupportedOperationException("getDelegate in getPCFactory");
             }
 
             @Override
             public CriteriaBuilder getCriteriaBuilder() {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("getCriteriaBuilder in getPCFactory");
             }
 
             @Override
@@ -197,17 +191,17 @@ public class TestWeldService
 
             @Override
             public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode, Map<String, Object> properties) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
@@ -221,17 +215,17 @@ public class TestWeldService
 
             @Override
             public StoredProcedureQuery createStoredProcedureQuery(String procedureName, String... resultSetMappings) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public StoredProcedureQuery createStoredProcedureQuery(String procedureName, Class... resultClasses) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public StoredProcedureQuery createStoredProcedureQuery(String procedureName) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
@@ -241,17 +235,17 @@ public class TestWeldService
 
             @Override
             public Query createQuery(CriteriaDelete deleteQuery) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public Query createQuery(CriteriaUpdate updateQuery) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
@@ -261,22 +255,22 @@ public class TestWeldService
 
             @Override
             public Query createNativeQuery(String sqlString, String resultSetMapping) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public Query createNativeQuery(String sqlString, Class resultClass) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public Query createNativeQuery(String sqlString) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public StoredProcedureQuery createNamedStoredProcedureQuery(String name) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("createNamedStoredProcedureQuery in getPCFactory");
             }
 
             @Override
@@ -286,17 +280,17 @@ public class TestWeldService
 
             @Override
             public Query createNamedQuery(String name) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("createNamedQuery in getPCFactory");
             }
 
             @Override
             public EntityGraph<?> createEntityGraph(String graphName) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException("createEntityGraph in getPCFactory");
             }
 
             @Override
             public <T> EntityGraph<T> createEntityGraph(Class<T> rootType) {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
 
             @Override

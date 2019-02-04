@@ -23,7 +23,6 @@ import static su.svn.rest.config.RestApplication.GROUP_RESOURCE;
 
 @Stateless
 @Path("/v1" + GROUP_RESOURCE)
-@Produces(MediaType.APPLICATION_JSON)
 public class GroupResource
 {
     @Context
@@ -33,12 +32,15 @@ public class GroupResource
     private ResponseStorageService storage;
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response create(Group entity)
     {
         return storage.create(servletRequest.getRequestURL(), entity);
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readAll()
     {
         return storage.readAllGroups();
@@ -46,6 +48,7 @@ public class GroupResource
 
     @GET
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response read(@PathParam("id") Integer id)
     {
         return storage.readById(Group.class, id.longValue());
@@ -53,19 +56,24 @@ public class GroupResource
 
     @GET
     @Path("/{id}/users")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readWithUsers(@PathParam("id") Integer id)
     {
         return storage.readGroupByIdWithUsers(id.longValue());
     }
 
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(Group entity)
     {
+        System.err.println("entity = " + entity);
         return storage.update(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response delete(@PathParam("id") Integer id)
     {
         return storage.delete(Group.class, id.longValue());
