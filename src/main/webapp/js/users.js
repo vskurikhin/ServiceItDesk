@@ -180,7 +180,16 @@ function renderList(data) {
 function renderDetails(user) {
 	$('#userId').val(user.id);
 	$('#name').val(user.name);
-    $('#group').val(user.group.name);
+    $('.dropdown-sin-1').empty();
+    $('.dropdown-sin-1').html(
+        '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
+        '</select>');
+    // TODO fill dropdown list
+    $('#group').append('<option value="' + user.group.id + '" selected>' + user.group.name + '</option>');
+    $('.dropdown-sin-1').dropdown({
+      readOnly: true,
+      input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
 	$('#description').val(user.description);
 }
 

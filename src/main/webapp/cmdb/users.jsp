@@ -19,9 +19,15 @@
     <meta charset=UTF-8>
     <title id="title">Service It Desk CMDB Console Пользователи | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
+    <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/jquery.dropdown.css' />
+    <style>
+        .container { margin:150px auto;}
+    </style>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
+    <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/jquery.dropdown.js'></script>
     <script language="javascript">
         var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>'
+        var groupRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>'
     </script>
 </head>
 
@@ -35,7 +41,7 @@
                     <form id="userForm">
                         <table class="tg2">
                             <tr>
-                                <th class="tg2-0laxl" rowspan="4">
+                                <th class="tg2-0laxl" rowspan="3">
                                     <div class="leftArea">
                                         <ul id="userList"></ul>
                                     </div>
@@ -54,13 +60,25 @@
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Group:</label><br/>
-                                    <input form="userForm" type="text" id="group" name="group" required title=""/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="tg2-0lax">
-                                    <label>Notes:</label><br/>
-                                    <textarea form="userForm" id="description" name="description" title=""></textarea>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                          <div class="text-info">Single Mode</div><br>
+                                          <div class="dropdown-sin-1 dropdown-single">
+                                            <select form="userForm" id="group" name="group" style="display:none" placeholder="Select">
+                                            </select>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-sm-4">
+                                        <label>Notes:</label><br/>
+                                        <textarea form="userForm" id="description" name="description" title=""></textarea>
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <br>
                                 </td>
                             </tr>
                             <tr>
@@ -82,6 +100,12 @@
         <%@ include file = "footer.jsp" %>
     </table>
     <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/users.js"></script>
+    <script>
+        $('.dropdown-sin-1').dropdown({
+          readOnly: true,
+          input: '<input type="text" maxLength="20" placeholder="Search">'
+        });
+    </script>
     </body>
 </html>
 
