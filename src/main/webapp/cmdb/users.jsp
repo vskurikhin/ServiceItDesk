@@ -4,7 +4,7 @@
 
 <%--
   ~ users.jsp
-  ~ This file was last modified at 2019-02-04 23:50 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-06 16:08 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -26,7 +26,7 @@
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/jquery.dropdown.js'></script>
     <script language="javascript">
-        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>'
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
         var groupRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>'
     </script>
 </head>
@@ -79,15 +79,14 @@
                                           </div>
                                         </div>
                                     </div>
+                                    <br>
                                     <div class="row">
                                       <div class="col-sm-4">
                                         <label>Notes:</label><br/>
                                         <textarea form="userForm" id="description" name="description" class="my-test-area" title="">
-                                        </textarea>
+                                       </textarea>
                                       </div>
                                     </div>
-                                    <br>
-                                    <br>
                                     <br>
                                     <br>
                                 </td>
