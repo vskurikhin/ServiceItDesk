@@ -36,10 +36,21 @@
     <table class="tg body">
         <%@ include file = "menu.jsp" %>
         <tr>
-            <td class="tg-0lax my-left">
+            <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px;">
+                <%@ include file = "aside.jsp" %>
+            </td>
+            <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
                     <form id="userForm">
                         <table class="tg2">
+                            <tr>
+                                <td class="tg2-baqh" colspan="2">
+                                    <button form="userForm" id="btnAdd">Clear</button>
+                                    <button form="userForm" id="btnSave">Add</button>
+                                    <button form="userForm" id="btnDelete">Delete</button>
+                                    <button form="userForm" id="btnSearch" hidden>Search</button>
+                                </td>
+                            </tr>
                             <tr>
                                 <th class="tg2-0laxl" rowspan="3">
                                     <div class="leftArea">
@@ -62,39 +73,28 @@
                                     <label>Group:</label><br/>
                                     <div class="row">
                                         <div class="col-sm-4">
-                                          <div class="text-info">Single Mode</div><br>
                                           <div class="dropdown-sin-1 dropdown-single">
                                             <select form="userForm" id="group" name="group" style="display:none" placeholder="Select">
                                             </select>
                                           </div>
                                         </div>
                                     </div>
-                                    <br>
-                                    <br>
                                     <div class="row">
                                       <div class="col-sm-4">
                                         <label>Notes:</label><br/>
-                                        <textarea form="userForm" id="description" name="description" title=""></textarea>
+                                        <textarea form="userForm" id="description" name="description" class="my-test-area" title="">
+                                        </textarea>
                                       </div>
                                     </div>
                                     <br>
                                     <br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="tg2-baqh" colspan="2">
-                                    <button form="userForm" id="btnAdd">Clear</button>
-                                    <button form="userForm" id="btnSave">Add</button>
-                                    <button form="userForm" id="btnDelete">Delete</button>
-                                    <button form="userForm" id="btnSearch" hidden>Search</button>
+                                    <br>
+                                    <br>
                                 </td>
                             </tr>
                         </table>
                     </form>
                 </main>
-            </td>
-            <td class="tg-0lax my-right" style="border-left: 2px dotted black;" colspan="2">
-                <%@ include file = "aside.jsp" %>
             </td>
         </tr>
         <%@ include file = "footer.jsp" %>
@@ -108,5 +108,3 @@
     </script>
     </body>
 </html>
-
-

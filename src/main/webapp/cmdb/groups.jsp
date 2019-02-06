@@ -30,10 +30,21 @@
     <table class="tg body">
         <%@ include file = "menu.jsp" %>
         <tr>
-            <td class="tg-0lax my-left">
-                <main id="main" class="w3-col m12 w3-margin-0 my-left">
+            <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px;">
+                <%@ include file = "aside.jsp" %>
+            </td>
+            <td class="tg-0lax my-right-main">
+                <main id="main" class="w3-col m12 w3-margin-0 my-right-main">
                     <form id="groupForm">
                         <table class="tg2">
+                            <tr>
+                                <td class="tg2-baqh" colspan="2">
+                                    <button form="groupForm" id="btnAdd">Clear</button>
+                                    <button form="groupForm" id="btnSave">Add</button>
+                                    <button form="groupForm" id="btnDelete">Delete</button>
+                                    <button form="groupForm" id="btnSearch" hidden>Search</button>
+                                </td>
+                            </tr>
                             <tr>
                                 <th class="tg2-0laxl" rowspan="3">
                                     <div class="leftArea">
@@ -54,23 +65,13 @@
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Notes:</label><br/>
-                                    <textarea form="groupForm" id="description" name="description" title=""></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="tg2-baqh" colspan="2">
-                                    <button form="groupForm" id="btnAdd">Clear</button>
-                                    <button form="groupForm" id="btnSave">Add</button>
-                                    <button form="groupForm" id="btnDelete">Delete</button>
-                                    <button form="groupForm" id="btnSearch" hidden>Search</button>
+                                    <textarea form="groupForm" id="description" name="description" class="my-test-area" title="">
+                                    </textarea>
                                 </td>
                             </tr>
                         </table>
                     </form>
                 </main>
-            </td>
-            <td class="tg-0lax my-right" style="border-left: 2px dotted black;" colspan="2">
-                <%@ include file = "aside.jsp" %>
             </td>
         </tr>
         <%@ include file = "footer.jsp" %>
@@ -78,5 +79,3 @@
     <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/groups.js"></script>
     </body>
 </html>
-
-
