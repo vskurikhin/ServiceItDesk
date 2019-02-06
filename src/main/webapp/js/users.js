@@ -178,28 +178,62 @@ function renderList(data) {
 }
 
 function renderDetails(user) {
+    function renderListGroupSelected(id, name) {
+        console.log('renderListGroupSelected');
+        // $('#group').remove();
+        $('#group').append('<option value="' + id + '" selected>' + name + '</option>');
+    }
+
+    function renderListGroup(data) {
+        console.log('renderListGroup');
+        // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
+        var list = data == null ? [] : (data instanceof Array ? data : [data]);
+
+        $.each(list, function(index, group) {
+            console.log('append: ' + group.id + ' ' + group.name);
+            $('#group').append('<option value="' + group.id + '">' + group.name + '</option>');
+        });
+        $('.dropdown-sin-1').dropdown({
+            readOnly: false,
+            input: '<input type="text" maxLength="20" placeholder="Search">'
+        });
+    }
+
+    function findAllGroup() {
+        console.log('findAllGroup');
+        $.ajax({
+            type: 'GET',
+            url: groupRootURL,
+            dataType: "json", // data type of response
+            success: renderListGroup
+        });
+    }
+
 	$('#userId').val(user.id);
 	$('#name').val(user.name);
-    $('.dropdown-sin-1').empty();
-    $('.dropdown-sin-1').html(
+    $('#div-dropdown-sin-1').empty();
+    $('#div-dropdown-sin-1').html(
+        '<div class="dropdown-sin-1 dropdown-single">' +
         '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
-        '</select>');
-    // TODO fill dropdown list
-    $('#group').append('<option value="' + user.group.id + '" selected>' + user.group.name + '</option>');
-    $('.dropdown-sin-1').dropdown({
-      readOnly: true,
-      input: '<input type="text" maxLength="20" placeholder="Search">'
-    });
+        '</select></div>'
+    );
+    // $('.dropdown-sin-1').html(
+    //     '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
+    //     '</select>');
+    renderListGroupSelected(user.group.id, user.group.name);
+    findAllGroup();
 	$('#description').val(user.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
 	var userId = $('#userId').val();
+	var userGroupId = $('#group').find('option:selected').val();
+    var userGroupName = $('#group').find('option:selected').text();
 	return JSON.stringify({
 		"id": userId === "" ? Number("0") : Number(userId),
 		"name": $('#name').val(),
-        "group": $('#group').val(),
+        "group": {"id": userGroupId, "name": userGroupName, "description": null},
 		"description": $('#description').val()
 		});
 }

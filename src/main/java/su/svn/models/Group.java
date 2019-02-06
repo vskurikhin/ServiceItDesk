@@ -8,6 +8,7 @@
 
 package su.svn.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -66,6 +67,7 @@ public class Group implements DataSet
     @Column(name = "description")
     private String description;
 
+    @JsonBackReference
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @ManyToMany(cascade = {
         CascadeType.PERSIST,

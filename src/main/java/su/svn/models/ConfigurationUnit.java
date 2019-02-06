@@ -8,11 +8,16 @@
 
 package su.svn.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import su.svn.services.adapters.GroupAdapter;
+import su.svn.services.adapters.UserAdapter;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.persistence.*;
 
 import java.util.Objects;
@@ -85,14 +90,17 @@ public class ConfigurationUnit implements DataSet
     @Column(name = "description")
     private String description;
 
+    @JsonbTypeAdapter(UserAdapter.class)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "admin_user_id", nullable = false)
     private User admin;
 
+    @JsonbTypeAdapter(UserAdapter.class)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_user_id", nullable = false)
     private User owner;
 
+    @JsonbTypeAdapter(GroupAdapter.class)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;

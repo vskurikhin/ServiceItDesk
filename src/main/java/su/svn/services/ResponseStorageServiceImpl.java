@@ -220,6 +220,17 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
+    public Response readAllConfigurationUnit()
+    {
+        return Response.ok(
+            configurationUnitDao.findAll()
+                .stream()
+                .peek(cu -> cu.getGroup().setUsers(null))
+                .collect(Collectors.toList())
+        ).build();
+    }
+
+    @Override
     public Response readAllGroups()
     {
         return Response.ok(

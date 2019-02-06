@@ -28,7 +28,8 @@
     <script language="javascript">
         var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_UNIT_RESOURCE %>';
         var groupRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>';
-        var configurationUnitRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>'
+        var userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
+        var configurationTypeRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
     </script>
 </head>
 
@@ -71,13 +72,43 @@
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
+                                    <label>Admin:</label><br/>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="dropdown-sin-1 dropdown-single">
+                                                <select form="configurationUnitForm" id="admin" name="admin" style="display:none" placeholder="Select">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <label>Owner:</label><br/>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="dropdown-sin-2 dropdown-single">
+                                                <select form="configurationUnitForm" id="owner" name="owner" style="display:none" placeholder="Select">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
                                     <label>Group:</label><br/>
                                     <div class="row">
                                         <div class="col-sm-4">
-                                          <div class="dropdown-sin-1 dropdown-single">
+                                          <div class="dropdown-sin-3 dropdown-single">
                                             <select form="configurationUnitForm" id="group" name="group" style="display:none" placeholder="Select">
                                             </select>
                                           </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <label>Configuration Type:</label><br/>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="dropdown-sin-4 dropdown-single">
+                                                <select form="configurationUnitForm" id="ctype" name="ctype" style="display:none" placeholder="Select">
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <br>
@@ -104,6 +135,14 @@
         $('.dropdown-sin-1').dropdown({
           readOnly: true,
           input: '<input type="text" maxLength="20" placeholder="Search">'
+        });
+        $('.dropdown-sin-2').dropdown({
+            readOnly: true,
+            input: '<input type="text" maxLength="20" placeholder="Search">'
+        });
+        $('.dropdown-sin-3').dropdown({
+            readOnly: true,
+            input: '<input type="text" maxLength="20" placeholder="Search">'
         });
     </script>
     </body>

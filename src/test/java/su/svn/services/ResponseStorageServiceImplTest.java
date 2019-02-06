@@ -213,7 +213,7 @@ class ResponseStorageServiceImplTest
     void readAllConfigurationUnit(ResponseStorageService storage)
     {
         dataSetSupplier = ConfigurationUnit::new;
-        Response response = storage.readAll(ConfigurationUnit.class);
+        Response response = storage.readAllConfigurationUnit();
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 

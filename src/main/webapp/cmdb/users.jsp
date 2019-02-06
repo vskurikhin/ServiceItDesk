@@ -72,7 +72,7 @@
                                 <td class="tg2-0lax">
                                     <label>Group:</label><br/>
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-4" id="div-dropdown-sin-1">
                                           <div class="dropdown-sin-1 dropdown-single">
                                             <select form="userForm" id="group" name="group" style="display:none" placeholder="Select">
                                             </select>
@@ -100,10 +100,10 @@
     </table>
     <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/users.js"></script>
     <script>
-        $('.dropdown-sin-1').dropdown({
-          readOnly: true,
-          input: '<input type="text" maxLength="20" placeholder="Search">'
-        });
+        // $('.dropdown-sin-1').dropdown({
+        //   readOnly: false,
+        //   input: '<input type="text" maxLength="20" placeholder="Search">'
+        // });
     </script>
     </body>
 </html>

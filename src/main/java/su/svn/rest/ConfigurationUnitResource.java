@@ -48,7 +48,7 @@ public class ConfigurationUnitResource
     @GET
     public Response readAll()
     {
-        return storage.readAll(ConfigurationUnit.class);
+        return storage.readAllConfigurationUnit();
     }
 
     @GET

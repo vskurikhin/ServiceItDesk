@@ -26,6 +26,8 @@ public interface ResponseStorageService
 
     <E extends DataSet> Response readAll(Class<E> eClass);
 
+    Response readAllConfigurationUnit();
+
     Response readAllGroups();
 
     <E extends DataSet> Response readById(Class<E> eClass, Long id);
