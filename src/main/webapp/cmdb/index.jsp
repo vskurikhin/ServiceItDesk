@@ -21,7 +21,6 @@
 </head>
 
 <body class="body">
-    <h1>Let's go!</h1>
     <table class="tg body">
 <%@ include file = "menu.jsp" %>
         <tr>

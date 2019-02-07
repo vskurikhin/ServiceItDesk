@@ -180,13 +180,11 @@ function renderList(data) {
 function renderDetails(user) {
     function renderListGroupSelected(id, name) {
         console.log('renderListGroupSelected');
-        // $('#group').remove();
         $('#group').append('<option value="' + id + '" selected>' + name + '</option>');
     }
 
     function renderListGroup(data) {
         console.log('renderListGroup');
-        // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
         var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
         $.each(list, function(index, group) {
@@ -217,9 +215,6 @@ function renderDetails(user) {
         '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
         '</select></div>'
     );
-    // $('.dropdown-sin-1').html(
-    //     '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
-    //     '</select>');
     renderListGroupSelected(user.group.id, user.group.name);
     findAllGroup();
 	$('#description').val(user.description);
@@ -235,7 +230,7 @@ function formToJSON() {
 		"name": $('#name').val(),
         "group": {"id": userGroupId, "name": userGroupName, "description": null},
 		"description": $('#description').val()
-		});
+	});
 }
 
 // Retrieve user list when application starts

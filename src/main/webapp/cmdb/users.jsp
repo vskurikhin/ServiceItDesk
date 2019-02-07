@@ -32,7 +32,6 @@
 </head>
 
 <body class="body">
-    <h1>Let's go!</h1>
     <table class="tg body">
         <%@ include file = "menu.jsp" %>
         <tr>
@@ -100,10 +99,10 @@
     </table>
     <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/users.js"></script>
     <script>
-        // $('.dropdown-sin-1').dropdown({
-        //   readOnly: false,
-        //   input: '<input type="text" maxLength="20" placeholder="Search">'
-        // });
+        $('.dropdown-sin-1').dropdown({
+          readOnly: false,
+          input: '<input type="text" maxLength="20" placeholder="Search">'
+        });
     </script>
     </body>
 </html>

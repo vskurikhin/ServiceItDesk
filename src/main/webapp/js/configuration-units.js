@@ -181,11 +181,11 @@ function renderDetails(configurationUnit) {
 	$('#configurationUnitId').val(configurationUnit.id);
 	$('#name').val(configurationUnit.name);
 
+    // TODO function
     $('.dropdown-sin-1').empty();
     $('.dropdown-sin-1').html(
         '<select form="configurationUnitForm" id="admin" name="admin" style="display:none" placeholder="Select1">' +
         '</select>');
-    // TODO fill dropdown list
     $('#admin').append('<option value="' + configurationUnit.admin.id + '" selected>' + configurationUnit.admin.name + '</option>');
     $('.dropdown-sin-1').dropdown({
         readOnly: true,
@@ -196,7 +196,6 @@ function renderDetails(configurationUnit) {
     $('.dropdown-sin-2').html(
         '<select form="configurationUnitForm" id="owner" name="owner" style="display:none" placeholder="Select1">' +
         '</select>');
-    // TODO fill dropdown list
     $('#owner').append('<option value="' + configurationUnit.owner.id + '" selected>' + configurationUnit.owner.name + '</option>');
     $('.dropdown-sin-2').dropdown({
         readOnly: true,
@@ -207,7 +206,6 @@ function renderDetails(configurationUnit) {
     $('.dropdown-sin-3').html(
         '<select form="configurationUnitForm" id="group" name="group" style="display:none" placeholder="Select3">' +
         '</select>');
-    // TODO fill dropdown list
     $('#group').append('<option value="' + configurationUnit.group.id + '" selected>' + configurationUnit.group.name + '</option>');
     $('.dropdown-sin-3').dropdown({
       readOnly: true,
@@ -218,7 +216,6 @@ function renderDetails(configurationUnit) {
     $('.dropdown-sin-4').html(
         '<select form="configurationUnitForm" id="ctype" name="ctype" style="display:none" placeholder="Select3">' +
         '</select>');
-    // TODO fill dropdown list
     $('#ctype').append('<option value="' + configurationUnit.type.id + '" selected>' + configurationUnit.type.name + '</option>');
     $('.dropdown-sin-4').dropdown({
         readOnly: true,
