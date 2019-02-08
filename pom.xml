@@ -2,7 +2,7 @@
 
 <!--
   ~ pom.xml
-  ~ This file was last modified at 2019-02-06 16:23 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-08 23:38 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,7 +17,7 @@
 
     <groupId>su.svn</groupId>
     <artifactId>ServiceItDesk</artifactId>
-    <version>1.2-35</version>
+    <version>1.2-36</version>
     <packaging>war</packaging>
 
     <name>JavaEE-09-2018 Service It Desk Webapp</name>

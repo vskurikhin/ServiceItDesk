@@ -1,6 +1,6 @@
 /*
  * users.js
- * This file was last modified at 2019-02-04 23:55 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 23:37 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -77,6 +77,21 @@ function findAll() {
 	});
 }
 
+function findAllGroup() {
+    console.log('findAllGroup');
+    $.ajax({
+        type: 'GET',
+        url: groupRootURL,
+        dataType: "json", // data type of response
+        success: renderListGroup
+    });
+}
+
+function find() {
+	findAll();
+	findAllGroup();
+}
+
 function findByName(searchKey) {
 	console.log('findByName: ' + searchKey);
 	$.ajax({
@@ -121,9 +136,6 @@ function addUser() {
 		    },
             406: function(data, textStatus, jqXHR){
                 alert('addUser error: ' + textStatus);
-                $('#btnDelete').show();
-                $('#btnSave').html('Save');
-                $('#userId').val(data.id);
             },
             500: function(data, textStatus, jqXHR){
                 alert('addUser FATAL error: ' + textStatus);
@@ -177,40 +189,31 @@ function renderList(data) {
 	setTriggers();
 }
 
+function renderListGroup(data) {
+    console.log('renderListGroup');
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
+
+    $.each(list, function(index, group) {
+        console.log('append: ' + group.id + ' ' + group.name);
+        $('#group').append('<option value="' + group.id + '">' + group.name + '</option>');
+    });
+    $('.dropdown-sin-1').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
+}
+
 function renderDetails(user) {
     function renderListGroupSelected(id, name) {
         console.log('renderListGroupSelected');
         $('#group').append('<option value="' + id + '" selected>' + name + '</option>');
     }
 
-    function renderListGroup(data) {
-        console.log('renderListGroup');
-        var list = data == null ? [] : (data instanceof Array ? data : [data]);
-
-        $.each(list, function(index, group) {
-            console.log('append: ' + group.id + ' ' + group.name);
-            $('#group').append('<option value="' + group.id + '">' + group.name + '</option>');
-        });
-        $('.dropdown-sin-1').dropdown({
-            readOnly: false,
-            input: '<input type="text" maxLength="20" placeholder="Search">'
-        });
-    }
-
-    function findAllGroup() {
-        console.log('findAllGroup');
-        $.ajax({
-            type: 'GET',
-            url: groupRootURL,
-            dataType: "json", // data type of response
-            success: renderListGroup
-        });
-    }
-
 	$('#userId').val(user.id);
 	$('#name').val(user.name);
-    $('#div-dropdown-sin-1').empty();
-    $('#div-dropdown-sin-1').html(
+    var divDropdownSin1 = $('#div-dropdown-sin-1');
+    divDropdownSin1.empty();
+    divDropdownSin1.html(
         '<div class="dropdown-sin-1 dropdown-single">' +
         '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
         '</select></div>'
@@ -228,11 +231,11 @@ function formToJSON() {
 	return JSON.stringify({
 		"id": userId === "" ? Number("0") : Number(userId),
 		"name": $('#name').val(),
-        "group": {"id": userGroupId, "name": userGroupName, "description": null},
+        "group": {"id": Number(userGroupId), "name": userGroupName},
 		"description": $('#description').val()
 	});
 }
 
 // Retrieve user list when application starts
-jQuery(document).ready(findAll());
+jQuery(document).ready(find());
 

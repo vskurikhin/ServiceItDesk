@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-types.jsp
-  ~ This file was last modified at 2019-02-06 16:14 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-08 22:46 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -64,8 +64,7 @@
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Notes:</label><br/>
-                                    <textarea form="configurationTypeForm" id="description" name="description" class="my-test-area" title="">
-                                    </textarea>
+                                    <textarea form="configurationTypeForm" id="description" name="description" class="my-test-area" title=""></textarea>
                                 </td>
                             </tr>
                         </table>

@@ -4,7 +4,7 @@
 
 <%--
   ~ users.jsp
-  ~ This file was last modified at 2019-02-06 16:08 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-08 22:46 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -82,8 +82,7 @@
                                     <div class="row">
                                       <div class="col-sm-4">
                                         <label>Notes:</label><br/>
-                                        <textarea form="userForm" id="description" name="description" class="my-test-area" title="">
-                                       </textarea>
+                                        <textarea form="userForm" id="description" name="description" class="my-test-area" title=""></textarea>
                                       </div>
                                     </div>
                                     <br>
@@ -98,11 +97,5 @@
         <%@ include file = "footer.jsp" %>
     </table>
     <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/users.js"></script>
-    <script>
-        $('.dropdown-sin-1').dropdown({
-          readOnly: false,
-          input: '<input type="text" maxLength="20" placeholder="Search">'
-        });
-    </script>
     </body>
 </html>

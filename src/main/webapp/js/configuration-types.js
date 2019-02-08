@@ -1,6 +1,6 @@
 /*
  * configuration-types.js
- * This file was last modified at 2019-02-06 16:02 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 23:35 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -121,9 +121,6 @@ function addConfigurationType() {
 		    },
             406: function(data, textStatus, jqXHR){
                 alert('addConfigurationType error: ' + textStatus);
-                $('#btnDelete').show();
-                $('#btnSave').html('Save');
-                $('#configurationTypeId').val(data.id);
             },
             500: function(data, textStatus, jqXHR){
                 alert('addConfigurationType FATAL error: ' + textStatus);

@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-units.jsp
-  ~ This file was last modified at 2019-02-06 16:16 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-08 22:47 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -73,7 +73,7 @@
                                 <td class="tg2-0lax">
                                     <label>Admin:</label><br/>
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-4"  id="div-dropdown-sin-1">
                                             <div class="dropdown-sin-1 dropdown-single">
                                                 <select form="configurationUnitForm" id="admin" name="admin" style="display:none" placeholder="Select">
                                                 </select>
@@ -83,7 +83,7 @@
                                     <br>
                                     <label>Owner:</label><br/>
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-4" id="div-dropdown-sin-2">
                                             <div class="dropdown-sin-2 dropdown-single">
                                                 <select form="configurationUnitForm" id="owner" name="owner" style="display:none" placeholder="Select">
                                                 </select>
@@ -93,7 +93,7 @@
                                     <br>
                                     <label>Group:</label><br/>
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-4" id="div-dropdown-sin-3">
                                           <div class="dropdown-sin-3 dropdown-single">
                                             <select form="configurationUnitForm" id="group" name="group" style="display:none" placeholder="Select">
                                             </select>
@@ -103,7 +103,7 @@
                                     <br>
                                     <label>Configuration Type:</label><br/>
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-4" id="div-dropdown-sin-4">
                                             <div class="dropdown-sin-4 dropdown-single">
                                                 <select form="configurationUnitForm" id="ctype" name="ctype" style="display:none" placeholder="Select">
                                                 </select>
@@ -114,8 +114,7 @@
                                     <div class="row">
                                       <div class="col-sm-4">
                                         <label>Notes:</label><br/>
-                                        <textarea form="configurationUnitForm" id="description" name="description" class="my-test-area" title="">
-                                       </textarea>
+                                        <textarea form="configurationUnitForm" id="description" name="description" class="my-test-area" title=""></textarea>
                                       </div>
                                     </div>
                                     <br>
@@ -130,19 +129,5 @@
         <%@ include file = "footer.jsp" %>
     </table>
     <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/configuration-units.js"></script>
-    <script>
-        $('.dropdown-sin-1').dropdown({
-          readOnly: true,
-          input: '<input type="text" maxLength="20" placeholder="Search">'
-        });
-        $('.dropdown-sin-2').dropdown({
-            readOnly: true,
-            input: '<input type="text" maxLength="20" placeholder="Search">'
-        });
-        $('.dropdown-sin-3').dropdown({
-            readOnly: true,
-            input: '<input type="text" maxLength="20" placeholder="Search">'
-        });
-    </script>
     </body>
 </html>

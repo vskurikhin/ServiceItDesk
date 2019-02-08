@@ -1,6 +1,6 @@
 /*
  * ResponseStorageServiceImpl.java
- * This file was last modified at 2019-02-03 16:21 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 22:24 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -121,28 +121,43 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         }
     }
 
+    private void prepareConfigurationUnit(ConfigurationUnit unit)
+    {
+        Optional<User> admin = userDao.findById(unit.getAdmin().getId());
+        if ( ! admin.isPresent()) {
+            throw new PersistenceException("can't find admin user by id " + unit.getGroup().getId() + '!');
+        }
+        unit.setAdmin(admin.get());
+
+        Optional<User> owher = userDao.findById(unit.getOwner().getId());
+        if ( ! owher.isPresent()) {
+            throw new PersistenceException("can't find owner user by id " + unit.getGroup().getId() + '!');
+        }
+        unit.setOwner(owher.get());
+
+        Optional<Group> group = groupDao.findById(unit.getGroup().getId());
+        if ( ! group.isPresent()) {
+            throw new PersistenceException("can't find group by id " + unit.getGroup().getId() + '!');
+        }
+        unit.setGroup(group.get());
+
+        Optional<ConfigurationType> type = configurationTypeDao.findById(unit.getType().getId());
+        if ( ! type.isPresent()) {
+            throw new PersistenceException("can't find configuration type by id " + unit.getGroup().getId() + '!');
+        }
+        unit.setType(type.get());
+
+        if ( ! ConfigurationUnit.isValidForSave(unit)) {
+            throw new PersistenceException("Configuration unit isn't valid for save!");
+        }
+    }
+
     @Override
     @TransactionAttribute(REQUIRES_NEW)
     public Response createConfigurationUnit(StringBuffer requestURL, ConfigurationUnit cu)
     {
         try {
-            if ( ! ConfigurationUnit.isValidForSave(cu)) {
-                throw new PersistenceException("configuration unit isn't valid for save!");
-            }
-            userDao.save(cu.getAdmin());
-            userDao.save(cu.getOwner());
-            if (Group.isValidForSave(cu.getGroup())) {
-                groupDao.save(cu.getGroup());
-            }
-            else {
-                LOGGER.warn("Can't save group: {} for configuration unit id: {} ", cu.getGroup(), cu.getId());
-            }
-            if (ConfigurationType.isValidForSave(cu.getType())) {
-                configurationTypeDao.save(cu.getType());
-            }
-            else {
-                LOGGER.warn("Can't save type: {} for configuration unit id: {} ", cu.getType(), cu.getId());
-            }
+            prepareConfigurationUnit(cu);
 
             return create(requestURL, cu);
         }
@@ -190,25 +205,30 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         }
     }
 
+    private void prepareUser(User user)
+    {
+        Optional<PrimaryGroup> group = primaryGroupDao.findById(user.getGroup().getId());
+        if ( ! group.isPresent()) {
+            throw new PersistenceException("can't find group by id " + user.getGroup().getId() + '!');
+        }
+        user.setGroup(group.get());
+
+        if ( ! User.isValidForSave(user)) {
+            throw new PersistenceException("user isn't valid for save!");
+        }
+    }
+
     @Override
     @TransactionAttribute(REQUIRES_NEW)
     public Response createUser(StringBuffer requestURL, User user)
     {
         try {
-            if ( ! User.isValidForSave(user)) {
-                throw new PersistenceException("user isn't valid for save!");
-            }
-            if (PrimaryGroup.isValidForSave(user.getGroup())) {
-                primaryGroupDao.save(user.getGroup());
-            }
-            else {
-                LOGGER.warn("Can't save group: {} for user id: {} ", user.getGroup(), user.getId());
-            }
+            prepareUser(user);
 
             return create(requestURL, user);
         }
         catch (RuntimeException e) {
-            LOGGER.error("Try create User: {} ", e.getMessage());
+            LOGGER.error("Try create User: {} with exception: ", e.getMessage());
             return Response.notAcceptable(Collections.emptyList()).build();
         }
     }
@@ -298,6 +318,34 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         }
         catch (RuntimeException e) {
             LOGGER.error("Try update {}: {} ", entity.getClass().getCanonicalName(), e);
+            return Response.notAcceptable(Collections.emptyList()).build();
+        }
+    }
+
+    @Override
+    public Response updateConfigurationUnit(StringBuffer requestURL, ConfigurationUnit unit)
+    {
+        try {
+            prepareConfigurationUnit(unit);
+
+            return update(requestURL, unit);
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Try create ConfigurationUnit: {} ", e.getMessage());
+            return Response.notAcceptable(Collections.emptyList()).build();
+        }
+    }
+
+    @Override
+    public Response updateUser(StringBuffer requestURL, User user)
+    {
+        try {
+            prepareUser(user);
+
+            return update(requestURL, user);
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Try create User: {} ", e.getMessage());
             return Response.notAcceptable(Collections.emptyList()).build();
         }
     }

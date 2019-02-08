@@ -1,6 +1,6 @@
 /*
  * ResponseStorageService.java
- * This file was last modified at 2019-02-03 19:36 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 14:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -35,6 +35,10 @@ public interface ResponseStorageService
     Response readGroupByIdWithUsers(Long id);
 
     <E extends DataSet> Response update(StringBuffer requestURL, E entity);
+
+    Response updateConfigurationUnit(StringBuffer requestURL, ConfigurationUnit unit);
+
+    Response updateUser(StringBuffer requestURL, User entity);
 
     <E extends DataSet> Response delete(Class<E> eClass, Long id);
 }

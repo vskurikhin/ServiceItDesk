@@ -1,6 +1,6 @@
 /*
  * UserResource.java
- * This file was last modified at 2019-02-04 23:36 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 22:26 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -36,7 +36,7 @@ public class UserResource
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response create(User entity)
     {
-        return storage.create(servletRequest.getRequestURL(), entity);
+        return storage.createUser(servletRequest.getRequestURL(), entity);
     }
 
     @POST
@@ -68,7 +68,7 @@ public class UserResource
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(User entity)
     {
-        return storage.update(servletRequest.getRequestURL(), entity);
+        return storage.updateUser(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE

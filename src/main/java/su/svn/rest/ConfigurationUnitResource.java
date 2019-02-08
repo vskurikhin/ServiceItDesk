@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitResource.java
- * This file was last modified at 2019-02-03 15:57 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 14:20 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -35,7 +35,7 @@ public class ConfigurationUnitResource
     @POST
     public Response create(ConfigurationUnit entity)
     {
-        return storage.create(servletRequest.getRequestURL(), entity);
+        return storage.createConfigurationUnit(servletRequest.getRequestURL(), entity);
     }
 
     @POST
@@ -61,7 +61,7 @@ public class ConfigurationUnitResource
     @PUT
     public Response update(ConfigurationUnit entity)
     {
-        return storage.update(servletRequest.getRequestURL(), entity);
+        return storage.updateConfigurationUnit(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE

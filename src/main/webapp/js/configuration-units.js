@@ -1,6 +1,6 @@
 /*
  * configuration-units.js
- * This file was last modified at 2019-02-06 16:16 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 23:35 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -77,6 +77,43 @@ function findAll() {
 	});
 }
 
+function findAllGroups() {
+    console.log('findAllGroups');
+    $.ajax({
+        type: 'GET',
+        url: groupRootURL,
+        dataType: "json", // data type of response
+        success: renderListGroup
+    });
+}
+
+function findAllUsers() {
+    console.log('findAllUsers');
+    $.ajax({
+        type: 'GET',
+        url: userRootURL,
+        dataType: "json", // data type of response
+        success: renderListUser
+    });
+}
+
+function findAllCTypes() {
+    console.log('findAllCTypes');
+    $.ajax({
+        type: 'GET',
+        url: configurationTypeRootURL,
+        dataType: "json", // data type of response
+        success: renderListConfigurationType
+    });
+}
+
+function find() {
+    findAll();
+    findAllCTypes();
+    findAllGroups();
+    findAllUsers();
+}
+
 function findByName(searchKey) {
 	console.log('findByName: ' + searchKey);
 	$.ajax({
@@ -121,9 +158,6 @@ function addConfigurationUnit() {
 		    },
             406: function(data, textStatus, jqXHR){
                 alert('addConfigurationUnit error: ' + textStatus);
-                $('#btnDelete').show();
-                $('#btnSave').html('Save');
-                $('#configurationUnitId').val(data.id);
             },
             500: function(data, textStatus, jqXHR){
                 alert('addConfigurationUnit FATAL error: ' + textStatus);
@@ -177,50 +211,97 @@ function renderList(data) {
 	setTriggers();
 }
 
+function renderListConfigurationType(data) {
+    console.log('renderListGroup');
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var ctypeSelect = $('#ctype');
+    var typeId = Number(ctypeSelect.find('option:selected').val());
+
+    $.each(list, function(index, type) {
+        if (typeId !== type.id) {
+            console.log('append: ' + type.id + ' ' + type.name); // TODO remove
+            ctypeSelect.append('<option value="' + type.id + '">' + type.name + '</option>');
+        }
+    });
+    $('.dropdown-sin-4').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
+}
+
+function renderListGroup(data) {
+    console.log('renderListGroup');
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var groupSelect = $('#group');
+    var groupId = Number(groupSelect.find('option:selected').val());
+    console.log('renderListGroup groupId:' + groupId);
+
+    $.each(list, function(index, group) {
+        if (groupId !== group.id) {
+            console.log('renderListGroup append: ' + group.id + ' ' + group.name); // TODO remove
+            groupSelect.append('<option value="' + group.id + '">' + group.name + '</option>');
+        }
+    });
+    $('.dropdown-sin-3').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
+}
+
+function renderListUser(data) {
+    console.log('renderListUser');
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var adminSelect = $('#admin');
+    var ownerSelect = $('#owner');
+    var adminId = Number(adminSelect.find('option:selected').val());
+    var ownerId = Number(ownerSelect.find('option:selected').val());
+
+    $.each(list, function(index, user) {
+        if (adminId !== user.id) {
+            console.log('renderListUser admin append: ' + user.id + ' ' + user.name);
+            adminSelect.append('<option value="' + user.id + '">' + user.name + '</option>');
+        }
+        if (ownerId !== user.id) {
+            console.log('renderListUser owner append: ' + user.id + ' ' + user.name);
+            ownerSelect.append('<option value="' + user.id + '">' + user.name + '</option>');
+        }
+    });
+    $('.dropdown-sin-1').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
+    $('.dropdown-sin-2').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
+}
+
 function renderDetails(configurationUnit) {
+    function renderDropdown(num, selectId, selectName, id, name) {
+        var divDropdownSin = $('#div-dropdown-sin-' + num);
+
+        divDropdownSin.empty();
+        divDropdownSin.html(
+            '<div class="dropdown-sin-' + num + ' dropdown-single">' +
+            '<select form="configurationUnitForm" id="' +
+            selectId + '" name="' + selectName +
+            '" style="display:none" placeholder="Select"></select></div>'
+        );
+        $('#' + selectId).append('<option value="' + id + '" selected>' + name + '</option>');
+    }
+
+    console.log('renderDetails');
+
 	$('#configurationUnitId').val(configurationUnit.id);
 	$('#name').val(configurationUnit.name);
 
-    // TODO function
-    $('.dropdown-sin-1').empty();
-    $('.dropdown-sin-1').html(
-        '<select form="configurationUnitForm" id="admin" name="admin" style="display:none" placeholder="Select1">' +
-        '</select>');
-    $('#admin').append('<option value="' + configurationUnit.admin.id + '" selected>' + configurationUnit.admin.name + '</option>');
-    $('.dropdown-sin-1').dropdown({
-        readOnly: true,
-        input: '<input type="text" maxLength="20" placeholder="Search">'
-    });
-
-    $('.dropdown-sin-2').empty();
-    $('.dropdown-sin-2').html(
-        '<select form="configurationUnitForm" id="owner" name="owner" style="display:none" placeholder="Select1">' +
-        '</select>');
-    $('#owner').append('<option value="' + configurationUnit.owner.id + '" selected>' + configurationUnit.owner.name + '</option>');
-    $('.dropdown-sin-2').dropdown({
-        readOnly: true,
-        input: '<input type="text" maxLength="20" placeholder="Search">'
-    });
-
-    $('.dropdown-sin-3').empty();
-    $('.dropdown-sin-3').html(
-        '<select form="configurationUnitForm" id="group" name="group" style="display:none" placeholder="Select3">' +
-        '</select>');
-    $('#group').append('<option value="' + configurationUnit.group.id + '" selected>' + configurationUnit.group.name + '</option>');
-    $('.dropdown-sin-3').dropdown({
-      readOnly: true,
-      input: '<input type="text" maxLength="20" placeholder="Search">'
-    });
-
-    $('.dropdown-sin-4').empty();
-    $('.dropdown-sin-4').html(
-        '<select form="configurationUnitForm" id="ctype" name="ctype" style="display:none" placeholder="Select3">' +
-        '</select>');
-    $('#ctype').append('<option value="' + configurationUnit.type.id + '" selected>' + configurationUnit.type.name + '</option>');
-    $('.dropdown-sin-4').dropdown({
-        readOnly: true,
-        input: '<input type="text" maxLength="20" placeholder="Search">'
-    });
+	renderDropdown('1', 'admin', 'admin', configurationUnit.admin.id, configurationUnit.admin.name);
+    renderDropdown('2', 'owner', 'owner', configurationUnit.owner.id, configurationUnit.owner.name);
+    findAllUsers();
+    renderDropdown('3', 'group', 'group', configurationUnit.group.id, configurationUnit.group.name);
+    findAllGroups();
+    renderDropdown('4', 'ctype', 'ctype', configurationUnit.type.id, configurationUnit.type.name);
+    findAllCTypes();
 
 	$('#description').val(configurationUnit.description);
 }
@@ -228,17 +309,34 @@ function renderDetails(configurationUnit) {
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
 	var configurationUnitId = $('#configurationUnitId').val();
+
+    var group = $('#group');
+    var configurationUnitGroupId = group.find('option:selected').val();
+    var configurationUnitGroupName = group.find('option:selected').text();
+
+    var admin = $('#admin');
+    var configurationUnitAdminId = admin.find('option:selected').val();
+    var configurationUnitAdminName = admin.find('option:selected').text();
+
+    var owner = $('#owner');
+    var configurationUnitOwnerId = owner.find('option:selected').val();
+    var configurationUnitOwnerName = owner.find('option:selected').text();
+
+    var ctype = $('#ctype');
+    var configurationUnitTypeId = ctype.find('option:selected').val();
+    var configurationUnitTypeName = ctype.find('option:selected').text();
+
 	return JSON.stringify({
 		"id": configurationUnitId === "" ? Number("0") : Number(configurationUnitId),
 		"name": $('#name').val(),
-        "admin": $('#admin').val(),
-        "owner": $('#owner').val(),
-        "group": $('#group').val(),
-        "type": $('#ctype').val(),
+        "admin": {"id": Number(configurationUnitAdminId), "name": configurationUnitAdminName, "description": null},
+        "owner": {"id": Number(configurationUnitOwnerId), "name": configurationUnitOwnerName, "description": null},
+        "group": {"id": Number(configurationUnitGroupId), "name": configurationUnitGroupName, "description": null},
+        "type":  {"id": Number(configurationUnitTypeId),  "name": configurationUnitTypeName,  "description": null},
 		"description": $('#description').val()
-		});
+	});
 }
 
 // Retrieve configurationUnit list when application starts
-jQuery(document).ready(findAll());
+jQuery(document).ready(find());
 

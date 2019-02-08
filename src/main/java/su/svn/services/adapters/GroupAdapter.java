@@ -1,6 +1,6 @@
 /*
  * GroupAdapter.java
- * This file was last modified at 2019-02-06 22:26 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-08 21:38 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -32,7 +32,7 @@ public class GroupAdapter implements JsonbAdapter<Group, JsonObject>
         Group group = new Group();
         group.setId((long) json.getInt("id"));
         group.setName(json.getString("name"));
-        group.setDescription(json.getString("description"));
+        group.setDescription(json.isNull("description") ? null : json.getString("description"));
         return group;
     }
 }
