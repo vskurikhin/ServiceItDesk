@@ -1,6 +1,6 @@
 /*
  * PrimaryGroup.java
- * This file was last modified at 2019-02-02 19:20 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:15 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -30,15 +30,15 @@ import static su.svn.models.PrimaryGroup.FIND_ALL_WHERE_NAME;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT g FROM Group g"
+        query = "SELECT DISTINCT g FROM Group g ORDER BY g.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_NAME,
-        query = "SELECT g FROM Group g WHERE g.name LIKE :name"
+        query = "SELECT DISTINCT g FROM Group g WHERE g.name LIKE :name ORDER BY g.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT g FROM Group g WHERE g.description LIKE :desc"
+        query = "SELECT DISTINCT g FROM Group g WHERE g.description LIKE :desc ORDER BY g.id"
     ),
 })
 public class PrimaryGroup implements DataSet

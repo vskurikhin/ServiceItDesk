@@ -1,15 +1,15 @@
 /*
- * groups.js
- * This file was last modified at 2019-02-09 22:58 by Victor N. Skurikhin.
+ * statuses.js
+ * This file was last modified at 2019-02-09 14:26 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
 // rootURL - The root URL for the RESTful services
-// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/groups";
+// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/statuss";
 
-var currentGroup;
+var currentStatus;
 
 function setTriggers() {
     // Nothing to delete in initial application state
@@ -17,38 +17,38 @@ function setTriggers() {
 
     // Register listeners
     $('#btnSearch').click(function() {
-        search($('#name').val());
+        search($('#status').val());
         return false;
     });
 
     // Trigger search when pressing 'Return' on search key input field
     $('#searchKey').keypress(function(e){
         if(e.which === 13) {
-            search($('#name').val());
+            search($('#status').val());
             e.preventDefault();
             return false;
         }
     });
 
     $('#btnAdd').click(function() {
-        newGroup();
+        newStatus();
         return false;
     });
 
     $('#btnSave').click(function() {
-        if ($('#groupId').val() === '')
-            addGroup();
+        if ($('#statusId').val() === '')
+            addStatus();
         else
-            updateGroup();
+            updateStatus();
         return false;
     });
 
     $('#btnDelete').click(function() {
-        deleteGroup();
+        deleteStatus();
         return false;
     });
 
-    $('#groupList a').click(function() {
+    $('#statusList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -60,14 +60,11 @@ function search(searchKey) {
 		findByName(searchKey);
 }
 
-function newGroup() {
-    setTimeout(function(){location.reload();}, 500);
-    /*
+function newStatus() {
 	$('#btnDelete').hide();
     $('#btnSave').html('Add');
-	currentGroup = {};
-	renderDetails(currentGroup); // Display empty form
-	*/
+	currentStatus = {};
+	renderDetails(currentStatus); // Display empty form
 }
 
 function findAll() {
@@ -99,15 +96,15 @@ function findById(id) {
 		success: function(data){
             $('#btnDelete').show();
             $('#btnSave').html('Save');
-			console.log('findById success: ' + data.name);
-			currentGroup = data;
-			renderDetails(currentGroup);
+			console.log('findById success: ' + data.status);
+			currentStatus = data;
+			renderDetails(currentStatus);
 		}
 	});
 }
 
-function addGroup() {
-	console.log('addGroup');
+function addStatus() {
+	console.log('addStatus');
 	$.ajax({
 		type: 'POST',
 		contentType: 'application/json',
@@ -116,24 +113,24 @@ function addGroup() {
 		data: formToJSON(),
         statusCode: {
 		    201: function(data, textStatus, jqXHR){
-                console.log("Group created successfully" + textStatus);
+                console.log("Status created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
-                $('#groupId').val(data.id);
+                $('#statusId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
 		    },
             406: function(data, textStatus, jqXHR){
-                alert('addGroup error: ' + textStatus);
+                alert('addStatus error: ' + textStatus);
             },
             500: function(data, textStatus, jqXHR){
-                alert('addGroup FATAL error: ' + textStatus);
+                alert('addStatus FATAL error: ' + textStatus);
             }
         }
 	});
 }
 
-function updateGroup() {
-	console.log('updateGroup');
+function updateStatus() {
+	console.log('updateStatus');
 	$.ajax({
 		type: 'PUT',
 		contentType: 'application/json',
@@ -141,27 +138,27 @@ function updateGroup() {
 		dataType: "json",
 		data: formToJSON(),
 		success: function(data, textStatus, jqXHR){
-            console.log("Group updated successfully: " + textStatus);
+            console.log("Status updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateGroup error: ' + textStatus);
+			alert('updateStatus error: ' + textStatus);
 		}
 	});
 }
 
-function deleteGroup() {
-	console.log('deleteGroup');
+function deleteStatus() {
+	console.log('deleteStatus');
 	$.ajax({
 		type: 'DELETE',
-		url: rootURL + '/' + $('#groupId').val(),
+		url: rootURL + '/' + $('#statusId').val(),
 		success: function(data, textStatus, jqXHR){
-			alert('Group deleted successfully');
+			alert('Status deleted successfully');
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteGroup error');
+			alert('deleteStatus error');
 		}
 	});
 }
@@ -170,29 +167,29 @@ function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
 	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#groupList li').remove();
-	$.each(list, function(index, group) {
-		$('#groupList').append('<li><a href="#" data-identity="' + group.id + '">'+group.name+'</a></li>');
+	$('#statusList li').remove();
+	$.each(list, function(index, status) {
+		$('#statusList').append('<li><a href="#" data-identity="' + status.id + '">' + status.status + '</a></li>');
 	});
 	setTriggers();
 }
 
-function renderDetails(group) {
-	$('#groupId').val(group.id);
-	$('#name').val(group.name);
-	$('#description').val(group.description);
+function renderDetails(status) {
+	$('#statusId').val(status.id);
+	$('#status').val(status.status);
+	$('#description').val(status.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var groupId = $('#groupId').val();
+	var statusId = $('#statusId').val();
 	return JSON.stringify({
-		"id": groupId === "" ? Number("0") : Number(groupId),
-		"name": $('#name').val(),
+		"id": statusId === "" ? Number("0") : Number(statusId),
+		"status": $('#status').val(),
 		"description": $('#description').val()
 		});
 }
 
-// Retrieve group list when application starts
+// Retrieve status list when application starts
 jQuery(document).ready(findAll());
 

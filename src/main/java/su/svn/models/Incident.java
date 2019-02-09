@@ -1,6 +1,6 @@
 /*
  * Incident.java
- * This file was last modified at 2019-02-03 12:57 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:13 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -8,14 +8,20 @@
 
 package su.svn.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import su.svn.services.adapters.UserAdapter;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.TreeSet;
 
 import static su.svn.models.Incident.*;
 
@@ -28,22 +34,31 @@ import static su.svn.models.Incident.*;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status"
+        query = "SELECT DISTINCT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status ORDER BY i.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_TITLE,
-        query = "SELECT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status WHERE i.title LIKE :title"
+        query = "SELECT DISTINCT i FROM Incident i"
+              + " JOIN FETCH i.consumer"
+              + " JOIN FETCH i.status"
+              + " WHERE i.title LIKE :title"
+              + " ORDER BY i.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT i FROM Incident i"
+        query = "SELECT DISTINCT i FROM Incident i"
               + " JOIN FETCH i.consumer"
               + " JOIN FETCH i.status"
               + " WHERE i.description LIKE :desc"
+              + " ORDER BY i.id"
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_DETAILS,
-        query = "SELECT DISTINCT i FROM Incident i JOIN FETCH i.consumer JOIN FETCH i.status WHERE i.id = :id"
+        query = "SELECT DISTINCT i FROM Incident i"
+              + " JOIN FETCH i.consumer"
+              + " JOIN FETCH i.status"
+              + " LEFT JOIN FETCH i.messages"
+              + " WHERE i.id = :id"
     ),
 })
 public class Incident implements DataSet
@@ -67,6 +82,7 @@ public class Incident implements DataSet
     @Column(name = "description_text", nullable = false)
     private String description;
 
+    @JsonbTypeAdapter(UserAdapter.class)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "consumer_user_id", nullable = false)
     private User consumer;
@@ -74,6 +90,17 @@ public class Incident implements DataSet
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "pm_inc_record",
+        joinColumns = @JoinColumn(name = "incident_id"),
+        inverseJoinColumns = @JoinColumn(name = "message_id")
+    )
+    private Collection<Message> messages = new TreeSet<>();
 
     public static boolean isValidForSave(Incident incident)
     {

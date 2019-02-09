@@ -1,7 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-        <%--
+
+<%--
   ~ footer.jsp
-  ~ This file was last modified at 2019-02-04 01:08 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-09 10:11 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>

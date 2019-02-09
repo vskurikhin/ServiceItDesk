@@ -1,6 +1,6 @@
 /*
  * users.js
- * This file was last modified at 2019-02-08 23:37 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 23:04 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -61,10 +61,13 @@ function search(searchKey) {
 }
 
 function newUser() {
+    setTimeout(function(){location.reload();}, 500);
+    /*
 	$('#btnDelete').hide();
     $('#btnSave').html('Add');
 	currentUser = {};
 	renderDetails(currentUser); // Display empty form
+	*/
 }
 
 function findAll() {
@@ -192,10 +195,15 @@ function renderList(data) {
 function renderListGroup(data) {
     console.log('renderListGroup');
     var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var groupSelect = $('#group');
+    var groupId = Number(groupSelect.find('option:selected').val());
+    console.log('renderListGroup groupId:' + groupId);
 
     $.each(list, function(index, group) {
-        console.log('append: ' + group.id + ' ' + group.name);
-        $('#group').append('<option value="' + group.id + '">' + group.name + '</option>');
+        if (groupId !== group.id) {
+            console.log('renderListGroup append: ' + group.id + ' ' + group.name); // TODO remove
+            groupSelect.append('<option value="' + group.id + '">' + group.name + '</option>');
+        }
     });
     $('.dropdown-sin-1').dropdown({
         readOnly: false,

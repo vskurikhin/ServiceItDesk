@@ -1,6 +1,6 @@
 /*
  * IncidentTest.java
- * This file was last modified at 2019-02-03 17:24 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 13:48 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -110,7 +110,7 @@ class IncidentTest
         @BeforeEach
         void createNew()
         {
-            incident = new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+            incident = new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1, EMPTY_MESSAGE_SET);
         }
 
         @Test
@@ -129,7 +129,7 @@ class IncidentTest
         void testEquals()
         {
             assertNotEquals(new Incident(), incident);
-            final Incident expected = new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+            final Incident expected = new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1, EMPTY_MESSAGE_SET);
             assertEquals(expected.hashCode(), incident.hashCode());
             assertEquals(expected, incident);
         }

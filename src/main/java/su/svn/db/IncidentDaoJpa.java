@@ -1,6 +1,6 @@
 /*
  * IncidentDaoJpa.java
- * This file was last modified at 2019-02-03 17:08 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 12:31 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -21,9 +21,7 @@ import java.util.Optional;
 
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
-import static su.svn.models.Incident.FIND_ALL;
-import static su.svn.models.Incident.FIND_ALL_WHERE_DESC;
-import static su.svn.models.Incident.FIND_ALL_WHERE_TITLE;
+import static su.svn.models.Incident.*;
 import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
@@ -45,11 +43,21 @@ public class IncidentDaoJpa implements IncidentDao
     @Override
     public Optional<Incident> findById(Long id)
     {
+        return findByIdWithDetails(id);
+    }
+
+    @Override
+    public Optional<Incident> findByIdWithDetails(Long id)
+    {
         try {
-            return Optional.ofNullable(em.find(Incident.class, id));
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Incident.class)
+                    .setParameter("id", id)
+                    .getSingleResult()
+            );
         }
-        catch (IllegalArgumentException e) {
-            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e.toString());
             return Optional.empty();
         }
     }

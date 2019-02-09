@@ -1,6 +1,6 @@
 /*
  * IncidentDaoJpaTest.java
- * This file was last modified at 2019-02-03 10:01 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 13:58 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -25,17 +25,13 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.models.Incident.FIND_ALL;
-import static su.svn.models.Incident.FIND_ALL_WHERE_DESC;
-import static su.svn.models.Incident.FIND_ALL_WHERE_TITLE;
-//TODO
-//import static su.svn.db.IncidentDaoJpa.SELECT_ALL;
-//import static su.svn.db.IncidentDaoJpa.SELECT_WHERE_DESC;
-//import static su.svn.db.IncidentDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.models.Incident.*;
 
 @DisplayName("Class IncidentDaoJpaTest")
 class IncidentDaoJpaTest
@@ -108,7 +104,10 @@ class IncidentDaoJpaTest
             expected.setTitle(TEST_TITLE);
             expected.setDescription(TEST_DESCRIPTION);
 
-            when(entityManager.find(Incident.class, TEST_ID1)).thenReturn(expected);
+            TypedQuery<Incident> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenReturn(expected);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Incident.class)).thenReturn(mockedQuery);
 
             Optional<Incident> test = dao.findById(TEST_ID1);
             assertTrue(test.isPresent());
@@ -119,7 +118,10 @@ class IncidentDaoJpaTest
         @Test
         void findById_null()
         {
-            when(entityManager.find(Incident.class, TEST_ID9)).thenReturn(null);
+            TypedQuery<Incident> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenThrow(PersistenceException.class);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Incident.class)).thenReturn(mockedQuery);
 
             Optional<Incident> test = dao.findById(TEST_ID9);
             assertFalse(test.isPresent());
@@ -129,7 +131,10 @@ class IncidentDaoJpaTest
         @Test
         void findById_exception()
         {
-            when(entityManager.find(Incident.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
+            TypedQuery<Incident> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenThrow(IllegalArgumentException.class);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Incident.class)).thenReturn(mockedQuery);
 
             Optional<Incident> test = dao.findById(TEST_ID9);
             assertFalse(test.isPresent());
@@ -259,7 +264,11 @@ class IncidentDaoJpaTest
         void delete_exception()
         {
             Incident expected = TEST_INCIDENT1;
-            when(entityManager.find(Incident.class, expected.getId())).thenReturn(expected);
+
+            TypedQuery<Incident> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenReturn(expected);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Incident.class)).thenReturn(mockedQuery);
             when(entityManager.merge(expected)).thenReturn(expected);
             doThrow(PersistenceException.class).when(entityManager).remove(expected);
 

@@ -1,6 +1,6 @@
 /*
  * Message.java
- * This file was last modified at 2019-02-02 19:17 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:15 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -29,14 +29,14 @@ import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT m FROM Message m"
+        query = "SELECT DISTINCT m FROM Message m ORDER BY m.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_TEXT,
-        query = "SELECT m FROM Message m WHERE m.text LIKE :text"
+        query = "SELECT DISTINCT m FROM Message m WHERE m.text LIKE :text ORDER BY m.id"
     ),
 })
-public class Message implements DataSet
+public class Message implements DataSet, Comparable<Message>
 {
     public static final String FIND_ALL = "Message.findAll";
     public static final String FIND_ALL_WHERE_TEXT = "Message.findAllWhereName";
@@ -60,6 +60,12 @@ public class Message implements DataSet
             return false;
         }
         return !Objects.isNull(message.text);
+    }
+
+    @Override
+    public int compareTo(Message m)
+    {
+        return id.compareTo(m.id);
     }
 }
 

@@ -4,7 +4,7 @@
 
 <%--
   ~ users.jsp
-  ~ This file was last modified at 2019-02-08 22:46 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-09 23:40 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -64,7 +64,7 @@
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Name:</label><br/>
-                                    <input form="userForm" type="text" id="name" name="name" required title=""/>
+                                    <input form="userForm" type="text" id="name" name="name" class="my-text-name" required title=""/>
                                 </td>
                             </tr>
                             <tr>

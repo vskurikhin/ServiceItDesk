@@ -1,3 +1,11 @@
+/*
+ * mystyle.css
+ * This file was last modified at 2019-02-09 23:54 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 * {
     font-family: Lucida Sans, Arial, Helvetica, sans-serif;
     box-sizing: border-box;
@@ -45,9 +53,18 @@
     min-width: 212px
 }
 
+.my-text-name {
+    width: 75%;
+}
+
 .my-test-area {
     width: 100%;
-    height: 150px;
+    height: 90px;
+}
+
+.my-message-textarea {
+    width: 100%;
+    height: 54px;
 }
 
 .firstColumnWidth {
@@ -86,6 +103,31 @@
     horiz-align: left;
     text-align: left;
     vertical-align: top
+}
+
+.tg0 {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+.tg0 th {
+    border: 0 solid black;
+    overflow: hidden;
+    padding: 0;
+    word-break: normal;
+    width: 100%
+}
+.tg0 td {
+    border: 0 solid black;
+    overflow: hidden;
+    word-break: normal;
+    width: 100%;
+    margin: 0
+}
+.tg0 .tg0-0lax {
+    horiz-align: left;
+    text-align: left;
+    vertical-align: top;
+    padding: 3px;
 }
 
 .tg1 {
@@ -350,11 +392,6 @@ input.find {
     height: 42px;
     background: lightgray;
     padding-left: 7px
-}
-
-input#name {
-    width: 250px;
-    background: lightgray
 }
 
 input#email {

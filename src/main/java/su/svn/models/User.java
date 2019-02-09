@@ -1,6 +1,6 @@
 /*
  * User.java
- * This file was last modified at 2019-02-03 14:22 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:22 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -28,15 +28,15 @@ import static su.svn.models.User.*;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT u FROM User u JOIN FETCH u.group"
+        query = "SELECT DISTINCT u FROM User u JOIN FETCH u.group ORDER BY u.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_NAME,
-        query = "SELECT u FROM User u JOIN FETCH u.group WHERE u.name LIKE :name"
+        query = "SELECT DISTINCT u FROM User u JOIN FETCH u.group WHERE u.name LIKE :name ORDER BY u.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT u FROM User u JOIN FETCH u.group WHERE u.description LIKE :desc"
+        query = "SELECT DISTINCT u FROM User u JOIN FETCH u.group WHERE u.description LIKE :desc ORDER BY u.id"
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_DETAILS,

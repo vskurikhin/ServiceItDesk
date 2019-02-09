@@ -1,6 +1,6 @@
 /*
  * Status.java
- * This file was last modified at 2019-02-03 10:53 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -29,15 +29,15 @@ import static su.svn.models.Status.FIND_ALL_WHERE_STATUS;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT s FROM Status s"
+        query = "SELECT DISTINCT s FROM Status s ORDER BY s.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_STATUS,
-        query = "SELECT s FROM Status s WHERE s.status LIKE :status"
+        query = "SELECT DISTINCT s FROM Status s WHERE s.status LIKE :status ORDER BY s.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT s FROM Status s WHERE s.description LIKE :desc"
+        query = "SELECT DISTINCT s FROM Status s WHERE s.description LIKE :desc ORDER BY s.id"
     ),
 })
 public class Status implements DataSet

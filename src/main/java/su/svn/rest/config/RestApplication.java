@@ -1,6 +1,6 @@
 /*
  * RestApplication.java
- * This file was last modified at 2019-02-04 23:33 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 14:40 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -60,6 +60,9 @@ public class RestApplication extends ResourceConfig
         register(ConfigurationUnitResource.class);
         register(GroupResource.class);
         register(UserResource.class);
+        register(IncidentResource.class);
+        register(StatusResource.class);
+        register(MessageResource.class);
         register(Version.class);
     }
 }

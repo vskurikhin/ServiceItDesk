@@ -1,6 +1,6 @@
 /*
  * TestData.java
- * This file was last modified at 2019-01-26 19:29 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 13:48 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,6 +17,7 @@ import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.mockito.Mockito.mock;
 
@@ -55,6 +56,8 @@ public class TestData
     }
 
     public static final Set<User> EMPTY_USER_SET = new HashSet<>();
+
+    public static final Set<Message> EMPTY_MESSAGE_SET = new TreeSet<>();
 
     public static PrimaryGroup createPrimaryGroup1()
     {
@@ -117,7 +120,7 @@ public class TestData
 
     public static Incident createIncident1()
     {
-        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, createUser1(), createStatus1());
+        return new Incident(TEST_ID1, TEST_TITLE, TEST_DESCRIPTION, createUser1(), createStatus1(), EMPTY_MESSAGE_SET);
     }
     public static final Incident TEST_INCIDENT1 = createIncident1();
 }

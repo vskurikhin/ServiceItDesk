@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnit.java
- * This file was last modified at 2019-02-02 19:13 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:12 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -33,29 +33,32 @@ import static su.svn.models.ConfigurationUnit.*;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT cu FROM ConfigurationUnit cu"
+        query = "SELECT DISTINCT cu FROM ConfigurationUnit cu"
               + " JOIN FETCH cu.admin"
               + " JOIN FETCH cu.owner"
               + " JOIN FETCH cu.group"
               + " JOIN FETCH cu.type"
+              + " ORDER BY cu.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_NAME,
-        query = "SELECT cu FROM ConfigurationUnit cu"
+        query = "SELECT DISTINCT cu FROM ConfigurationUnit cu"
               + " JOIN FETCH cu.admin"
               + " JOIN FETCH cu.owner"
               + " JOIN FETCH cu.group"
               + " JOIN FETCH cu.type"
               + " WHERE cu.name LIKE :name"
+              + " ORDER BY cu.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT cu FROM ConfigurationUnit cu"
+        query = "SELECT DISTINCT cu FROM ConfigurationUnit cu"
               + " JOIN FETCH cu.admin"
               + " JOIN FETCH cu.owner"
               + " JOIN FETCH cu.group"
               + " JOIN FETCH cu.type"
               + " WHERE cu.description LIKE :desc"
+              + " ORDER BY cu.id"
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_DETAILS,

@@ -1,6 +1,6 @@
 /*
  * Task.java
- * This file was last modified at 2019-02-03 12:58 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:22 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,7 +14,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.util.Objects;
 
 import static su.svn.models.Task.*;
@@ -28,22 +27,30 @@ import static su.svn.models.Task.*;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT t FROM Task t JOIN FETCH t.consumer JOIN FETCH t.status"
+        query = "SELECT DISTINCT t FROM Task t JOIN FETCH t.consumer JOIN FETCH t.status ORDER BY t.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_TITLE,
-        query = "SELECT t FROM Task t JOIN FETCH t.consumer JOIN FETCH t.status WHERE t.title LIKE :title"
+        query = "SELECT DISTINCT t FROM Task t"
+              + " JOIN FETCH t.consumer"
+              + " JOIN FETCH t.status"
+              + " WHERE t.title LIKE :title"
+              + " ORDER BY t.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT t FROM Task t"
+        query = "SELECT DISTINCT t FROM Task t"
               + " JOIN FETCH t.consumer"
               + " JOIN FETCH t.status"
               + " WHERE t.description LIKE :desc"
+              + " ORDER BY t.id"
     ),
     @NamedQuery(
         name = FIND_BY_ID_WITH_DETAILS,
-        query = "SELECT DISTINCT t FROM Incident t JOIN FETCH t.consumer JOIN FETCH t.status WHERE t.id = :id"
+        query = "SELECT DISTINCT t FROM Task t"
+              + " JOIN FETCH t.consumer"
+              + " JOIN FETCH t.status"
+              + " WHERE t.id = :id"
     ),
 })
 public class Task implements DataSet

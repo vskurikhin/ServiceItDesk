@@ -1,6 +1,6 @@
 /*
  * UserAdapter.java
- * This file was last modified at 2019-02-08 22:20 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 22:47 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -32,8 +32,8 @@ public class UserAdapter implements JsonbAdapter<User, JsonObject>
         User user = new User();
         user.setId((long) json.getInt("id"));
         user.setName(json.getString("name"));
-        System.err.println("json = " + json);
         user.setDescription(json.getString("description", null));
+
         return user;
     }
 }

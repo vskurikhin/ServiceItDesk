@@ -1,6 +1,6 @@
 /*
  * ConfigurationType.java
- * This file was last modified at 2019-02-02 19:10 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:08 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -30,15 +30,15 @@ import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_NAME;
 @NamedQueries({
     @NamedQuery(
         name = FIND_ALL,
-        query = "SELECT ct FROM ConfigurationType ct"
+        query = "SELECT DISTINCT ct FROM ConfigurationType ct ORDER BY ct.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_NAME,
-        query = "SELECT ct FROM ConfigurationType ct WHERE ct.name LIKE :name"
+        query = "SELECT DISTINCT ct FROM ConfigurationType ct WHERE ct.name LIKE :name ORDER BY ct.id"
     ),
     @NamedQuery(
         name = FIND_ALL_WHERE_DESC,
-        query = "SELECT ct FROM ConfigurationType ct WHERE ct.description LIKE :desc"
+        query = "SELECT DISTINCT ct FROM ConfigurationType ct WHERE ct.description LIKE :desc ORDER BY ct.id"
     ),
 })
 public class ConfigurationType implements DataSet

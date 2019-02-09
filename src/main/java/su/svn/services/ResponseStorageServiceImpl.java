@@ -1,6 +1,6 @@
 /*
  * ResponseStorageServiceImpl.java
- * This file was last modified at 2019-02-08 22:24 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 22:49 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import su.svn.db.*;
 import su.svn.models.*;
+import su.svn.models.dto.ConfigurationUnitDTO;
+import su.svn.models.dto.GroupDTO;
+import su.svn.models.dto.IncidentDTO;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -167,16 +170,31 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         }
     }
 
+    private void prepareIncident(Incident incident)
+    {
+        Optional<User> consumer = userDao.findById(incident.getConsumer().getId());
+        if ( ! consumer.isPresent()) {
+            throw new PersistenceException("can't find consumer user by id " + incident.getConsumer().getId() + '!');
+        }
+        incident.setConsumer(consumer.get());
+
+        Optional<Status> status = statusDao.findById(incident.getStatus().getId());
+        if ( ! status.isPresent()) {
+            throw new PersistenceException("can't find status by id " + incident.getStatus().getId() + '!');
+        }
+        incident.setStatus(status.get());
+
+        if ( ! Incident.isValidForSave(incident)) {
+            throw new PersistenceException("incident isn't valid for save!");
+        }
+    }
+
     @Override
     @TransactionAttribute(REQUIRES_NEW)
     public Response createIncident(StringBuffer requestURL, Incident incident)
     {
         try {
-            if ( ! Incident.isValidForSave(incident)) {
-                throw new PersistenceException("incident isn't valid for save!");
-            }
-            userDao.save(incident.getConsumer());
-            statusDao.save(incident.getStatus());
+            prepareIncident(incident);
 
             return create(requestURL, incident);
         }
@@ -245,7 +263,7 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         return Response.ok(
             configurationUnitDao.findAll()
                 .stream()
-                .peek(cu -> cu.getGroup().setUsers(null))
+                .map(ConfigurationUnitDTO::create)
                 .collect(Collectors.toList())
         ).build();
     }
@@ -256,7 +274,18 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         return Response.ok(
             groupDao.findAll()
                 .stream()
-                .peek(g -> g.setUsers(null))
+                .map(GroupDTO::create)
+                .collect(Collectors.toList())
+        ).build();
+    }
+
+    @Override
+    public Response readAllIncidents()
+    {
+        return Response.ok(
+            incidentDao.findAll()
+                .stream()
+                .map(IncidentDTO::create)
                 .collect(Collectors.toList())
         ).build();
     }
@@ -304,6 +333,44 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
+    public Response readIncidentById(Long id)
+    {
+        try {
+            Optional<Incident> optionalEntity = incidentDao.findById(id);
+
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
+            Incident entity = optionalEntity.get();
+
+            return Response.ok(IncidentDTO.create(entity)).build();
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the Incident with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Override
+    public Response readIncidentByIdWithMessages(Long id)
+    {
+        try {
+            Optional<Incident> optionalEntity = incidentDao.findByIdWithDetails(id);
+
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
+            Incident entity = optionalEntity.get();
+
+            return Response.ok(entity).build();
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the Incident with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Override
     public <E extends DataSet> Response update(StringBuffer requestURL, E entity)
     {
         try {
@@ -337,6 +404,22 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
+    public Response updateIncident(StringBuffer requestURL, Incident unit)
+    {
+        try {
+            prepareIncident(unit);
+            Optional<Incident> optionalIncident = incidentDao.findByIdWithDetails(unit.getId());
+            optionalIncident.ifPresent(i -> unit.setMessages(i.getMessages()));
+
+            return update(requestURL, unit);
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Try create ConfigurationUnit: {} ", e.getMessage());
+            return Response.notAcceptable(Collections.emptyList()).build();
+        }
+    }
+
+    @Override
     public Response updateUser(StringBuffer requestURL, User user)
     {
         try {
@@ -345,7 +428,7 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
             return update(requestURL, user);
         }
         catch (RuntimeException e) {
-            LOGGER.error("Try create User: {} ", e.getMessage());
+            LOGGER.error("Try update User: {} ", e.getMessage());
             return Response.notAcceptable(Collections.emptyList()).build();
         }
     }
