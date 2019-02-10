@@ -20,5 +20,16 @@
 Процесс управления сервисными конфигурациями.
 Эта информация включает в себя описание конфигурации и описание связей между конфигурациями, которая хранится на уровне системы управления конфигурациями (CMS) или на уровне базы данных управления конфигурациями (CMDB).
 
- * [ ] [Список задач: JavaEE-2018-09-Task_list_v1.4.ods](https://docs.google.com/spreadsheets/d/1IRvdgsItB3VJ5QfzOwMgjVc1QAmqcvVWDssKM7AnuGI/edit#gid=1989280701)
- * [x] [Список задач: JavaEE-2018-09-Task_list_v0.1.ods](https://docs.google.com/spreadsheets/d/1IRvdgsItB3VJ5QfzOwMgjVc1QAmqcvVWDssKM7AnuGI/edit#gid=1989280701)
+1. Реализован ResponseStorageService.
+2. Реализованы все RESTful сервисы.
+3. Работаю над интерфейсом CMDB Console (смотрю в сторону RESTful + jQuery).
+
+1. Раялизованна «CMDB Console»
+2. Реализован IncidentManagementService
+3. Реализован TaskManagementService (частично)
+4. Раялизованна «Incedent Console»
+5. Раялизованна «Task Console» (частично)
+
+TODO:
+1. Security Аудентификация + матрица доступа -> авторизация
+2. По возможности доработать TaskManagement + Task Console
