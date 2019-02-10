@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitTest.java
- * This file was last modified at 2019-01-26 11:30 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:25 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,14 +20,14 @@ import static su.svn.TestData.*;
 @DisplayName("Class ConfigurationUnit")
 class ConfigurationUnitTest
 {
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String DESCRIPTION = "description";
-    public static final String GROUP = "group";
-    public static final String OWNER = "owner";
-    public static final String TYPE = "type";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+    private static final String GROUP = "group";
+    private static final String OWNER = "owner";
+    private static final String TYPE = "type";
 
-    ConfigurationUnit cunit;
+    private ConfigurationUnit cunit;
 
     @Test
     @DisplayName("is instantiated with new ConfigurationUnit()")
@@ -75,6 +75,13 @@ class ConfigurationUnitTest
             assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, cunit.getDescription());
         }
+
+        @Test
+        void isValidForSave()
+        {
+            assertFalse(ConfigurationUnit.isValidForSave(cunit));
+        }
+
         @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
@@ -87,13 +94,15 @@ class ConfigurationUnitTest
     @DisplayName("when new with all args constructor")
     class WhenNewAllArgsConstructor
     {
+        User newUser1 = createUser0();
+        User newUser2 = createUser0();
+        Group group = createGroup1();
+        ConfigurationType type = createConfigurationType1();
+
         @BeforeEach
         void createNew()
         {
-            cunit = new ConfigurationUnit(
-                TEST_ID1, TEST_NAME, TEST_DESCRIPTION,
-                createUser1(), createUser1(), createGroup1(), createConfigurationType1()
-            );
+            cunit = new ConfigurationUnit(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, newUser1, newUser2, group, type);
         }
 
         @Test
@@ -103,9 +112,10 @@ class ConfigurationUnitTest
             assertThat(cunit).hasFieldOrPropertyWithValue(ID, 1L);
             assertThat(cunit).hasFieldOrPropertyWithValue(NAME, TEST_NAME);
             assertThat(cunit).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_DESCRIPTION);
-            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, TEST_GROUP1);
-            assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, TEST_USER1);
-            assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, TEST_CONFIGURATION_TYPE1);
+            assertThat(cunit).hasFieldOrPropertyWithValue("admin", newUser1);
+            assertThat(cunit).hasFieldOrPropertyWithValue(OWNER, newUser2);
+            assertThat(cunit).hasFieldOrPropertyWithValue(GROUP, group);
+            assertThat(cunit).hasFieldOrPropertyWithValue(TYPE, type);
         }
 
         @Test
@@ -113,9 +123,17 @@ class ConfigurationUnitTest
         void testEquals()
         {
             assertNotEquals(new ConfigurationUnit(), cunit);
-            final ConfigurationUnit expected = TEST_CONFIGURATION_UNIT1;
+            final ConfigurationUnit expected = new ConfigurationUnit(
+                TEST_ID1, TEST_NAME, TEST_DESCRIPTION, newUser1, newUser2, group, type
+            );
             assertEquals(expected.hashCode(), cunit.hashCode());
             assertEquals(expected, cunit);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(ConfigurationUnit.isValidForSave(cunit));
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
  * TaskDaoJpaTest.java
- * This file was last modified at 2019-01-26 18:15 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-02 11:39 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -21,6 +21,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,9 +29,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.TaskDaoJpa.SELECT_ALL;
-import static su.svn.db.TaskDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.TaskDaoJpa.SELECT_WHERE_TITLE;
+import static su.svn.models.Task.FIND_ALL;
+import static su.svn.models.Task.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Task.FIND_ALL_WHERE_TITLE;
 
 @DisplayName("Class TaskDaoJpaTest")
 class TaskDaoJpaTest
@@ -105,8 +106,9 @@ class TaskDaoJpaTest
 
             when(entityManager.find(Task.class, TEST_ID1)).thenReturn(expected);
 
-            Task test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<Task> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
@@ -115,8 +117,8 @@ class TaskDaoJpaTest
         {
             when(entityManager.find(Task.class, TEST_ID9)).thenReturn(null);
 
-            Task test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Task> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
@@ -125,8 +127,8 @@ class TaskDaoJpaTest
         {
             when(entityManager.find(Task.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            Task test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<Task> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -137,7 +139,7 @@ class TaskDaoJpaTest
             List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findAll();
             assertEquals(expected, test);
@@ -150,7 +152,7 @@ class TaskDaoJpaTest
             List<Task> expected = Collections.emptyList();
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findAll();
             assertEquals(expected, test);
@@ -165,7 +167,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("title", TEST_TITLE)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByTitle(TEST_TITLE);
             assertEquals(expected, test);
@@ -179,7 +181,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("title", TEST_TITLE)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_TITLE, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByTitle(TEST_TITLE);
             assertEquals(expected, test);
@@ -194,7 +196,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -208,7 +210,7 @@ class TaskDaoJpaTest
             TypedQuery<Task> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, Task.class)).thenReturn(mockedQuery);
 
             List<Task> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -296,9 +298,11 @@ class TaskDaoJpaTest
         @Test
         void save_persists()
         {
-            Task test = createTask1();
-            saveNewTask(test);
-            assertEquals(test, dao.findById(test.getId()));
+            Task expected = createTask1();
+            saveNewTask(expected);
+            Optional<Task> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -324,8 +328,8 @@ class TaskDaoJpaTest
             Task test = createTask1();
             saveNewTask(test);
             runInTransaction(() -> dao.delete(test.getId()));
-
-            assertNull(dao.findById(test.getId()));
+            Optional<Task> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
     }

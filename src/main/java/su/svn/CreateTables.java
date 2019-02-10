@@ -1,3 +1,11 @@
+/*
+ * CreateTables.java
+ * This file was last modified at 2019-02-02 12:44 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 package su.svn;
 
 /*
@@ -30,6 +38,7 @@ public class CreateTables
         MetadataSources sources = new MetadataSources(registry);
 
         sources.addAnnotatedClass(Group.class);
+        sources.addAnnotatedClass(PrimaryGroup.class);
         sources.addAnnotatedClass(User.class);
         sources.addAnnotatedClass(ConfigurationType.class);
         sources.addAnnotatedClass(ConfigurationUnit.class);

@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitDaoJpa.java
- * This file was last modified at 2019-01-26 18:12 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:08 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,22 +17,17 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.ConfigurationUnit.*;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT cu FROM ConfigurationUnit cu";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE cu.name LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE cu.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -40,65 +35,75 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
 
     public ConfigurationUnitDaoJpa() { /* None */}
 
-    public ConfigurationUnitDaoJpa(EntityManager entityManager)
+    ConfigurationUnitDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
     @Override
-    public ConfigurationUnit findById(Long id)
+    public Optional<ConfigurationUnit> findById(Long id)
     {
-        try {
-            return em.find(ConfigurationUnit.class, id);
-        }
-        catch (IllegalArgumentException e) {
-            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
-        }
+        return findByIdWithDetails(id);
     }
 
     @Override
     public List<ConfigurationUnit> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, ConfigurationUnit.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, ConfigurationUnit.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
 
     @Override
-    public List<ConfigurationUnit> findByName(String value)
+    public Optional<ConfigurationUnit> findByIdWithDetails(Long id)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, ConfigurationUnit.class)
-                .setParameter("name", value)
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, ConfigurationUnit.class)
+                    .setParameter("id", id)
+                    .getSingleResult()
+            );
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e.toString());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<ConfigurationUnit> findByName(String name)
+    {
+        try {
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationUnit.class)
+                .setParameter("name", name)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by name: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by name: {} because had the exception {}", name, e);
             return Collections.emptyList();
         }
     }
 
     @Override
-    public List<ConfigurationUnit> findByDescription(String value)
+    public List<ConfigurationUnit> findByDescription(String desc)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, ConfigurationUnit.class)
-                .setParameter("desc", value)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationUnit.class)
+                .setParameter("desc", desc)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by description: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by description: {} because had the exception {}", desc, e);
             return Collections.emptyList();
         }
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(ConfigurationUnit entity)
     {
         try {
@@ -119,11 +124,11 @@ public class ConfigurationUnitDaoJpa implements ConfigurationUnitDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
-            ConfigurationUnit merged = em.merge(findById(id));
+            ConfigurationUnit merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete cunit with id: {}", merged.getId());
             return true;

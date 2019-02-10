@@ -1,6 +1,6 @@
 /*
  * Status.java
- * This file was last modified at 2019-01-26 11:04 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 20:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,15 +14,38 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
+
+import static su.svn.models.Status.FIND_ALL;
+import static su.svn.models.Status.FIND_ALL_WHERE_DESC;
+import static su.svn.models.Status.FIND_ALL_WHERE_STATUS;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "cm_status")
+@Table(name = "pm_status")
+@NamedQueries({
+    @NamedQuery(
+        name = FIND_ALL,
+        query = "SELECT DISTINCT s FROM Status s ORDER BY s.id"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_STATUS,
+        query = "SELECT DISTINCT s FROM Status s WHERE s.status LIKE :status ORDER BY s.id"
+    ),
+    @NamedQuery(
+        name = FIND_ALL_WHERE_DESC,
+        query = "SELECT DISTINCT s FROM Status s WHERE s.description LIKE :desc ORDER BY s.id"
+    ),
+})
 public class Status implements DataSet
 {
+    public static final String FIND_ALL = "Status.findAll";
+    public static final String FIND_ALL_WHERE_STATUS = "Status.findAllWhereStatus";
+    public static final String FIND_ALL_WHERE_DESC = "Status.findAllWhereDescription";
+
     @Id
     @SequenceGenerator(name = "status_identifier", sequenceName = "status_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "status_identifier")
@@ -36,6 +59,17 @@ public class Status implements DataSet
     @Basic
     @Column(name = "description")
     private String description;
+
+    public static boolean isValidForSave(Status status)
+    {
+        if (Objects.isNull(status)) {
+            return false;
+        }
+        if (Objects.isNull(status.id)) {
+            return false;
+        }
+        return !Objects.isNull(status.status);
+    }
 }
 
 /* vim: syntax=java:fileencoding=utf-8:fileformat=unix:tw=78:ts=4:sw=4:sts=4:et

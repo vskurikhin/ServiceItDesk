@@ -1,6 +1,6 @@
 /*
  * PrimaryGroupDaoJpa.java
- * This file was last modified at 2019-01-26 18:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:09 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -15,24 +15,22 @@ import su.svn.models.PrimaryGroup;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.PrimaryGroup.*;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class PrimaryGroupDaoJpa implements PrimaryGroupDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT g FROM PrimaryGroup g";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -40,20 +38,20 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
 
     public PrimaryGroupDaoJpa() { /* None */}
 
-    public PrimaryGroupDaoJpa(EntityManager entityManager)
+    PrimaryGroupDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
     @Override
-    public PrimaryGroup findById(Long id)
+    public Optional<PrimaryGroup> findById(Long id)
     {
         try {
-            return em.find(PrimaryGroup.class, id);
+            return Optional.ofNullable(em.find(PrimaryGroup.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -61,7 +59,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     public List<PrimaryGroup> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, PrimaryGroup.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, PrimaryGroup.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search all because had the exception ", e);
@@ -73,7 +71,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     public List<PrimaryGroup> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, PrimaryGroup.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, PrimaryGroup.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -84,7 +82,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(PrimaryGroup entity)
     {
         try {
@@ -96,7 +94,7 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
             }
         }
         catch (IllegalArgumentException | PersistenceException e) {
-            LOGGER.error("Can't save group with id: {} because had the exception {}", entity.getId(), e);
+            LOGGER.error("Can't save primary group with id: {} because had the exception {}", entity.getId(), e);
             return false;
         }
 
@@ -105,11 +103,11 @@ public class PrimaryGroupDaoJpa implements PrimaryGroupDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
-            PrimaryGroup merged = em.merge(findById(id));
+            PrimaryGroup merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete group with id: {}", merged.getId());
             return true;

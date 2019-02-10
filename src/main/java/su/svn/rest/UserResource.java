@@ -1,6 +1,6 @@
 /*
  * UserResource.java
- * This file was last modified at 2018.12.03 20:05 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 12:55 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -8,10 +8,8 @@
 
 package su.svn.rest;
 
-import su.svn.db.PrimaryGroupDao;
-import su.svn.db.UserDao;
-import su.svn.models.PrimaryGroup;
 import su.svn.models.User;
+import su.svn.services.ResponseStorageService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,89 +19,64 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.exceptions.ExceptionsFabric.getWebApplicationException;
-import static su.svn.rest.config.RestApplication.USER_RESOURCE;
+import static su.svn.shared.Constants.Rest.USER_RESOURCE;
 
 @Stateless
 @Path("/v1" + USER_RESOURCE)
-@Produces(MediaType.APPLICATION_JSON)
-public class UserResource extends CRUDResource<User, UserDao>
+public class UserResource
 {
     @Context
     private HttpServletRequest servletRequest;
 
     @EJB
-    private UserDao dao;
+    private ResponseStorageService storage;
 
-    @EJB
-    private PrimaryGroupDao groupDao;
-
-    @Override
-    public UserDao getDao()
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    public Response create(User entity)
     {
-        return dao;
-    }
-
-    @Override
-    public HttpServletRequest getHttpServletRequest()
-    {
-        return servletRequest;
+        return storage.createUser(servletRequest.getRequestURL(), entity);
     }
 
     @POST
-    public Response create(User entity)
+    @Path("/group")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    public Response createWithGroup(User entity)
     {
-        PrimaryGroup group = entity.getGroup();
-
-        if (0 == group.getId()) {
-            groupDao.save(group);
-        }
-        else {
-            entity.setGroup(groupDao.findById(group.getId()));
-        }
-
-        return createSave(entity);
+        return storage.createUser(servletRequest.getRequestURL(), entity);
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readAll()
     {
-        return Response.ok(getDao().findAllWithDetails()).build();
+        return storage.readAll(User.class);
     }
 
     @GET
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response read(@PathParam("id") Integer id)
     {
-        User entity = getDao().findByIdWithDetails(id.longValue());
-
-        if (null != entity) {
-            return Response.ok(entity).build();
-        }
-
-        throw getWebApplicationException(new Throwable("Not Found!"));
+        return storage.readById(User.class, id.longValue());
     }
 
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(User entity)
     {
-        PrimaryGroup group = entity.getGroup();
-
-        if (0 == group.getId()) {
-            groupDao.save(group);
-        }
-        else {
-            entity.setGroup(groupDao.findById(group.getId()));
-        }
-
-        return updateSave(entity);
+        return storage.updateUser(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response delete(@PathParam("id") Integer id)
     {
-        return deleteById(id);
+        return storage.delete(User.class, id.longValue());
     }
 }
 

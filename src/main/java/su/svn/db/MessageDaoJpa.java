@@ -1,6 +1,6 @@
 /*
  * MessageDaoJpa.java
- * This file was last modified at 2019-01-26 18:10 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:09 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,20 +17,18 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Message.FIND_ALL;
+import static su.svn.models.Message.FIND_ALL_WHERE_TEXT;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class MessageDaoJpa implements MessageDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT m FROM Message m";
-
-    public static final String SELECT_WHERE_TEXT = SELECT_ALL + " WHERE m.text LIKE :text";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -38,20 +36,20 @@ public class MessageDaoJpa implements MessageDao
 
     public MessageDaoJpa() { /* None */}
 
-    public MessageDaoJpa(EntityManager entityManager)
+    MessageDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
     @Override
-    public Message findById(Long id)
+    public Optional<Message> findById(Long id)
     {
         try {
-            return em.find(Message.class, id);
+            return Optional.ofNullable(em.find(Message.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -59,10 +57,10 @@ public class MessageDaoJpa implements MessageDao
     public List<Message> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Message.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Message.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
@@ -71,7 +69,7 @@ public class MessageDaoJpa implements MessageDao
     public List<Message> findByText(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_TEXT, Message.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_TEXT, Message.class)
                 .setParameter("text", value)
                 .getResultList();
         }
@@ -82,7 +80,7 @@ public class MessageDaoJpa implements MessageDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Message entity)
     {
         try {
@@ -103,11 +101,11 @@ public class MessageDaoJpa implements MessageDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
-            Message merged = em.merge(findById(id));
+            Message merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete message with id: {}", merged.getId());
             return true;

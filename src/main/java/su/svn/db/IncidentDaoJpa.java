@@ -1,6 +1,6 @@
 /*
  * IncidentDaoJpa.java
- * This file was last modified at 2019-01-26 18:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-09 12:31 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,22 +17,17 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Incident.*;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class IncidentDaoJpa implements IncidentDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT i FROM Incident i";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE i.title LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE i.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -40,20 +35,30 @@ public class IncidentDaoJpa implements IncidentDao
 
     public IncidentDaoJpa() { /* None */}
 
-    public IncidentDaoJpa(EntityManager entityManager)
+    IncidentDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
     @Override
-    public Incident findById(Long id)
+    public Optional<Incident> findById(Long id)
+    {
+        return findByIdWithDetails(id);
+    }
+
+    @Override
+    public Optional<Incident> findByIdWithDetails(Long id)
     {
         try {
-            return em.find(Incident.class, id);
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Incident.class)
+                    .setParameter("id", id)
+                    .getSingleResult()
+            );
         }
-        catch (IllegalArgumentException e) {
-            LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e.toString());
+            return Optional.empty();
         }
     }
 
@@ -61,24 +66,24 @@ public class IncidentDaoJpa implements IncidentDao
     public List<Incident> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Incident.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Incident.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
 
     @Override
-    public List<Incident> findByName(String value)
+    public List<Incident> findByTitle(String title)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, Incident.class)
-                .setParameter("name", value)
+            return em.createNamedQuery(FIND_ALL_WHERE_TITLE, Incident.class)
+                .setParameter("title", title)
                 .getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search by name: {} because had the exception {}", value, e);
+            LOGGER.error("Can't search by name: {} because had the exception {}", title, e);
             return Collections.emptyList();
         }
     }
@@ -87,7 +92,7 @@ public class IncidentDaoJpa implements IncidentDao
     public List<Incident> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Incident.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Incident.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -98,7 +103,7 @@ public class IncidentDaoJpa implements IncidentDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Incident entity)
     {
         try {
@@ -119,11 +124,11 @@ public class IncidentDaoJpa implements IncidentDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
-            Incident merged = em.merge(findById(id));
+            Incident merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete incident with id: {}", merged.getId());
             return true;

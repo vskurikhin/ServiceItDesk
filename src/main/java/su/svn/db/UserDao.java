@@ -11,12 +11,11 @@ package su.svn.db;
 import su.svn.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao extends Dao<User, Long>
 {
-    List<User> findAllWithDetails();
-
-    User findByIdWithDetails(Long id);
+    Optional<User> findByIdWithDetails(Long id);
 
     List<User> findByName(String value);
 

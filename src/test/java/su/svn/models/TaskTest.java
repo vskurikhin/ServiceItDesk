@@ -1,6 +1,6 @@
 /*
  * TaskTest.java
- * This file was last modified at 2019-01-26 15:24 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 20:25 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,11 +20,11 @@ import static su.svn.TestData.*;
 @DisplayName("Class Task")
 class TaskTest
 {
-    public static final String ID = "id";
-    public static final String TITLE = "title";
-    public static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String TITLE = "title";
+    private static final String DESCRIPTION = "description";
 
-    Task task;
+    private Task task;
 
     @Test
     @DisplayName("is instantiated with new Task()")
@@ -90,6 +90,12 @@ class TaskTest
         }
 
         @Test
+        void isValidForSave()
+        {
+            assertFalse(Task.isValidForSave(task));
+        }
+
+        @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
         {
@@ -104,7 +110,7 @@ class TaskTest
         @BeforeEach
         void createNew()
         {
-            task = new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1);
+            task = new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1, EMPTY_MESSAGE_SET);
         }
 
         @Test
@@ -123,9 +129,15 @@ class TaskTest
         void testEquals()
         {
             assertNotEquals(new Task(), task);
-            final Task expected = TEST_TASK1;
+            final Task expected = new Task(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, TEST_USER1, TEST_STATUS1, EMPTY_MESSAGE_SET);
             assertEquals(expected.hashCode(), task.hashCode());
             assertEquals(expected, task);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(Task.isValidForSave(task));
         }
     }
 }
