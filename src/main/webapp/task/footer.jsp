@@ -2,7 +2,7 @@
 
 <%--
   ~ footer.jsp
-  ~ This file was last modified at 2019-02-09 10:12 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-10 00:02 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>

@@ -1,18 +1,18 @@
 /*
- * incidents.js
+ * tasks.js
  * This file was last modified at 2019-02-10 23:29 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-var currentIncident;
+var currentTask;
 
 function setTriggers() {
     $('#btnStatus1').click(function () {
         var value = $('#message-text').val();
         if (value.length > 0) {
-            currentIncident.status.id = 2;
+            currentTask.status.id = 2;
             statusToWork();
         }
         else {
@@ -43,7 +43,7 @@ function setTriggers() {
         return false;
     });
 
-    $('#incidentList a').click(function() {
+    $('#taskList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -67,8 +67,8 @@ function findById(id) {
         success: function(data){
             $('#btnStatus' + data.status.id).show();
             console.log('findById success: ' + data.name);
-            currentIncident = data;
-            renderDetails(currentIncident);
+            currentTask = data;
+            renderDetails(currentTask);
         }
     });
 }
@@ -89,15 +89,15 @@ function statusToWork() {
     $.ajax({
         type: 'PUT',
         contentType: 'application/json',
-        url: rootURL + '/' + $('#incidentId').val() + '/to-work',
+        url: rootURL + '/' + $('#taskId').val() + '/to-work',
         dataType: "json",
         data: formToJSON(STATUS_WORK),
         success: function(data, textStatus, jqXHR){
-            console.log("Incident's status updated successfully: " + textStatus);
+            console.log("Task's status updated successfully: " + textStatus);
             $('#btnStatus1').hide();
             $('#btnAddMessage').show();
             $('#btnStatus2').show();
-            findById(currentIncident.id);
+            findById(currentTask.id);
         },
         error: function(jqXHR, textStatus, errorThrown){
             alert('change status to work error: ' + textStatus);
@@ -111,12 +111,12 @@ function addMessage() {
     $.ajax({
         type: 'PUT',
         contentType: 'application/json',
-        url: rootURL + '/' + $('#incidentId').val() + '/add-message',
+        url: rootURL + '/' + $('#taskId').val() + '/add-message',
         dataType: "json",
         data: formToJSON(STATUS_NONE),
         success: function(data, textStatus, jqXHR){
-            console.log("Incident's status updated successfully: " + textStatus);
-            findById(currentIncident.id);
+            console.log("Task's status updated successfully: " + textStatus);
+            findById(currentTask.id);
         },
         error: function(jqXHR, textStatus, errorThrown){
             alert('change status to work error: ' + textStatus);
@@ -130,14 +130,14 @@ function resolution() {
     $.ajax({
         type: 'PUT',
         contentType: 'application/json',
-        url: rootURL + '/' + $('#incidentId').val() + '/resolution',
+        url: rootURL + '/' + $('#taskId').val() + '/resolution',
         dataType: "json",
         data: formToJSON(STATUS_CLOSED),
         success: function(data, textStatus, jqXHR){
-            console.log("Incident's status updated successfully: " + textStatus);
+            console.log("Task's status updated successfully: " + textStatus);
             $('#btnAddMessage').hide();
             $('#btnStatus2').hide();
-            findById(currentIncident.id);
+            findById(currentTask.id);
         },
         error: function(jqXHR, textStatus, errorThrown){
             alert('change status to work error: ' + textStatus);
@@ -149,9 +149,9 @@ function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
 	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#incidentList li').remove();
-	$.each(list, function(index, incident) {
-		$('#incidentList').append('<li><a href="#" data-identity="' + incident.id + '">' + incident.title + '</a></li>');
+	$('#taskList li').remove();
+	$.each(list, function(index, task) {
+		$('#taskList').append('<li><a href="#" data-identity="' + task.id + '">' + task.title + '</a></li>');
 	});
 	setTriggers();
 }
@@ -169,27 +169,27 @@ function renderMessagesList(data) {
     $('<table class="tg0"></table>').append(rows.join('')).appendTo('#div-messages');
 }
 
-function renderDetails(incident) {
+function renderDetails(task) {
     console.log('renderDetails');
 
-	$('#incidentId').val(incident.id);
-	$('#title').val(incident.title);
-	$('#consumer').html('Инициатор: ' + incident.consumer.name);
-    $('#status').html('Статус: ' + incident.status.status);
-	$('#description').val(incident.description);
+	$('#taskId').val(task.id);
+	$('#title').val(task.title);
+	$('#consumer').html('Инициатор: ' + task.consumer.name);
+    $('#status').html('Статус: ' + task.status.status);
+	$('#description').val(task.description);
 
-	renderMessagesList(incident.messages)
+	renderMessagesList(task.messages)
 }
 
 // Helper function to serialize all the form fields into a JSON string
-function formToJSON(incidentStatusId) {
+function formToJSON(taskStatusId) {
     console.log('formToJSON');
 
-	var incidentId = $('#incidentId').val();
+	var taskId = $('#taskId').val();
 
 	return JSON.stringify({
-		"id": incidentId === "" ? Number("0") : Number(incidentId),
-        "status-id": incidentStatusId === "" ? Number("0") : Number(incidentStatusId),
+		"id": taskId === "" ? Number("0") : Number(taskId),
+        "status-id": taskStatusId === "" ? Number("0") : Number(taskStatusId),
 		"message": $('#message-text').val()
 	});
 }
@@ -198,5 +198,5 @@ function find() {
     findAll();
 }
 
-// Retrieve incidents list when application starts
+// Retrieve tasks list when application starts
 jQuery(document).ready(find());

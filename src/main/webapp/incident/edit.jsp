@@ -4,7 +4,7 @@
 
 <%--
   ~ edit.jsp
-  ~ This file was last modified at 2019-02-09 23:23 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-10 22:31 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -45,78 +45,67 @@
                     <form id="incidentForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2">
+                                <td class="tg2-baqh" colspan="2" style="height: 44px">
                                     <button form="incidentForm" id="btnAdd">Clear</button>
                                     <button form="incidentForm" id="btnSave">Add</button>
                                     <button form="incidentForm" id="btnDelete">Delete</button>
                                 </td>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="4">
+                                <th class="tg2-0laxl" rowspan="3">
                                     <div class="leftArea">
                                         <ul id="incidentList"></ul>
                                     </div>
                                 </th>
                                 <th class="tg2-0lax">
-                                    <label>Id:</label><br/>
+                                    <label>Номер:</label>
+                                    <br/>
                                     <input form="incidentForm" id="incidentId" name="id" type="text" disabled title=""/>
                                 </th>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
-                                    <label>Name:</label><br/>
+                                    <label>Заголовок:</label>
+                                    <br/>
                                     <input form="incidentForm" type="text" id="title" name="title" required title=""/>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
-                                    <label>Consumer:</label><br/>
+                                    <label>Инициатор:</label>
+                                    <br/>
                                     <div class="row">
-                                        <div class="col-sm-4"  id="div-dropdown-sin-1">
+                                        <div class="col-sm-4" id="div-dropdown-sin-1">
                                             <div class="dropdown-sin-1 dropdown-single">
-                                                <select form="incidentForm" id="consumer" name="consumer" style="display:none" placeholder="Select">
+                                                <select form="incidentForm" id="consumer" name="consumer"
+                                                        style="display:none" placeholder="Select">
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <br>
-                                    <label>Owner:</label><br/>
+                                    <br/>
+                                    <label>Статус:</label>
+                                    <br/>
                                     <div class="row">
                                         <div class="col-sm-4" id="div-dropdown-sin-2">
                                             <div class="dropdown-sin-2 dropdown-single">
-                                                <select form="incidentForm" id="status" name="status" style="display:none" placeholder="Select">
+                                                <select form="incidentForm" id="status" name="status"
+                                                        style="display:none" placeholder="Select">
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <br>
+                                    <br/>
                                     <div class="row">
-                                      <div class="col-sm-4">
-                                        <label>Notes:</label><br/>
-                                        <textarea form="incidentForm" id="description" name="description" class="my-test-area" title=""></textarea>
-                                      </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-sm-4" id="div-message-textarea">
-                                            <label>Messages:</label><br/>
-                                            <textarea disabled form="incidentForm" id="message-text" name="message-text" class="my-message-textarea" title=""></textarea>
+                                        <div class="col-sm-4">
+                                            <label>Комментарий:</label>
+                                            <br/>
+                                            <textarea form="incidentForm" id="description" name="description"
+                                                      class="my-test-area" title=""></textarea>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="tg2-0lax">
-                                    <label></label>
-                                    <div id = "div-messages">
-                                        <table class="tg0" id="table-messages">
-                                            <tr>
-                                                <td class="tg0-0lax">
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-
+                                    <br/>
+                                    <br/>
                                 </td>
                             </tr>
                         </table>

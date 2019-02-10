@@ -1,6 +1,6 @@
 /*
  * MessageResource.java
- * This file was last modified at 2019-02-03 16:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 23:00 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,11 +19,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.rest.config.RestApplication.MESSAGE_RESOURCE;
+import static su.svn.shared.Constants.Rest.MESSAGE_RESOURCE;
 
 @Stateless
 @Path("/v1" + MESSAGE_RESOURCE)
-@Produces(MediaType.APPLICATION_JSON)
 public class MessageResource
 {
     @Context
@@ -33,12 +32,16 @@ public class MessageResource
     private ResponseStorageService storage;
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response create(Message entity)
     {
         return storage.create(servletRequest.getRequestURL(), entity);
     }
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/admin/owner")
     public Response createWithAdminAndOwner(Message entity)
     {
@@ -46,12 +49,14 @@ public class MessageResource
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readAll()
     {
         return storage.readAll(Message.class);
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
@@ -59,12 +64,15 @@ public class MessageResource
     }
 
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(Message entity)
     {
         return storage.update(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {

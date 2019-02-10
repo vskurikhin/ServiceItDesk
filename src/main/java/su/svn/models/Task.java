@@ -1,6 +1,6 @@
 /*
  * Task.java
- * This file was last modified at 2019-02-09 20:22 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 22:11 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -8,13 +8,18 @@
 
 package su.svn.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import su.svn.services.adapters.UserAdapter;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.TreeSet;
 
 import static su.svn.models.Task.*;
 
@@ -50,6 +55,7 @@ import static su.svn.models.Task.*;
         query = "SELECT DISTINCT t FROM Task t"
               + " JOIN FETCH t.consumer"
               + " JOIN FETCH t.status"
+              + " LEFT JOIN FETCH t.messages"
               + " WHERE t.id = :id"
     ),
 })
@@ -74,6 +80,7 @@ public class Task implements DataSet
     @Column(name = "description_text", nullable = false)
     private String description;
 
+    @JsonbTypeAdapter(UserAdapter.class)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "consumer_user_id", nullable = false)
     private User consumer;
@@ -81,6 +88,17 @@ public class Task implements DataSet
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "pm_task_record",
+        joinColumns = @JoinColumn(name = "incident_id"),
+        inverseJoinColumns = @JoinColumn(name = "message_id")
+    )
+    private Collection<Message> messages = new TreeSet<>();
 
     public static boolean isValidForSave(Task task)
     {

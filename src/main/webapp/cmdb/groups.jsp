@@ -4,7 +4,7 @@
 
 <%--
   ~ groups.jsp
-  ~ This file was last modified at 2019-02-09 23:46 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-10 23:27 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>'
+        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>'
     </script>
 </head>
 
@@ -37,7 +37,7 @@
                     <form id="groupForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2">
+                                <td class="tg2-baqh" colspan="2" style="height: 44px">
                                     <button form="groupForm" id="btnAdd">Clear</button>
                                     <button form="groupForm" id="btnSave">Add</button>
                                     <button form="groupForm" id="btnDelete">Delete</button>

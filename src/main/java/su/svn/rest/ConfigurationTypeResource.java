@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeResource.java
- * This file was last modified at 2019-02-03 15:55 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 23:08 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,11 +19,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.rest.config.RestApplication.CONFIGURATION_TYPE_RESOURCE;
+import static su.svn.shared.Constants.Rest.CONFIGURATION_TYPE_RESOURCE;
 
 @Stateless
 @Path("/v1" + CONFIGURATION_TYPE_RESOURCE)
-@Produces(MediaType.APPLICATION_JSON)
 public class ConfigurationTypeResource
 {
     @Context
@@ -33,18 +32,22 @@ public class ConfigurationTypeResource
     private ResponseStorageService storage;
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response create(ConfigurationType entity)
     {
         return storage.create(servletRequest.getRequestURL(), entity);
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readAll()
     {
         return storage.readAll(ConfigurationType.class);
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
@@ -52,12 +55,15 @@ public class ConfigurationTypeResource
     }
 
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(ConfigurationType entity)
     {
         return storage.update(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {

@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--
-  ~ incidents.jsp
-  ~ This file was last modified at 2019-02-10 22:30 by Victor N. Skurikhin.
+  ~ tasks.jsp
+  ~ This file was last modified at 2019-02-10 22:35 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -30,7 +30,7 @@
         var STATUS_NEW = 1;
         var STATUS_WORK = 2;
         var STATUS_CLOSED = 3;
-        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.TASK_RESOURCE %>';
     </script>
 </head>
 
@@ -43,32 +43,32 @@
             </td>
             <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
-                    <form id="incidentForm">
+                    <form id="taskForm">
                         <table class="tg2">
                             <tr>
                                 <td class="tg2-baqh" colspan="2" style="height: 44px">
-                                    <button form="incidentForm" id="btnStatus1" hidden>В работу</button>
-                                    <button form="incidentForm" id="btnAddMessage" hidden>Резолюция</button>
-                                    <button form="incidentForm" id="btnStatus2" hidden>Решение</button>
+                                    <button form="taskForm" id="btnStatus1" hidden>В работу</button>
+                                    <button form="taskForm" id="btnAddMessage" hidden>Резолюция</button>
+                                    <button form="taskForm" id="btnStatus2" hidden>Решение</button>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="tg2-0laxl" rowspan="4">
                                     <div class="leftArea">
-                                        <ul id="incidentList"></ul>
+                                        <ul id="taskList"></ul>
                                     </div>
                                 </th>
                                 <th class="tg2-0lax">
                                     <label>Номер:</label>
                                     <br/>
-                                    <input form="incidentForm" id="incidentId" name="id" type="text" disabled title=""/>
+                                    <input form="taskForm" id="taskId" name="id" type="text" disabled title=""/>
                                 </th>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Заголовок:</label>
                                     <br/>
-                                    <input form="incidentForm" type="text" id="title" name="title" class="my-text-name"
+                                    <input form="taskForm" type="text" id="title" name="title" class="my-text-name"
                                            disabled title=""/>
                                 </td>
                             </tr>
@@ -84,7 +84,7 @@
                                         <div class="col-sm-4">
                                             <label>Описание:</label>
                                             <br/>
-                                            <textarea form="incidentForm" id="description" name="description"
+                                            <textarea form="taskForm" id="description" name="description"
                                                       class="my-test-area" readonly title=""></textarea>
                                         </div>
                                     </div>
@@ -93,7 +93,7 @@
                                         <div class="col-sm-4" id="div-message-textarea">
                                             <label>Комментарий:</label>
                                             <br/>
-                                            <textarea disabled form="incidentForm" id="message-text" name="message-text"
+                                            <textarea disabled form="taskForm" id="message-text" name="message-text"
                                                       class="my-message-textarea" title=""></textarea>
                                         </div>
                                     </div>
@@ -119,6 +119,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/incidents.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/tasks.js"></script>
     </body>
 </html>

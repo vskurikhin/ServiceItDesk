@@ -1,6 +1,6 @@
 /*
  * GroupResource.java
- * This file was last modified at 2019-02-04 23:32 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 12:33 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.rest.config.RestApplication.GROUP_RESOURCE;
+import static su.svn.shared.Constants.Rest.GROUP_RESOURCE;
 
 @Stateless
 @Path("/v1" + GROUP_RESOURCE)

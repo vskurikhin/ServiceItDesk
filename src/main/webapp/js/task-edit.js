@@ -1,12 +1,12 @@
 /*
- * incident-edit.js
+ * task-edit.js
  * This file was last modified at 2019-02-10 23:29 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-var currentIncident;
+var currentTask;
 
 function setTriggers() {
     // Nothing to delete in initial application state
@@ -29,24 +29,24 @@ function setTriggers() {
     });
 
     $('#btnAdd').click(function() {
-        newIncident();
+        newTask();
         return false;
     });
 
     $('#btnSave').click(function() {
-        if ($('#incidentId').val() === '')
-            addIncident();
+        if ($('#taskId').val() === '')
+            addTask();
         else
-            updateIncident();
+            updateTask();
         return false;
     });
 
     btnDelete.click(function() {
-        deleteIncident();
+        deleteTask();
         return false;
     });
 
-    $('#incidentList a').click(function() {
+    $('#taskList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -58,11 +58,11 @@ function search(searchKey) {
 		findByName(searchKey);
 }
 
-function newIncident() {
+function newTask() {
 	$('#btnDelete').hide();
     $('#btnSave').html('Add');
-	currentIncident = {};
-	renderDetails(currentIncident); // Display empty form
+	currentTask = {};
+	renderDetails(currentTask); // Display empty form
 }
 
 function findAll() {
@@ -121,14 +121,14 @@ function findById(id) {
             $('#btnDelete').show();
             $('#btnSave').html('Save');
 			console.log('findById success: ' + data.name);
-			currentIncident = data;
-			renderDetails(currentIncident);
+			currentTask = data;
+			renderDetails(currentTask);
 		}
 	});
 }
 
-function addIncident() {
-	console.log('addIncident');
+function addTask() {
+	console.log('addTask');
 	// noinspection JSUnusedLocalSymbols
     $.ajax({
 		type: 'POST',
@@ -138,24 +138,24 @@ function addIncident() {
 		data: formToJSON(),
         statusCode: {
 		    201: function(data, textStatus, jqXHR){
-                console.log("Incident created successfully" + textStatus);
+                console.log("Task created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
-                $('#incidentId').val(data.id);
+                $('#taskId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
 		    },
             406: function(data, textStatus, jqXHR){
-                alert('addIncident error: ' + textStatus);
+                alert('addTask error: ' + textStatus);
             },
             500: function(data, textStatus, jqXHR){
-                alert('addIncident FATAL error: ' + textStatus);
+                alert('addTask FATAL error: ' + textStatus);
             }
         }
 	});
 }
 
-function updateIncident() {
-	console.log('updateIncident');
+function updateTask() {
+	console.log('updateTask');
 	// noinspection JSUnusedLocalSymbols
     $.ajax({
 		type: 'PUT',
@@ -164,39 +164,39 @@ function updateIncident() {
 		dataType: "json",
 		data: formToJSON(),
 		success: function(data, textStatus, jqXHR){
-            console.log("Incident updated successfully: " + textStatus);
+            console.log("Task updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateIncident error: ' + textStatus);
+			alert('updateTask error: ' + textStatus);
 		}
 	});
 }
 
-function deleteIncident() {
-	console.log('deleteIncident');
+function deleteTask() {
+	console.log('deleteTask');
 	// noinspection JSUnusedLocalSymbols
     $.ajax({
 		type: 'DELETE',
-		url: rootURL + '/' + $('#incidentId').val(),
+		url: rootURL + '/' + $('#taskId').val(),
 		success: function(data, textStatus, jqXHR){
-			alert('Incident deleted successfully');
+			alert('Task deleted successfully');
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteIncident error');
+			alert('deleteTask error');
 		}
 	});
 }
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#incidentList li').remove();
-	$.each(list, function(index, incident) {
-		$('#incidentList').append('<li><a href="#" data-identity="' + incident.id + '">' + incident.title + '</a></li>');
+	$('#taskList li').remove();
+	$.each(list, function(index, task) {
+		$('#taskList').append('<li><a href="#" data-identity="' + task.id + '">' + task.title + '</a></li>');
 	});
 	setTriggers();
 }
@@ -216,6 +216,26 @@ function renderListStatus(data) {
     $('.dropdown-sin-2').dropdown({
         readOnly: false,
         input: '<input  maxLength="20" placeholder="Search">'
+    });
+}
+
+// TODO remove
+function renderListGroup(data) {
+    console.log('renderListGroup');
+    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var groupSelect = $('#group');
+    let groupId = Number(groupSelect.find('option:selected').val());
+    console.log('renderListGroup groupId:' + groupId);
+
+    $.each(list, function(index, group) {
+        if (groupId !== group.id) {
+            console.log('renderListGroup append: ' + group.id + ' ' + group.name); // TODO remove
+            groupSelect.append('<option value="' + group.id + '">' + group.name + '</option>');
+        }
+    });
+    $('.dropdown-sin-3').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
     });
 }
 
@@ -250,14 +270,14 @@ function renderMessagesList(data) {
     $('<table class="tg0"></table>').append(rows.join('')).appendTo('#div-messages');
 }
 
-function renderDetails(incident) {
+function renderDetails(task) {
     function renderDropdown(num, selectId, selectName, id, name) {
         var divDropdownSin = $('#div-dropdown-sin-' + num);
 
         divDropdownSin.empty();
         divDropdownSin.html(
             '<div class="dropdown-sin-' + num + ' dropdown-single">' +
-            '<select form="incidentForm" id="' +
+            '<select form="taskForm" id="' +
             selectId + '" name="' + selectName +
             '" style="display:none" placeholder="Select"></select></div>'
         );
@@ -266,61 +286,40 @@ function renderDetails(incident) {
 
     console.log('renderDetails');
 
-	$('#incidentId').val(incident.id);
-	$('#title').val(incident.title);
+	$('#taskId').val(task.id);
+	$('#title').val(task.title);
 
-	renderDropdown('1', 'consumer', 'consumer', incident.consumer.id, incident.consumer.name);
+	renderDropdown('1', 'consumer', 'consumer', task.consumer.id, task.consumer.name);
     findAllUsers();
-    renderDropdown('2', 'status', 'status', incident.status.id, incident.status.status);
+    renderDropdown('2', 'status', 'status', task.status.id, task.status.status);
     findAllStatuses();
 
-	$('#description').val(incident.description);
+	$('#description').val(task.description);
 
-	renderMessagesList(incident.messages)
-}
-
-// Helper function to serialize all the form fields into a JSON string
-function messageToJSON() {
-    let incidentId = $('#incidentId').val();
-
-    let consumer = $('#consumer');
-    let incidentConsumerId = consumer.find('option:selected').val();
-    let incidentConsumerName = consumer.find('option:selected').text();
-
-    let status = $('#status');
-    let incidentStatusId = status.find('option:selected').val();
-    let incidentStatusName = status.find('option:selected').text();
-
-    return JSON.stringify({
-        "id": incidentId === "" ? Number("0") : Number(incidentId),
-        "title": $('#title').val(),
-        "consumer": {"id": Number(incidentConsumerId), "name": incidentConsumerName, "description": null},
-        "status": {"id": Number(incidentStatusId), "status": incidentStatusName, "description": null},
-        "description": $('#description').val()
-    });
+	renderMessagesList(task.messages)
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let incidentId = $('#incidentId').val();
+	let taskId = $('#taskId').val();
 
     let consumer = $('#consumer');
-    let incidentConsumerId = consumer.find('option:selected').val();
-    let incidentConsumerName = consumer.find('option:selected').text();
+    let taskConsumerId = consumer.find('option:selected').val();
+    let taskConsumerName = consumer.find('option:selected').text();
 
     let status = $('#status');
-    let incidentStatusId = status.find('option:selected').val();
-    let incidentStatusName = status.find('option:selected').text();
+    let taskStatusId = status.find('option:selected').val();
+    let taskStatusName = status.find('option:selected').text();
 
 	return JSON.stringify({
-		"id": incidentId === "" ? Number("0") : Number(incidentId),
+		"id": taskId === "" ? Number("0") : Number(taskId),
 		"title": $('#title').val(),
-        "consumer": {"id": Number(incidentConsumerId), "name": incidentConsumerName, "description": null},
-        "status": {"id": Number(incidentStatusId), "status": incidentStatusName, "description": null},
+        "consumer": {"id": Number(taskConsumerId), "name": taskConsumerName, "description": null},
+        "status": {"id": Number(taskStatusId), "status": taskStatusName, "description": null},
 		"description": $('#description').val()
 	});
 }
 
-// Retrieve incident list when application starts
+// Retrieve task list when application starts
 jQuery(document).ready(find());
 

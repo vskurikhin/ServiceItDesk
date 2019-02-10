@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitResource.java
- * This file was last modified at 2019-02-08 14:20 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 23:06 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,11 +19,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.rest.config.RestApplication.CONFIGURATION_UNIT_RESOURCE;
+import static su.svn.shared.Constants.Rest.CONFIGURATION_UNIT_RESOURCE;
 
 @Stateless
 @Path("/v1" + CONFIGURATION_UNIT_RESOURCE)
-@Produces(MediaType.APPLICATION_JSON)
 public class ConfigurationUnitResource
 {
     @Context
@@ -33,12 +32,16 @@ public class ConfigurationUnitResource
     private ResponseStorageService storage;
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response create(ConfigurationUnit entity)
     {
         return storage.createConfigurationUnit(servletRequest.getRequestURL(), entity);
     }
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/admin/owner")
     public Response createWithAdminAndOwner(ConfigurationUnit entity)
     {
@@ -46,12 +49,14 @@ public class ConfigurationUnitResource
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response readAll()
     {
         return storage.readAllConfigurationUnit();
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
     public Response read(@PathParam("id") Integer id)
     {
@@ -59,12 +64,15 @@ public class ConfigurationUnitResource
     }
 
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response update(ConfigurationUnit entity)
     {
         return storage.updateConfigurationUnit(servletRequest.getRequestURL(), entity);
     }
 
     @DELETE
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id)
     {

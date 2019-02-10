@@ -1,6 +1,6 @@
 /*
  * ResponseStorageServiceImpl.java
- * This file was last modified at 2019-02-09 22:49 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 22:04 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -15,19 +15,20 @@ import su.svn.models.*;
 import su.svn.models.dto.ConfigurationUnitDTO;
 import su.svn.models.dto.GroupDTO;
 import su.svn.models.dto.IncidentDTO;
+import su.svn.models.dto.TaskDTO;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static su.svn.exceptions.ExceptionsFabric.getWebApplicationException;
+import static su.svn.utils.UniformResource.getLocation;
 
 @Stateless
 public class ResponseStorageServiceImpl implements ResponseStorageService
@@ -98,11 +99,6 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     {
         //noinspection unchecked
         return (D) getDao(entity.getClass());
-    }
-
-    private URI getLocation(StringBuffer url, Long id)
-    {
-        return URI.create(url.append('/').append(id).toString());
     }
 
     @Override
@@ -204,16 +200,31 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
         }
     }
 
+    private void prepareTask(Task task)
+    {
+        Optional<User> consumer = userDao.findById(task.getConsumer().getId());
+        if ( ! consumer.isPresent()) {
+            throw new PersistenceException("can't find consumer user by id " + task.getConsumer().getId() + '!');
+        }
+        task.setConsumer(consumer.get());
+
+        Optional<Status> status = statusDao.findById(task.getStatus().getId());
+        if ( ! status.isPresent()) {
+            throw new PersistenceException("can't find status by id " + task.getStatus().getId() + '!');
+        }
+        task.setStatus(status.get());
+
+        if ( ! Task.isValidForSave(task)) {
+            throw new PersistenceException("task isn't valid for save!");
+        }
+    }
+
     @Override
     @TransactionAttribute(REQUIRES_NEW)
     public Response createTask(StringBuffer requestURL, Task task)
     {
         try {
-            if ( ! Task.isValidForSave(task)) {
-                throw new PersistenceException("task isn't valid for save!");
-            }
-            userDao.save(task.getConsumer());
-            statusDao.save(task.getStatus());
+            prepareTask(task);
 
             return create(requestURL, task);
         }
@@ -291,12 +302,23 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
+    public Response readAllTasks()
+    {
+        return Response.ok(
+            taskDao.findAll()
+                .stream()
+                .map(TaskDTO::create)
+                .collect(Collectors.toList())
+        ).build();
+    }
+
+    @Override
     public  <E extends DataSet> Response readById(Class<E> clazz, Long id)
     {
         try {
             Optional<E> optionalEntity = getDao(clazz).findById(id);
 
-            if (!optionalEntity.isPresent()) {
+            if ( ! optionalEntity.isPresent()) {
                 throw new PersistenceException("it isn't present!");
             }
             E entity = optionalEntity.get();
@@ -371,6 +393,44 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
+    public Response readTaskById(Long id)
+    {
+        try {
+            Optional<Task> optionalEntity = taskDao.findById(id);
+
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
+            Task entity = optionalEntity.get();
+
+            return Response.ok(TaskDTO.create(entity)).build();
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the Task with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Override
+    public Response readTaskByIdWithMessages(Long id)
+    {
+        try {
+            Optional<Task> optionalEntity = taskDao.findByIdWithDetails(id);
+
+            if ( ! optionalEntity.isPresent()) {
+                throw new PersistenceException("it isn't present!");
+            }
+            Task entity = optionalEntity.get();
+
+            return Response.ok(entity).build();
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Did not find the Task with id == {}: {}", id, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Override
     public <E extends DataSet> Response update(StringBuffer requestURL, E entity)
     {
         try {
@@ -404,17 +464,33 @@ public class ResponseStorageServiceImpl implements ResponseStorageService
     }
 
     @Override
-    public Response updateIncident(StringBuffer requestURL, Incident unit)
+    public Response updateIncident(StringBuffer requestURL, Incident incident)
     {
         try {
-            prepareIncident(unit);
-            Optional<Incident> optionalIncident = incidentDao.findByIdWithDetails(unit.getId());
-            optionalIncident.ifPresent(i -> unit.setMessages(i.getMessages()));
+            prepareIncident(incident);
+            Optional<Incident> optionalIncident = incidentDao.findByIdWithDetails(incident.getId());
+            optionalIncident.ifPresent(i -> incident.setMessages(i.getMessages()));
 
-            return update(requestURL, unit);
+            return update(requestURL, incident);
         }
         catch (RuntimeException e) {
-            LOGGER.error("Try create ConfigurationUnit: {} ", e.getMessage());
+            LOGGER.error("Try create Incident: {} ", e.getMessage());
+            return Response.notAcceptable(Collections.emptyList()).build();
+        }
+    }
+
+    @Override
+    public Response updateTask(StringBuffer requestURL, Task task)
+    {
+        try {
+            prepareTask(task);
+            Optional<Task> optionalIncident = taskDao.findByIdWithDetails(task.getId());
+            optionalIncident.ifPresent(i -> task.setMessages(i.getMessages()));
+
+            return update(requestURL, task);
+        }
+        catch (RuntimeException e) {
+            LOGGER.error("Try create Task: {} ", e.getMessage());
             return Response.notAcceptable(Collections.emptyList()).build();
         }
     }
