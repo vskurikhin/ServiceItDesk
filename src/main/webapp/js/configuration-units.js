@@ -1,19 +1,17 @@
 /*
  * configuration-units.js
- * This file was last modified at 2019-02-08 23:35 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-11 00:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-// rootURL - The root URL for the RESTful services
-// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/configurationUnits";
-
 var currentConfigurationUnit;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    $('#btnDelete').hide();
+    let btnDelete = $('#btnDelete');
+    btnDelete.hide();
 
     // Register listeners
     $('#btnSearch').click(function() {
@@ -43,7 +41,7 @@ function setTriggers() {
         return false;
     });
 
-    $('#btnDelete').click(function() {
+    btnDelete.click(function() {
         deleteConfigurationUnit();
         return false;
     });
@@ -142,7 +140,8 @@ function findById(id) {
 
 function addConfigurationUnit() {
 	console.log('addConfigurationUnit');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'POST',
 		contentType: 'application/json',
 		url: rootURL,
@@ -168,7 +167,8 @@ function addConfigurationUnit() {
 
 function updateConfigurationUnit() {
 	console.log('updateConfigurationUnit');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'PUT',
 		contentType: 'application/json',
 		url: rootURL,
@@ -308,23 +308,23 @@ function renderDetails(configurationUnit) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var configurationUnitId = $('#configurationUnitId').val();
+	let configurationUnitId = $('#configurationUnitId').val();
 
-    var group = $('#group');
-    var configurationUnitGroupId = group.find('option:selected').val();
-    var configurationUnitGroupName = group.find('option:selected').text();
+    let group = $('#group');
+    let configurationUnitGroupId = group.find('option:selected').val();
+    let configurationUnitGroupName = group.find('option:selected').text();
 
-    var admin = $('#admin');
-    var configurationUnitAdminId = admin.find('option:selected').val();
-    var configurationUnitAdminName = admin.find('option:selected').text();
+    let admin = $('#admin');
+    let configurationUnitAdminId = admin.find('option:selected').val();
+    let configurationUnitAdminName = admin.find('option:selected').text();
 
-    var owner = $('#owner');
-    var configurationUnitOwnerId = owner.find('option:selected').val();
-    var configurationUnitOwnerName = owner.find('option:selected').text();
+    let owner = $('#owner');
+    let configurationUnitOwnerId = owner.find('option:selected').val();
+    let configurationUnitOwnerName = owner.find('option:selected').text();
 
-    var ctype = $('#ctype');
-    var configurationUnitTypeId = ctype.find('option:selected').val();
-    var configurationUnitTypeName = ctype.find('option:selected').text();
+    let ctype = $('#ctype');
+    let configurationUnitTypeId = ctype.find('option:selected').val();
+    let configurationUnitTypeName = ctype.find('option:selected').text();
 
 	return JSON.stringify({
 		"id": configurationUnitId === "" ? Number("0") : Number(configurationUnitId),

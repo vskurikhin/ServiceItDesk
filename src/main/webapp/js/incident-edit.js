@@ -1,6 +1,6 @@
 /*
  * incident-edit.js
- * This file was last modified at 2019-02-10 23:29 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-11 00:18 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -252,7 +252,7 @@ function renderMessagesList(data) {
 
 function renderDetails(incident) {
     function renderDropdown(num, selectId, selectName, id, name) {
-        var divDropdownSin = $('#div-dropdown-sin-' + num);
+        let divDropdownSin = $('#div-dropdown-sin-' + num);
 
         divDropdownSin.empty();
         divDropdownSin.html(

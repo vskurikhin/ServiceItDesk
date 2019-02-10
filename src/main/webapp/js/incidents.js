@@ -1,6 +1,6 @@
 /*
  * incidents.js
- * This file was last modified at 2019-02-10 23:29 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-11 00:22 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -10,7 +10,7 @@ var currentIncident;
 
 function setTriggers() {
     $('#btnStatus1').click(function () {
-        var value = $('#message-text').val();
+        let value = $('#message-text').val();
         if (value.length > 0) {
             currentIncident.status.id = 2;
             statusToWork();
@@ -22,7 +22,7 @@ function setTriggers() {
     });
 
     $('#btnAddMessage').click(function () {
-        var value = $('#message-text').val();
+        let value = $('#message-text').val();
         if (value.length > 0) {
             addMessage();
         }
@@ -33,7 +33,7 @@ function setTriggers() {
     });
 
     $('#btnStatus2').click(function () {
-        var value = $('#message-text').val();
+        let value = $('#message-text').val();
         if (value.length > 0) {
             resolution();
         }
@@ -147,7 +147,7 @@ function resolution() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#incidentList li').remove();
 	$.each(list, function(index, incident) {
@@ -157,7 +157,7 @@ function renderList(data) {
 }
 
 function renderMessagesList(data) {
-    var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    let list = data == null ? [] : (data instanceof Array ? data : [data]);
     var rows = [];
 
     $('#message-text').prop('disabled', false);
@@ -184,8 +184,7 @@ function renderDetails(incident) {
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON(incidentStatusId) {
     console.log('formToJSON');
-
-	var incidentId = $('#incidentId').val();
+	let incidentId = $('#incidentId').val();
 
 	return JSON.stringify({
 		"id": incidentId === "" ? Number("0") : Number(incidentId),

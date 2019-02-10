@@ -4,7 +4,7 @@
 
 <%--
   ~ edit.jsp
-  ~ This file was last modified at 2019-02-10 22:31 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-11 00:14 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -19,17 +19,15 @@
     <meta charset=UTF-8>
     <title id="head-title">Service It Desk CMDB Console Конфигурационные еденицы | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
-    <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/jquery.dropdown.css' />
     <style>
         .container { margin:150px auto;}
     </style>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
-    <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/jquery.dropdown.js'></script>
     <script language="javascript">
-        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
-        var userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
-        var statusRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.STATUS_RESOURCE %>';
-        var messageRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.MESSAGE_RESOURCE %>';
+        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
+        let userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
+        let statusRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.STATUS_RESOURCE %>';
+        let messageRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.MESSAGE_RESOURCE %>';
     </script>
 </head>
 

@@ -2,7 +2,7 @@
 
 <!--
   ~ pom.xml
-  ~ This file was last modified at 2019-02-10 23:09 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-11 00:28 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,7 +17,7 @@
 
     <groupId>su.svn</groupId>
     <artifactId>ServiceItDesk</artifactId>
-    <version>1.2-38</version>
+    <version>1.2-40</version>
     <packaging>war</packaging>
 
     <name>JavaEE-09-2018 Service It Desk Webapp</name>
@@ -439,6 +439,7 @@
                     <!-- CSS minimization -->
                     <cssSourceDir>css</cssSourceDir>
                     <cssSourceFiles>
+                        <cssSourceFile>jquery.dropdown.min.css</cssSourceFile>
                         <cssSourceFile>mystyle.css</cssSourceFile>
                         <cssSourceFile>styles.css</cssSourceFile>
                         <cssSourceFile>w3.css</cssSourceFile>
@@ -448,6 +449,7 @@
                     <jsSourceDir>js</jsSourceDir>
                     <jsSourceFiles>
                         <jsSourceFile>jquery-3.3.1.min.js</jsSourceFile>
+                        <jsSourceFile>jquery.dropdown.min.js</jsSourceFile>
                         <jsSourceFile>login.js</jsSourceFile>
                         <!-- jsSourceFile>groups.js</jsSourceFile -->
                     </jsSourceFiles>

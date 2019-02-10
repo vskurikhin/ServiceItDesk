@@ -1,19 +1,17 @@
 /*
  * groups.js
- * This file was last modified at 2019-02-09 22:58 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-11 00:22 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-// rootURL - The root URL for the RESTful services
-// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/groups";
-
 var currentGroup;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    $('#btnDelete').hide();
+    let btnDelete = $('#btnDelete');
+    btnDelete.hide();
 
     // Register listeners
     $('#btnSearch').click(function() {
@@ -43,7 +41,7 @@ function setTriggers() {
         return false;
     });
 
-    $('#btnDelete').click(function() {
+    btnDelete.click(function() {
         deleteGroup();
         return false;
     });
@@ -62,12 +60,6 @@ function search(searchKey) {
 
 function newGroup() {
     setTimeout(function(){location.reload();}, 500);
-    /*
-	$('#btnDelete').hide();
-    $('#btnSave').html('Add');
-	currentGroup = {};
-	renderDetails(currentGroup); // Display empty form
-	*/
 }
 
 function findAll() {
@@ -108,7 +100,8 @@ function findById(id) {
 
 function addGroup() {
 	console.log('addGroup');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'POST',
 		contentType: 'application/json',
 		url: rootURL,
@@ -134,7 +127,8 @@ function addGroup() {
 
 function updateGroup() {
 	console.log('updateGroup');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'PUT',
 		contentType: 'application/json',
 		url: rootURL,
@@ -153,7 +147,8 @@ function updateGroup() {
 
 function deleteGroup() {
 	console.log('deleteGroup');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'DELETE',
 		url: rootURL + '/' + $('#groupId').val(),
 		success: function(data, textStatus, jqXHR){
@@ -168,7 +163,7 @@ function deleteGroup() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#groupList li').remove();
 	$.each(list, function(index, group) {
@@ -185,7 +180,8 @@ function renderDetails(group) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var groupId = $('#groupId').val();
+	let groupId = $('#groupId').val();
+
 	return JSON.stringify({
 		"id": groupId === "" ? Number("0") : Number(groupId),
 		"name": $('#name').val(),

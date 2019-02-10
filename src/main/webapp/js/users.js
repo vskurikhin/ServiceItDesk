@@ -1,19 +1,17 @@
 /*
  * users.js
- * This file was last modified at 2019-02-09 23:04 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-11 00:25 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-// rootURL - The root URL for the RESTful services
-// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/users";
-
 var currentUser;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    $('#btnDelete').hide();
+    let btnDelete = $('#btnDelete');
+    btnDelete.hide();
 
     // Register listeners
     $('#btnSearch').click(function() {
@@ -43,7 +41,7 @@ function setTriggers() {
         return false;
     });
 
-    $('#btnDelete').click(function() {
+    btnDelete.click(function() {
         deleteUser();
         return false;
     });
@@ -62,12 +60,6 @@ function search(searchKey) {
 
 function newUser() {
     setTimeout(function(){location.reload();}, 500);
-    /*
-	$('#btnDelete').hide();
-    $('#btnSave').html('Add');
-	currentUser = {};
-	renderDetails(currentUser); // Display empty form
-	*/
 }
 
 function findAll() {
@@ -123,7 +115,8 @@ function findById(id) {
 
 function addUser() {
 	console.log('addUser');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'POST',
 		contentType: 'application/json',
 		url: rootURL,
@@ -149,7 +142,8 @@ function addUser() {
 
 function updateUser() {
 	console.log('updateUser');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'PUT',
 		contentType: 'application/json',
 		url: rootURL,
@@ -168,7 +162,8 @@ function updateUser() {
 
 function deleteUser() {
 	console.log('deleteUser');
-	$.ajax({
+	// noinspection JSUnusedLocalSymbols
+    $.ajax({
 		type: 'DELETE',
 		url: rootURL + '/' + $('#userId').val(),
 		success: function(data, textStatus, jqXHR){
@@ -183,7 +178,7 @@ function deleteUser() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#userList li').remove();
 	$.each(list, function(index, user) {
@@ -194,9 +189,9 @@ function renderList(data) {
 
 function renderListGroup(data) {
     console.log('renderListGroup');
-    var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    let list = data == null ? [] : (data instanceof Array ? data : [data]);
     var groupSelect = $('#group');
-    var groupId = Number(groupSelect.find('option:selected').val());
+    let groupId = Number(groupSelect.find('option:selected').val());
     console.log('renderListGroup groupId:' + groupId);
 
     $.each(list, function(index, group) {
@@ -219,7 +214,7 @@ function renderDetails(user) {
 
 	$('#userId').val(user.id);
 	$('#name').val(user.name);
-    var divDropdownSin1 = $('#div-dropdown-sin-1');
+    let divDropdownSin1 = $('#div-dropdown-sin-1');
     divDropdownSin1.empty();
     divDropdownSin1.html(
         '<div class="dropdown-sin-1 dropdown-single">' +
@@ -233,9 +228,9 @@ function renderDetails(user) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var userId = $('#userId').val();
-	var userGroupId = $('#group').find('option:selected').val();
-    var userGroupName = $('#group').find('option:selected').text();
+	let userId = $('#userId').val();
+	let userGroupId = $('#group').find('option:selected').val();
+    let userGroupName = $('#group').find('option:selected').text();
 	return JSON.stringify({
 		"id": userId === "" ? Number("0") : Number(userId),
 		"name": $('#name').val(),
