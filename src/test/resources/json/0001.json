@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "name": "user_name1",
+  "description": "description1",
+  "group": {
+    "description": "description1",
+    "id": 1,
+    "name": "name1"
+  }
+}

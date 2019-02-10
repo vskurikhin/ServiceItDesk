@@ -1,6 +1,6 @@
 /*
  * GroupTest.java
- * This file was last modified at 2019-01-26 19:17 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:25 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -23,11 +23,11 @@ import static su.svn.TestData.*;
 @DisplayName("Class Group")
 class GroupTest
 {
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
 
-    Group group;
+    private Group group;
 
     @Test
     @DisplayName("is instantiated with new Group()")
@@ -71,6 +71,13 @@ class GroupTest
             assertThat(group).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, group.getDescription());
         }
+
+        @Test
+        void isValidForSave()
+        {
+            assertFalse(Group.isValidForSave(group));
+        }
+
         @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
@@ -110,6 +117,12 @@ class GroupTest
             expected.setUsers(emptySet);
             assertEquals(expected.hashCode(), group.hashCode());
             assertEquals(expected, group);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(Group.isValidForSave(group));
         }
     }
 }

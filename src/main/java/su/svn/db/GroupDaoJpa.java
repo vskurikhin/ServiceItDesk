@@ -1,6 +1,6 @@
 /*
  * GroupDaoJpa.java
- * This file was last modified at 2019-01-26 18:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:08 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,28 +17,18 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Group.*;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class GroupDaoJpa implements GroupDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT g FROM Group g";
-
-    public static final String SELECT_WITH_USERS =
-        "SELECT DISTINCT g" +
-        " FROM Group g" +
-        " LEFT JOIN FETCH g.users" +
-        " WHERE g.id = :id";
-
-    public static final String SELECT_WHERE_NAME = SELECT_ALL + " WHERE g.name LIKE :name";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE g.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -46,20 +36,26 @@ public class GroupDaoJpa implements GroupDao
 
     public GroupDaoJpa() { /* None */}
 
-    public GroupDaoJpa(EntityManager entityManager)
+    GroupDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
     @Override
-    public Group findById(Long id)
+    public Optional<Group> findById(Long id)
     {
         try {
-            return em.find(Group.class, id);
+            Group group;
+
+            if ( ! Objects.isNull(group = em.find(Group.class, id))) {
+                group.setUsers(null);
+            }
+
+            return Optional.ofNullable(group);
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -67,25 +63,27 @@ public class GroupDaoJpa implements GroupDao
     public List<Group> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Group.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Group.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
         }
     }
 
     @Override
-    public Group findByIdWithUsers(Long id)
+    public Optional<Group> findByIdWithUsers(Long id)
     {
         try {
-            return em.createQuery(SELECT_WITH_USERS, Group.class)
-                .setParameter("id", id)
-                .getSingleResult();
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_USERS, Group.class)
+                  .setParameter("id", id)
+                  .getSingleResult()
+            );
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -93,7 +91,7 @@ public class GroupDaoJpa implements GroupDao
     public List<Group> findByName(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_NAME, Group.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_NAME, Group.class)
                 .setParameter("name", value)
                 .getResultList();
         }
@@ -107,7 +105,7 @@ public class GroupDaoJpa implements GroupDao
     public List<Group> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Group.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Group.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -118,7 +116,7 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Group entity)
     {
         try {
@@ -139,11 +137,11 @@ public class GroupDaoJpa implements GroupDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
-            Group merged = em.merge(findById(id));
+            Group merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete group with id: {}", merged.getId());
             return true;

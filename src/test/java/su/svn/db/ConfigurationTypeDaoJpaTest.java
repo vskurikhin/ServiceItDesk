@@ -21,6 +21,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,9 +29,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static su.svn.TestData.*;
-import static su.svn.db.ConfigurationTypeDaoJpa.SELECT_ALL;
-import static su.svn.db.ConfigurationTypeDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.ConfigurationTypeDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.models.ConfigurationType.FIND_ALL;
+import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_DESC;
+import static su.svn.models.ConfigurationType.FIND_ALL_WHERE_NAME;
 
 @DisplayName("Class ConfigurationTypeDaoJpaTest")
 class ConfigurationTypeDaoJpaTest
@@ -105,8 +106,9 @@ class ConfigurationTypeDaoJpaTest
 
             when(entityManager.find(ConfigurationType.class, TEST_ID1)).thenReturn(expected);
 
-            ConfigurationType test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<ConfigurationType> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
@@ -115,8 +117,8 @@ class ConfigurationTypeDaoJpaTest
         {
             when(entityManager.find(ConfigurationType.class, TEST_ID9)).thenReturn(null);
 
-            ConfigurationType test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<ConfigurationType> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
@@ -125,8 +127,8 @@ class ConfigurationTypeDaoJpaTest
         {
             when(entityManager.find(ConfigurationType.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
 
-            ConfigurationType test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<ConfigurationType> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -137,7 +139,7 @@ class ConfigurationTypeDaoJpaTest
             List<ConfigurationType> expected = Collections.emptyList();
             TypedQuery<ConfigurationType> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, ConfigurationType.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, ConfigurationType.class)).thenReturn(mockedQuery);
 
             List<ConfigurationType> test = dao.findAll();
             assertEquals(expected, test);
@@ -150,7 +152,7 @@ class ConfigurationTypeDaoJpaTest
             List<ConfigurationType> expected = Collections.emptyList();
             TypedQuery<ConfigurationType> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, ConfigurationType.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, ConfigurationType.class)).thenReturn(mockedQuery);
 
             List<ConfigurationType> test = dao.findAll();
             assertEquals(expected, test);
@@ -165,7 +167,7 @@ class ConfigurationTypeDaoJpaTest
             TypedQuery<ConfigurationType> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, ConfigurationType.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationType.class)).thenReturn(mockedQuery);
 
             List<ConfigurationType> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -179,7 +181,7 @@ class ConfigurationTypeDaoJpaTest
             TypedQuery<ConfigurationType> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, ConfigurationType.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, ConfigurationType.class)).thenReturn(mockedQuery);
 
             List<ConfigurationType> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -194,7 +196,7 @@ class ConfigurationTypeDaoJpaTest
             TypedQuery<ConfigurationType> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, ConfigurationType.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationType.class)).thenReturn(mockedQuery);
 
             List<ConfigurationType> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -208,7 +210,7 @@ class ConfigurationTypeDaoJpaTest
             TypedQuery<ConfigurationType> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, ConfigurationType.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, ConfigurationType.class)).thenReturn(mockedQuery);
 
             List<ConfigurationType> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -276,11 +278,13 @@ class ConfigurationTypeDaoJpaTest
         @Test
         void save_persists()
         {
-            ConfigurationType test = new ConfigurationType();
-            test.setName(TEST_NAME);
-            test.setDescription(TEST_DESCRIPTION);
-            runInTransaction(() -> dao.save(test));
-            assertEquals(test, dao.findById(test.getId()));
+            ConfigurationType expected = new ConfigurationType();
+            expected.setName(TEST_NAME);
+            expected.setDescription(TEST_DESCRIPTION);
+            runInTransaction(() -> dao.save(expected));
+            Optional<ConfigurationType> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -306,7 +310,8 @@ class ConfigurationTypeDaoJpaTest
             test.setDescription(TEST_DESCRIPTION);
             runInTransaction(() -> dao.save(test));
             runInTransaction(() -> dao.delete(test.getId()));
-            assertNull(dao.findById(test.getId()));
+            Optional<ConfigurationType> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
     }

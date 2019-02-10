@@ -1,6 +1,6 @@
 /*
  * TaskDaoJpa.java
- * This file was last modified at 2019-01-26 18:09 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-10 20:39 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,22 +17,17 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static su.svn.models.Task.*;
+import static su.svn.shared.Constants.Db.PERSISTENCE_UNIT_NAME;
 
 @Stateless
 @TransactionAttribute(SUPPORTS)
 public class TaskDaoJpa implements TaskDao
 {
-    public static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    public static final String SELECT_ALL = "SELECT t FROM Task t";
-
-    public static final String SELECT_WHERE_TITLE = SELECT_ALL + " WHERE t.title LIKE :title";
-
-    public static final String SELECT_WHERE_DESC = SELECT_ALL + " WHERE t.description LIKE :desc";
-
     @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME)
     private EntityManager em;
 
@@ -40,20 +35,20 @@ public class TaskDaoJpa implements TaskDao
 
     public TaskDaoJpa() { /* None */}
 
-    public TaskDaoJpa(EntityManager entityManager)
+    TaskDaoJpa(EntityManager entityManager)
     {
         em = entityManager;
     }
 
     @Override
-    public Task findById(Long id)
+    public Optional<Task> findById(Long id)
     {
         try {
-            return em.find(Task.class, id);
+            return Optional.ofNullable(em.find(Task.class, id));
         }
         catch (IllegalArgumentException e) {
             LOGGER.error("Can't search by id: {} because had the exception {}", id, e);
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -61,11 +56,27 @@ public class TaskDaoJpa implements TaskDao
     public List<Task> findAll()
     {
         try {
-            return em.createQuery(SELECT_ALL, Task.class).getResultList();
+            return em.createNamedQuery(FIND_ALL, Task.class).getResultList();
         }
         catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
-            LOGGER.error("Can't search all because had the exception ", e);
+            LOGGER.error("Can't search all because had the exception {}", e.toString());
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public Optional<Task> findByIdWithDetails(Long id)
+    {
+        try {
+            return Optional.of(
+                em.createNamedQuery(FIND_BY_ID_WITH_DETAILS, Task.class)
+                    .setParameter("id", id)
+                    .getSingleResult()
+            );
+        }
+        catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
+            LOGGER.error("Can't search by id: {} because had the exception {}", id, e.toString());
+            return Optional.empty();
         }
     }
 
@@ -73,7 +84,7 @@ public class TaskDaoJpa implements TaskDao
     public List<Task> findByTitle(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_TITLE, Task.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_TITLE, Task.class)
                 .setParameter("title", value)
                 .getResultList();
         }
@@ -87,7 +98,7 @@ public class TaskDaoJpa implements TaskDao
     public List<Task> findByDescription(String value)
     {
         try {
-            return em.createQuery(SELECT_WHERE_DESC, Task.class)
+            return em.createNamedQuery(FIND_ALL_WHERE_DESC, Task.class)
                 .setParameter("desc", value)
                 .getResultList();
         }
@@ -98,7 +109,7 @@ public class TaskDaoJpa implements TaskDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean save(Task entity)
     {
         try {
@@ -119,11 +130,11 @@ public class TaskDaoJpa implements TaskDao
     }
 
     @Override
-    @TransactionAttribute(REQUIRES_NEW)
+    @TransactionAttribute(REQUIRED)
     public boolean delete(Long id)
     {
         try {
-            Task merged = em.merge(findById(id));
+            Task merged = em.merge(findById(id).orElseThrow(NoResultException::new));
             em.remove(merged);
             LOGGER.info("Delete task with id: {}", merged.getId());
             return true;

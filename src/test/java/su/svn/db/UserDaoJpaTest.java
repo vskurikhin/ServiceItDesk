@@ -21,16 +21,15 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static su.svn.TestData.*;
-import static su.svn.db.UserDaoJpa.SELECT_ALL;
-import static su.svn.db.UserDaoJpa.SELECT_WHERE_DESC;
-import static su.svn.db.UserDaoJpa.SELECT_WHERE_NAME;
+import static su.svn.models.User.*;
 
 @DisplayName("Class UserDaoJpaTest")
 class UserDaoJpaTest
@@ -103,30 +102,40 @@ class UserDaoJpaTest
             expected.setName(TEST_NAME);
             expected.setDescription(TEST_DESCRIPTION);
 
-            when(entityManager.find(User.class, TEST_ID1)).thenReturn(expected);
+            TypedQuery<User> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenReturn(expected);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, User.class)).thenReturn(mockedQuery);
 
-            User test = dao.findById(TEST_ID1);
-            assertEquals(expected, test);
+            Optional<User> test = dao.findById(TEST_ID1);
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("find by id return null")
         @Test
         void findById_null()
         {
-            when(entityManager.find(User.class, TEST_ID9)).thenReturn(null);
+            TypedQuery<User> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenThrow(PersistenceException.class);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, User.class)).thenReturn(mockedQuery);
 
-            User test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<User> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
         }
 
         @DisplayName("find by id was an IllegalArgumentException")
         @Test
         void findById_exception()
         {
-            when(entityManager.find(User.class, TEST_ID9)).thenThrow(IllegalArgumentException.class);
+            TypedQuery<User> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenThrow(IllegalArgumentException.class);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, User.class)).thenReturn(mockedQuery);
 
-            User test = dao.findById(TEST_ID9);
-            assertNull(test);
+            Optional<User> test = dao.findById(TEST_ID9);
+            assertFalse(test.isPresent());
             assertTrue(appender.getMessages().size() > 0);
         }
 
@@ -137,7 +146,7 @@ class UserDaoJpaTest
             List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findAll();
             assertEquals(expected, test);
@@ -150,7 +159,7 @@ class UserDaoJpaTest
             List<User> expected = Collections.emptyList();
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_ALL, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findAll();
             assertEquals(expected, test);
@@ -165,7 +174,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -179,7 +188,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("name", TEST_NAME)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_NAME, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_NAME, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByName(TEST_NAME);
             assertEquals(expected, test);
@@ -194,7 +203,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenReturn(expected);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -208,7 +217,7 @@ class UserDaoJpaTest
             TypedQuery<User> mockedQuery = mockTypedQuery();
             when(mockedQuery.setParameter("desc", TEST_DESCRIPTION)).thenReturn(mockedQuery);
             when(mockedQuery.getResultList()).thenThrow(PersistenceException.class);
-            when(entityManager.createQuery(SELECT_WHERE_DESC, User.class)).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_ALL_WHERE_DESC, User.class)).thenReturn(mockedQuery);
 
             List<User> test = dao.findByDescription(TEST_DESCRIPTION);
             assertEquals(expected, test);
@@ -253,7 +262,11 @@ class UserDaoJpaTest
         void delete_exception()
         {
             User expected = TEST_USER1;
-            when(entityManager.find(User.class, expected.getId())).thenReturn(expected);
+
+            TypedQuery<User> mockedQuery = mockTypedQuery();
+            when(mockedQuery.getSingleResult()).thenReturn(expected);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(entityManager.createNamedQuery(FIND_BY_ID_WITH_DETAILS, User.class)).thenReturn(mockedQuery);
             when(entityManager.merge(expected)).thenReturn(expected);
             doThrow(PersistenceException.class).when(entityManager).remove(expected);
 
@@ -287,9 +300,11 @@ class UserDaoJpaTest
         @Test
         void save_persists()
         {
-            User test = createUser1();
-            saveNewGroupAndUser(test);
-            assertEquals(test, dao.findById(test.getId()));
+            User expected = createUser1();
+            saveNewGroupAndUser(expected);
+            Optional<User> test = dao.findById(expected.getId());
+            assertTrue(test.isPresent());
+            assertEquals(expected, test.get());
         }
 
         @DisplayName("merge the detached object when save")
@@ -311,7 +326,8 @@ class UserDaoJpaTest
             User test = createUser1();
             saveNewGroupAndUser(test);
             runInTransaction(() -> dao.delete(test.getId()));
-            assertNull(dao.findById(test.getId()));
+            Optional<User> none = dao.findById(test.getId());
+            assertFalse(none.isPresent());
             assertTrue(dao.findAll().isEmpty());
         }
     }

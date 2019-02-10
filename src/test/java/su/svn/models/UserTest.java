@@ -1,6 +1,6 @@
 /*
  * UserTest.java
- * This file was last modified at 2019-01-26 19:33 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:25 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,11 +20,11 @@ import static su.svn.TestData.*;
 @DisplayName("Class User")
 class UserTest
 {
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
 
-    User user;
+    private User user;
 
     @Test
     @DisplayName("is instantiated with new User()")
@@ -71,6 +71,12 @@ class UserTest
         }
 
         @Test
+        void isValidForSave()
+        {
+            assertFalse(User.isValidForSave(user));
+        }
+
+        @Test
         @DisplayName("The length of string from Genre::toString is great than zero")
         void testToString()
         {
@@ -108,6 +114,12 @@ class UserTest
             User expected = new User(TEST_ID1, TEST_NAME, TEST_DESCRIPTION, group);
             assertEquals(expected.hashCode(), user.hashCode());
             assertEquals(expected, user);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(User.isValidForSave(user));
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeTest.java
- * This file was last modified at 2019-01-26 11:28 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-03 17:24 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -20,11 +20,11 @@ import static su.svn.TestData.*;
 @DisplayName("Class ConfigurationType")
 class ConfigurationTypeTest
 {
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
 
-    ConfigurationType ctype;
+    private ConfigurationType ctype;
 
     @Test
     @DisplayName("is instantiated with new ConfigurationType()")
@@ -68,6 +68,13 @@ class ConfigurationTypeTest
             assertThat(ctype).hasFieldOrPropertyWithValue(DESCRIPTION, TEST_STR1);
             assertEquals(TEST_STR1, ctype.getDescription());
         }
+
+        @Test
+        void isValidForSave()
+        {
+            assertFalse(ConfigurationType.isValidForSave(ctype));
+        }
+
         @Test
         @DisplayName("The length of string from toString is great than zero")
         void testToString()
@@ -103,6 +110,12 @@ class ConfigurationTypeTest
             ConfigurationType expected = TEST_CONFIGURATION_TYPE1;
             assertEquals(expected.hashCode(), ctype.hashCode());
             assertEquals(expected, ctype);
+        }
+
+        @Test
+        void isValidForSave()
+        {
+            assertTrue(ConfigurationType.isValidForSave(ctype));
         }
     }
 }

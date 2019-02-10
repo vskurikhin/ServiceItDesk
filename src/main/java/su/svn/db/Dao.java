@@ -11,12 +11,13 @@ package su.svn.db;
 import su.svn.models.DataSet;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Dao<E extends DataSet, K extends Number>
 {
     List<E> findAll();
 
-    E findById(K id);
+    Optional<E> findById(K id);
 
     boolean save(E entity);
 
