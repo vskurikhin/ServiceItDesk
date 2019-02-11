@@ -1,12 +1,15 @@
 /*
- * groups.js
- * This file was last modified at 2019-02-11 00:22 by Victor N. Skurikhin.
+ * configuration-types.js
+ * This file was last modified at 2019-02-11 00:29 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-var currentGroup;
+// rootURL - The root URL for the RESTful services
+// Example: var rootURL = "http://localhost:8080/ServiceItDesk/rest/api/v1/configurationTypes";
+
+var currentConfigurationType;
 
 function setTriggers() {
     // Nothing to delete in initial application state
@@ -29,24 +32,24 @@ function setTriggers() {
     });
 
     $('#btnAdd').click(function() {
-        newGroup();
+        newConfigurationType();
         return false;
     });
 
     $('#btnSave').click(function() {
-        if ($('#groupId').val() === '')
-            addGroup();
+        if ($('#configurationTypeId').val() === '')
+            addConfigurationType();
         else
-            updateGroup();
+            updateConfigurationType();
         return false;
     });
 
     btnDelete.click(function() {
-        deleteGroup();
+        deleteConfigurationType();
         return false;
     });
 
-    $('#groupList a').click(function() {
+    $('#configurationTypeList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -58,8 +61,11 @@ function search(searchKey) {
 		findByName(searchKey);
 }
 
-function newGroup() {
-    setTimeout(function(){location.reload();}, 500);
+function newConfigurationType() {
+	$('#btnDelete').hide();
+    $('#btnSave').html('Add');
+	currentConfigurationType = {};
+	renderDetails(currentConfigurationType); // Display empty form
 }
 
 function findAll() {
@@ -92,16 +98,15 @@ function findById(id) {
             $('#btnDelete').show();
             $('#btnSave').html('Save');
 			console.log('findById success: ' + data.name);
-			currentGroup = data;
-			renderDetails(currentGroup);
+			currentConfigurationType = data;
+			renderDetails(currentConfigurationType);
 		}
 	});
 }
 
-function addGroup() {
-	console.log('addGroup');
-	// noinspection JSUnusedLocalSymbols
-    $.ajax({
+function addConfigurationType() {
+	console.log('addConfigurationType');
+	$.ajax({
 		type: 'POST',
 		contentType: 'application/json',
 		url: rootURL,
@@ -109,54 +114,52 @@ function addGroup() {
 		data: formToJSON(),
         statusCode: {
 		    201: function(data, textStatus, jqXHR){
-                console.log("Group created successfully" + textStatus);
+                console.log("ConfigurationType created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
-                $('#groupId').val(data.id);
+                $('#configurationTypeId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
 		    },
             406: function(data, textStatus, jqXHR){
-                alert('addGroup error: ' + textStatus);
+                alert('addConfigurationType error: ' + textStatus);
             },
             500: function(data, textStatus, jqXHR){
-                alert('addGroup FATAL error: ' + textStatus);
+                alert('addConfigurationType FATAL error: ' + textStatus);
             }
         }
 	});
 }
 
-function updateGroup() {
-	console.log('updateGroup');
-	// noinspection JSUnusedLocalSymbols
-    $.ajax({
+function updateConfigurationType() {
+	console.log('updateConfigurationType');
+	$.ajax({
 		type: 'PUT',
 		contentType: 'application/json',
 		url: rootURL,
 		dataType: "json",
 		data: formToJSON(),
 		success: function(data, textStatus, jqXHR){
-            console.log("Group updated successfully: " + textStatus);
+            console.log("ConfigurationType updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateGroup error: ' + textStatus);
+			alert('updateConfigurationType error: ' + textStatus);
 		}
 	});
 }
 
-function deleteGroup() {
-	console.log('deleteGroup');
-	// noinspection JSUnusedLocalSymbols
-    $.ajax({
+function deleteConfigurationType() {
+	console.log('deleteConfigurationType');
+	$.ajax({
 		type: 'DELETE',
-		url: rootURL + '/' + $('#groupId').val(),
+		url: rootURL + '/' + $('#configurationTypeId').val(),
 		success: function(data, textStatus, jqXHR){
-			alert('Group deleted successfully');
+			alert('ConfigurationType deleted successfully');
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteGroup error');
+			alert('deleteConfigurationType error');
 		}
 	});
 }
@@ -165,30 +168,29 @@ function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
 	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#groupList li').remove();
-	$.each(list, function(index, group) {
-		$('#groupList').append('<li><a href="#" data-identity="' + group.id + '">'+group.name+'</a></li>');
+	$('#configurationTypeList li').remove();
+	$.each(list, function(index, configurationType) {
+		$('#configurationTypeList').append('<li><a href="#" data-identity="' + configurationType.id + '">'+configurationType.name+'</a></li>');
 	});
 	setTriggers();
 }
 
-function renderDetails(group) {
-	$('#groupId').val(group.id);
-	$('#name').val(group.name);
-	$('#description').val(group.description);
+function renderDetails(configurationType) {
+	$('#configurationTypeId').val(configurationType.id);
+	$('#name').val(configurationType.name);
+	$('#description').val(configurationType.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let groupId = $('#groupId').val();
-
+	let configurationTypeId = $('#configurationTypeId').val();
 	return JSON.stringify({
-		"id": groupId === "" ? Number("0") : Number(groupId),
+		"id": configurationTypeId === "" ? Number("0") : Number(configurationTypeId),
 		"name": $('#name').val(),
 		"description": $('#description').val()
 		});
 }
 
-// Retrieve group list when application starts
+// Retrieve configurationType list when application starts
 jQuery(document).ready(findAll());
 

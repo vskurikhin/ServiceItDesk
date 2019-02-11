@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-types.jsp
-  ~ This file was last modified at 2019-02-10 23:27 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-11 23:30 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -74,6 +74,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/configuration-types.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/cmdb/configuration-types.js"></script>
     </body>
 </html>

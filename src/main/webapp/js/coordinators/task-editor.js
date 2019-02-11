@@ -1,6 +1,6 @@
 /*
- * task-edit.js
- * This file was last modified at 2019-02-10 23:29 by Victor N. Skurikhin.
+ * task-editor.js
+ * This file was last modified at 2019-02-11 23:25 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -46,7 +46,7 @@ function setTriggers() {
         return false;
     });
 
-    $('#taskList a').click(function() {
+    $('#asideList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -194,9 +194,9 @@ function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
 	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#taskList li').remove();
+	$('#asideList li').remove();
 	$.each(list, function(index, task) {
-		$('#taskList').append('<li><a href="#" data-identity="' + task.id + '">' + task.title + '</a></li>');
+		$('#asideList').append('<li><a href="#" data-identity="' + task.id + '">' + task.title + '</a></li>');
 	});
 	setTriggers();
 }
@@ -286,17 +286,17 @@ function renderDetails(task) {
 
     console.log('renderDetails');
 
-	$('#taskId').val(task.id);
-	$('#title').val(task.title);
+    $('#taskId').val(task.id);
+    $('#title').val(task.title);
 
-	renderDropdown('1', 'consumer', 'consumer', task.consumer.id, task.consumer.name);
+    renderDropdown('1', 'consumer', 'consumer', task.consumer.id, task.consumer.name);
     findAllUsers();
     renderDropdown('2', 'status', 'status', task.status.id, task.status.status);
     findAllStatuses();
 
-	$('#description').val(task.description);
+    $('#description').val(task.description);
 
-	renderMessagesList(task.messages)
+    renderMessagesList(task.messages)
 }
 
 // Helper function to serialize all the form fields into a JSON string
@@ -311,13 +311,13 @@ function formToJSON() {
     let taskStatusId = status.find('option:selected').val();
     let taskStatusName = status.find('option:selected').text();
 
-	return JSON.stringify({
-		"id": taskId === "" ? Number("0") : Number(taskId),
-		"title": $('#title').val(),
+    return JSON.stringify({
+        "id": taskId === "" ? Number("0") : Number(taskId),
+        "title": $('#title').val(),
         "consumer": {"id": Number(taskConsumerId), "name": taskConsumerName, "description": null},
         "status": {"id": Number(taskStatusId), "status": taskStatusName, "description": null},
-		"description": $('#description').val()
-	});
+        "description": $('#description').val()
+    });
 }
 
 // Retrieve task list when application starts

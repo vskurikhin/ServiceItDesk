@@ -16,9 +16,9 @@
                 <nav class="menu">
                     <ul>
                         <li><a id="navigation-menu-0" href="<c:out value="${baseURL}/"/>welcome.jsp">«Домашняя страница»</a></li>
-                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>actuaries/index.jsp">«Регистраторы»</a></li>
-                        <li><a id="navigation-menu-2" href="<c:out value="${baseURL}/"/>admins/index.jsp">«Администраторы»</a></li>
-                        <li><a id="navigation-menu-3" href="<c:out value="${baseURL}/"/>coordinators/index.jsp">«Координаторы»</a></li>
+                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>admins/incidents.jsp">«Консоль инцидентов»</a></li>
+                        <li><a id="navigation-menu-2" href="<c:out value="${baseURL}/"/>admins/tasks.jsp">«Консоль задач»</a></li>
+                        <li><a id="navigation-menu-3" href="<c:out value="${baseURL}/"/>admins/cmdb.jsp">«Консоль CMDB»</a></li>
                         <li><a id="navigation-menu-4" href="<c:out value="${baseURL}/"/>logout.do">Выход</a></li>
                     </ul>
                 </nav>

@@ -4,7 +4,7 @@
 
 <%--
   ~ users.jsp
-  ~ This file was last modified at 2019-02-11 00:14 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-11 23:28 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -94,6 +94,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/users.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/cmdb/users.js"></script>
     </body>
 </html>

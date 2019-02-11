@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ glassfish-web.xml
+  ~ This file was last modified at 2019-02-11 23:39 by Victor N. Skurikhin.
+  ~ $Id$
+  ~ This is free and unencumbered software released into the public domain.
+  ~ For more information, please refer to <http://unlicense.org>
+  -->
+
 <glassfish-web-app>
     <class-loader delegate="true"/>
-    <security-role-mapping>
-        <role-name>ADMIN</role-name>
-        <group-name>admins</group-name>
-    </security-role-mapping>
-    <security-role-mapping>
-        <role-name>COORDICATOR</role-name>
-        <group-name>Coordicators</group-name>
-    </security-role-mapping>
+
     <security-role-mapping>
         <role-name>ACTUARY</role-name>
         <group-name>Actuaries</group-name>
     </security-role-mapping>
+
+    <security-role-mapping>
+        <role-name>ADMIN</role-name>
+        <group-name>Admins</group-name>
+    </security-role-mapping>
+
+    <security-role-mapping>
+        <role-name>COORDINATOR</role-name>
+        <group-name>Coordinators</group-name>
+    </security-role-mapping>
+
+    <security-role-mapping>
+        <role-name>SUPER</role-name>
+        <group-name>Supers</group-name>
+    </security-role-mapping>
+
     <security-role-mapping>
         <role-name>USER</role-name>
         <group-name>Users</group-name>
