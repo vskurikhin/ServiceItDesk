@@ -16,21 +16,30 @@ VALUES
  (nextval('group_id_seq'), 'Users', 'Test Users');
 
 INSERT INTO cm_user
- (user_id, description, user_name, primary_group_id)
+ (user_id, user_name, description, primary_group_id)
 VALUES
  (nextval('user_id_seq'), 'admin', 'Administrator', 1);
 INSERT INTO cm_user
- (user_id, description, user_name, primary_group_id)
+ (user_id, user_name, description, primary_group_id)
 VALUES
  (nextval('user_id_seq'), 'coordicator', 'Test Coordicator', 2);
 INSERT INTO cm_user
- (user_id, description, user_name, primary_group_id)
+ (user_id, user_name, description, primary_group_id)
 VALUES
  (nextval('user_id_seq'), 'actuary', 'Test Actuary', 3);
 INSERT INTO cm_user
- (user_id, description, user_name, primary_group_id)
+ (user_id, user_name, description, primary_group_id)
 VALUES
- (nextval('user_id_seq'), 'user', 'Test User', 3);
+ (nextval('user_id_seq'), 'user', 'Test User', 4);
+
+ALTER TABLE cm_user 
+ ADD COLUMN password VARCHAR NOT NULL
+ DEFAULT 'e1X6Nk2/9ydYmDO74y89BK0aNQmQnQjK59X46mMRV9Q=';
+
+CREATE VIEW sm_groups AS 
+SELECT g.name, u.user_name
+ FROM cm_group g
+ LEFT JOIN cm_user u ON g.group_id = u.primary_group_id; 
 
 INSERT INTO pm_status
  (status_id, status, description)
@@ -105,4 +114,3 @@ INSERT INTO pm_task
  (task_id, task_title, description_text, consumer_user_id, status_id)
 VALUES
  (nextval('task_id_seq'), 'task_title_2', 'description_text_2', 2, 2);
-
