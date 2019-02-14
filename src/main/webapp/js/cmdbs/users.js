@@ -1,12 +1,12 @@
 /*
- * groups.js
- * This file was last modified at 2019-02-11 00:29 by Victor N. Skurikhin.
+ * users.js
+ * This file was last modified at 2019-02-12 00:03 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-var currentGroup;
+var currentUser;
 
 function setTriggers() {
     // Nothing to delete in initial application state
@@ -29,24 +29,24 @@ function setTriggers() {
     });
 
     $('#btnAdd').click(function() {
-        newGroup();
+        newUser();
         return false;
     });
 
     $('#btnSave').click(function() {
-        if ($('#groupId').val() === '')
-            addGroup();
+        if ($('#userId').val() === '')
+            addUser();
         else
-            updateGroup();
+            updateUser();
         return false;
     });
 
     btnDelete.click(function() {
-        deleteGroup();
+        deleteUser();
         return false;
     });
 
-    $('#groupList a').click(function() {
+    $('#userList a').click(function() {
         findById($(this).data('identity'));
     });
 }
@@ -58,7 +58,7 @@ function search(searchKey) {
 		findByName(searchKey);
 }
 
-function newGroup() {
+function newUser() {
     setTimeout(function(){location.reload();}, 500);
 }
 
@@ -70,6 +70,21 @@ function findAll() {
 		dataType: "json", // data type of response
 		success: renderList
 	});
+}
+
+function findAllGroup() {
+    console.log('findAllGroup');
+    $.ajax({
+        type: 'GET',
+        url: groupRootURL,
+        dataType: "json", // data type of response
+        success: renderListGroup
+    });
+}
+
+function find() {
+	findAll();
+	findAllGroup();
 }
 
 function findByName(searchKey) {
@@ -92,14 +107,14 @@ function findById(id) {
             $('#btnDelete').show();
             $('#btnSave').html('Save');
 			console.log('findById success: ' + data.name);
-			currentGroup = data;
-			renderDetails(currentGroup);
+			currentUser = data;
+			renderDetails(currentUser);
 		}
 	});
 }
 
-function addGroup() {
-	console.log('addGroup');
+function addUser() {
+	console.log('addUser');
 	// noinspection JSUnusedLocalSymbols
     $.ajax({
 		type: 'POST',
@@ -109,24 +124,24 @@ function addGroup() {
 		data: formToJSON(),
         statusCode: {
 		    201: function(data, textStatus, jqXHR){
-                console.log("Group created successfully" + textStatus);
+                console.log("User created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
-                $('#groupId').val(data.id);
+                $('#userId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
 		    },
             406: function(data, textStatus, jqXHR){
-                alert('addGroup error: ' + textStatus);
+                alert('addUser error: ' + textStatus);
             },
             500: function(data, textStatus, jqXHR){
-                alert('addGroup FATAL error: ' + textStatus);
+                alert('addUser FATAL error: ' + textStatus);
             }
         }
 	});
 }
 
-function updateGroup() {
-	console.log('updateGroup');
+function updateUser() {
+	console.log('updateUser');
 	// noinspection JSUnusedLocalSymbols
     $.ajax({
 		type: 'PUT',
@@ -135,28 +150,28 @@ function updateGroup() {
 		dataType: "json",
 		data: formToJSON(),
 		success: function(data, textStatus, jqXHR){
-            console.log("Group updated successfully: " + textStatus);
+            console.log("User updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateGroup error: ' + textStatus);
+			alert('updateUser error: ' + textStatus);
 		}
 	});
 }
 
-function deleteGroup() {
-	console.log('deleteGroup');
+function deleteUser() {
+	console.log('deleteUser');
 	// noinspection JSUnusedLocalSymbols
     $.ajax({
 		type: 'DELETE',
-		url: rootURL + '/' + $('#groupId').val(),
+		url: rootURL + '/' + $('#userId').val(),
 		success: function(data, textStatus, jqXHR){
-			alert('Group deleted successfully');
+			alert('User deleted successfully');
             setTimeout(function(){location.reload();}, 750);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteGroup error');
+			alert('deleteUser error');
 		}
 	});
 }
@@ -165,30 +180,65 @@ function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
 	let list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#groupList li').remove();
-	$.each(list, function(index, group) {
-		$('#groupList').append('<li><a href="#" data-identity="' + group.id + '">'+group.name+'</a></li>');
+	$('#userList li').remove();
+	$.each(list, function(index, user) {
+		$('#userList').append('<li><a href="#" data-identity="' + user.id + '">'+user.name+'</a></li>');
 	});
 	setTriggers();
 }
 
-function renderDetails(group) {
-	$('#groupId').val(group.id);
-	$('#name').val(group.name);
-	$('#description').val(group.description);
+function renderListGroup(data) {
+    console.log('renderListGroup');
+    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var groupSelect = $('#group');
+    let groupId = Number(groupSelect.find('option:selected').val());
+    console.log('renderListGroup groupId:' + groupId);
+
+    $.each(list, function(index, group) {
+        if (groupId !== group.id) {
+            console.log('renderListGroup append: ' + group.id + ' ' + group.name); // TODO remove
+            groupSelect.append('<option value="' + group.id + '">' + group.name + '</option>');
+        }
+    });
+    $('.dropdown-sin-1').dropdown({
+        readOnly: false,
+        input: '<input type="text" maxLength="20" placeholder="Search">'
+    });
+}
+
+function renderDetails(user) {
+    function renderListGroupSelected(id, name) {
+        console.log('renderListGroupSelected');
+        $('#group').append('<option value="' + id + '" selected>' + name + '</option>');
+    }
+
+	$('#userId').val(user.id);
+	$('#name').val(user.name);
+    let divDropdownSin1 = $('#div-dropdown-sin-1');
+    divDropdownSin1.empty();
+    divDropdownSin1.html(
+        '<div class="dropdown-sin-1 dropdown-single">' +
+        '<select form="userForm" id="group" name="group" style="display:none" placeholder="Select">' +
+        '</select></div>'
+    );
+    renderListGroupSelected(user.group.id, user.group.name);
+    findAllGroup();
+	$('#description').val(user.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let groupId = $('#groupId').val();
-
+	let userId = $('#userId').val();
+	let userGroupId = $('#group').find('option:selected').val();
+    let userGroupName = $('#group').find('option:selected').text();
 	return JSON.stringify({
-		"id": groupId === "" ? Number("0") : Number(groupId),
+		"id": userId === "" ? Number("0") : Number(userId),
 		"name": $('#name').val(),
+        "group": {"id": Number(userGroupId), "name": userGroupName},
 		"description": $('#description').val()
-		});
+	});
 }
 
-// Retrieve group list when application starts
-jQuery(document).ready(findAll());
+// Retrieve user list when application starts
+jQuery(document).ready(find());
 

@@ -4,7 +4,7 @@
 
 <%--
   ~ tasks.jsp
-  ~ This file was last modified at 2019-02-11 00:12 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-14 22:12 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,7 +17,7 @@
 <html lang=ru>
 <head>
     <meta charset=UTF-8>
-    <title id="head-title">Service It Desk CMDB Console Конфигурационные еденицы | JavaEE-09-2018 welcome</title>
+    <title id="head-title">Service It Desk «Консоль задач» | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <style>
         .container { margin:150px auto;}
@@ -44,23 +44,18 @@
                     <form id="taskForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2" style="height: 44px">
+                                <th class="tg2-baqh" style="height: 44px">
                                     <button form="taskForm" id="btnStatus1" hidden>В работу</button>
                                     <button form="taskForm" id="btnAddMessage" hidden>Резолюция</button>
                                     <button form="taskForm" id="btnStatus2" hidden>Решение</button>
-                                </td>
+                                </th>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="4">
-                                    <div class="leftArea">
-                                        <ul id="taskList"></ul>
-                                    </div>
-                                </th>
-                                <th class="tg2-0lax">
+                                <td class="tg2-0lax">
                                     <label>Номер:</label>
                                     <br/>
                                     <input form="taskForm" id="taskId" name="id" type="text" disabled title=""/>
-                                </th>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
@@ -117,6 +112,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/tasks.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/admins/tasks.js"></script>
     </body>
 </html>

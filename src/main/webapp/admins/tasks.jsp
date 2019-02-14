@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--
-  ~ incidents.jsp
-  ~ This file was last modified at 2019-02-11 00:13 by Victor N. Skurikhin.
+  ~ tasks.jsp
+  ~ This file was last modified at 2019-02-14 22:19 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,7 +17,7 @@
 <html lang=ru>
 <head>
     <meta charset=UTF-8>
-    <title id="head-title">Service It Desk CMDB Console Конфигурационные еденицы | JavaEE-09-2018 welcome</title>
+    <title id="head-title">Service It Desk «Консоль задач» | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <style>
         .container { margin:150px auto;}
@@ -28,7 +28,7 @@
         let STATUS_NEW = 1;
         let STATUS_WORK = 2;
         let STATUS_CLOSED = 3;
-        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
+        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.TASK_RESOURCE %>';
     </script>
 </head>
 
@@ -41,32 +41,27 @@
             </td>
             <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
-                    <form id="incidentForm">
+                    <form id="taskForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2" style="height: 44px">
-                                    <button form="incidentForm" id="btnStatus1" hidden>В работу</button>
-                                    <button form="incidentForm" id="btnAddMessage" hidden>Резолюция</button>
-                                    <button form="incidentForm" id="btnStatus2" hidden>Решение</button>
-                                </td>
+                                <th class="tg2-baqh" style="height: 44px">
+                                    <button form="taskForm" id="btnStatus1" hidden>В работу</button>
+                                    <button form="taskForm" id="btnAddMessage" hidden>Резолюция</button>
+                                    <button form="taskForm" id="btnStatus2" hidden>Решение</button>
+                                </th>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="4">
-                                    <div class="leftArea">
-                                        <ul id="incidentList"></ul>
-                                    </div>
-                                </th>
-                                <th class="tg2-0lax">
+                                <td class="tg2-0lax">
                                     <label>Номер:</label>
                                     <br/>
-                                    <input form="incidentForm" id="incidentId" name="id" type="text" disabled title=""/>
-                                </th>
+                                    <input form="taskForm" id="taskId" name="id" type="text" disabled title=""/>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
                                     <label>Заголовок:</label>
                                     <br/>
-                                    <input form="incidentForm" type="text" id="title" name="title" class="my-text-name"
+                                    <input form="taskForm" type="text" id="title" name="title" class="my-text-name"
                                            disabled title=""/>
                                 </td>
                             </tr>
@@ -82,7 +77,7 @@
                                         <div class="col-sm-4">
                                             <label>Описание:</label>
                                             <br/>
-                                            <textarea form="incidentForm" id="description" name="description"
+                                            <textarea form="taskForm" id="description" name="description"
                                                       class="my-test-area" readonly title=""></textarea>
                                         </div>
                                     </div>
@@ -91,7 +86,7 @@
                                         <div class="col-sm-4" id="div-message-textarea">
                                             <label>Комментарий:</label>
                                             <br/>
-                                            <textarea disabled form="incidentForm" id="message-text" name="message-text"
+                                            <textarea disabled form="taskForm" id="message-text" name="message-text"
                                                       class="my-message-textarea" title=""></textarea>
                                         </div>
                                     </div>
@@ -117,6 +112,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/incidents.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/admins/tasks.js"></script>
     </body>
 </html>

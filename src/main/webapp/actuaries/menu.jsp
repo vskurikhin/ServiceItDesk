@@ -3,7 +3,7 @@
 
 <%--
   ~ menu.jsp
-  ~ This file was last modified at 2019-02-11 22:51 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-14 22:03 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -16,9 +16,9 @@
                 <nav class="menu">
                     <ul>
                         <li><a id="navigation-menu-0" href="<c:out value="${baseURL}/"/>welcome.jsp">«Домашняя страница»</a></li>
-                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>actuaries/incidents.jsp">«Консоль инцидентов»</a></li>
-                        <li><a id="navigation-menu-2" href="<c:out value="${baseURL}/"/>actuaries/tasks.jsp">«Консоль задач»</a></li>
-                        <li><a id="navigation-menu-4" href="<c:out value="${baseURL}/"/>logout.do">Выход</a></li>
+                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>actuaries/new-incident.jsp">«Создать инцидентов»</a></li>
+                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>actuaries/new-task.jsp">«Создать задачу»</a></li>
+                        <li><a id="navigation-menu-3" href="<c:out value="${baseURL}/"/>logout.do">Выход</a></li>
                     </ul>
                 </nav>
             </td>

@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--
-  ~ edit.jsp
-  ~ This file was last modified at 2019-02-11 00:14 by Victor N. Skurikhin.
+  ~ incident-editor.jsp
+  ~ This file was last modified at 2019-02-12 00:03 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,7 +17,7 @@
 <html lang=ru>
 <head>
     <meta charset=UTF-8>
-    <title id="head-title">Service It Desk CMDB Console Конфигурационные еденицы | JavaEE-09-2018 welcome</title>
+    <title id="head-title">Service It Desk «Редактор инцидентов» | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <style>
         .container { margin:150px auto;}
@@ -43,19 +43,14 @@
                     <form id="incidentForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2" style="height: 44px">
-                                    <button form="incidentForm" id="btnAdd">Clear</button>
-                                    <button form="incidentForm" id="btnSave">Add</button>
-                                    <button form="incidentForm" id="btnDelete">Delete</button>
+                                <th class="tg2-baqh" style="height: 44px">
+                                    <button form="incidentForm" id="btnAdd">Очистить</button>
+                                    <button form="incidentForm" id="btnSave">Создать</button>
+                                    <button form="incidentForm" id="btnDelete">Удалить</button>
                                 </td>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="3">
-                                    <div class="leftArea">
-                                        <ul id="incidentList"></ul>
-                                    </div>
-                                </th>
-                                <th class="tg2-0lax">
+                                <td class="tg2-0lax">
                                     <label>Номер:</label>
                                     <br/>
                                     <input form="incidentForm" id="incidentId" name="id" type="text" disabled title=""/>
@@ -113,6 +108,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/incident-edit.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/coordinators/incident-editor.js"></script>
     </body>
 </html>

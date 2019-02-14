@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--
-  ~ edit.jsp
-  ~ This file was last modified at 2019-02-11 00:13 by Victor N. Skurikhin.
+  ~ new-task.jsp
+  ~ This file was last modified at 2019-02-14 22:20 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -17,7 +17,7 @@
 <html lang=ru>
 <head>
     <meta charset=UTF-8>
-    <title id="head-title">Service It Desk CMDB Console Конфигурационные еденицы | JavaEE-09-2018 welcome</title>
+    <title id="head-title">Service It Desk «Редактор задач» | JavaEE-09-2018 welcome</title>
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <style>
         .container { margin:150px auto;}
@@ -43,23 +43,18 @@
                     <form id="taskForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2" style="height: 44px">
-                                    <button form="taskForm" id="btnAdd">Clear</button>
-                                    <button form="taskForm" id="btnSave">Add</button>
-                                    <button form="taskForm" id="btnDelete">Delete</button>
-                                </td>
+                                <th class="tg2-baqh" style="height: 44px">
+                                    <button form="taskForm" id="btnAdd">Очистить</button>
+                                    <button form="taskForm" id="btnSave">Создать</button>
+                                    <button form="taskForm" id="btnDelete">Удалить</button>
+                                </th>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="3">
-                                    <div class="leftArea">
-                                        <ul id="taskList"></ul>
-                                    </div>
-                                </th>
-                                <th class="tg2-0lax">
+                                <td class="tg2-0lax">
                                     <label>Номер:</label>
                                     <br/>
                                     <input form="taskForm" id="taskId" name="id" type="text" disabled title=""/>
-                                </th>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">
@@ -113,6 +108,6 @@
         </tr>
         <%@ include file = "footer.jsp" %>
     </table>
-    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/task-edit.js"></script>
+    <script type="text/javascript" language="javascript" src="<c:out value="${baseURL}/"/>js/coordinators/task-editor.js"></script>
     </body>
 </html>
