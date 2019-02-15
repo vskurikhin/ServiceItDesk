@@ -42,6 +42,7 @@ import static su.svn.shared.Constants.Rest.INCIDENT_RESOURCE;
         name = "Incidents Resource",
         description = "RESTful API to interact with incidents resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )

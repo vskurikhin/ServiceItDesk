@@ -1,1 +1,1 @@
-<% response.sendRedirect("welcome.jsp"); %>
+<% response.sendRedirect("welcome.do"); %>

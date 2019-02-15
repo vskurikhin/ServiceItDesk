@@ -40,6 +40,7 @@ import static su.svn.shared.Constants.Rest.USER_RESOURCE;
         name = "Users Resource",
         description = "RESTful API to interact with users resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )

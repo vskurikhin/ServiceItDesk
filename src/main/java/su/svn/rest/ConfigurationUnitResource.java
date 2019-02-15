@@ -40,6 +40,7 @@ import static su.svn.shared.Constants.Rest.CONFIGURATION_UNIT_RESOURCE;
         name = "Configuration units Resource",
         description = "RESTful API to interact with configuration units resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
@@ -100,8 +101,8 @@ public class ConfigurationUnitResource
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
-    @ApiOperation(value = "Find Configuration Type by ID",
-        notes = "Returns a single Configuration Type",
+    @ApiOperation(value = "Find Configuration Unit by ID",
+        notes = "Returns a single Configuration Unit",
         response = ConfigurationUnit.class
     )
     @ApiResponses({
@@ -109,7 +110,7 @@ public class ConfigurationUnitResource
         @ApiResponse(code = 404, message = "Not Found")
     })
     @ApiImplicitParams({@ApiImplicitParam(
-        name = "id", value = "ID of Configuration Type to return", dataType = "int", paramType = "path", required = true
+        name = "id", value = "ID of Configuration Unit to return", dataType = "int", paramType = "path", required = true
     )})
     public Response read(@PathParam("id") Integer id)
     {
@@ -119,6 +120,14 @@ public class ConfigurationUnitResource
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Update an existing Configuration Unit")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The Configuration Unit object that needs to be updated in the CMDB", required = true
+    )})
     public Response update(ConfigurationUnit entity)
     {
         return storage.updateConfigurationUnit(servletRequest.getRequestURL(), entity);
@@ -127,6 +136,11 @@ public class ConfigurationUnitResource
     @DELETE
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
+    @ApiOperation(value = "Deletes a Configuration Unit")
+    @ApiResponses({ @ApiResponse(code = 204, message = "No Content") })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of Configuration Unit to delete", dataType = "int", paramType = "path", required = true
+    )})
     public Response delete(@PathParam("id") Integer id)
     {
         return storage.delete(ConfigurationUnit.class, id.longValue());

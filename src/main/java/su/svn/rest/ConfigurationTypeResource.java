@@ -40,6 +40,7 @@ import static su.svn.shared.Constants.Rest.CONFIGURATION_TYPE_RESOURCE;
         name = "Configuration types Resource",
         description = "RESTful API to interact with configuration types resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
@@ -103,7 +104,7 @@ public class ConfigurationTypeResource
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation("Update an existing Configuration Types")
+    @ApiOperation("Update an existing Configuration Type")
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 406, message = "Not Acceptable")
@@ -119,7 +120,7 @@ public class ConfigurationTypeResource
     @DELETE
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
-    @ApiOperation(value = "Deletes a Configuration")
+    @ApiOperation(value = "Deletes a Configuration Type")
     @ApiResponses({ @ApiResponse(code = 204, message = "No Content") })
     @ApiImplicitParams({@ApiImplicitParam(
         name = "id", value = "ID of Configuration Type to delete", dataType = "int", paramType = "path", required = true

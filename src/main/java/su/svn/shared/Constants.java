@@ -38,6 +38,14 @@ public class Constants
         public static final String VERSION = "version";
     }
 
+    public static class Security
+    {
+        public static final String ROLE_ADMIN = "ADMIN";
+        public static final String ROLE_ACTUARY = "ACTUARY";
+        public static final String ROLE_COORDINATOR = "COORDINATOR";
+        public static final String ROLE_USER= "USER";
+    }
+
     public static class Servlet
     {
         public static final String CMDB_GROUP_JSP = "/cmdb/group.jsp";

@@ -40,6 +40,7 @@ import static su.svn.shared.Constants.Rest.MESSAGE_RESOURCE;
         name = "Messages Resource",
         description = "RESTful API to interact with messages resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )

@@ -40,6 +40,7 @@ import static su.svn.shared.Constants.Rest.GROUP_RESOURCE;
         name = "Groups Resource",
         description = "RESTful API to interact with groups resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
@@ -55,6 +56,14 @@ public class GroupResource
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Add a new Group to the CMDB")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The Configuration Unit object that needs to be added to the CMDB", required = true
+    )})
     public Response create(Group entity)
     {
         return storage.create(servletRequest.getRequestURL(), entity);
@@ -62,6 +71,11 @@ public class GroupResource
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Find ALL Groups")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public Response readAll()
     {
         return storage.readAllGroups();
@@ -70,6 +84,17 @@ public class GroupResource
     @GET
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Find Group by ID",
+        notes = "Returns a single Group",
+        response = Group.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 404, message = "Not Found")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of Group to return", dataType = "int", paramType = "path", required = true
+    )})
     public Response read(@PathParam("id") Integer id)
     {
         return storage.readById(Group.class, id.longValue());
@@ -78,6 +103,17 @@ public class GroupResource
     @GET
     @Path("/{id}/users")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Find Group by ID",
+        notes = "Returns a single Group",
+        response = Group.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 404, message = "Not Found")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of Group to return", dataType = "int", paramType = "path", required = true
+    )})
     public Response readWithUsers(@PathParam("id") Integer id)
     {
         return storage.readGroupByIdWithUsers(id.longValue());
@@ -86,6 +122,14 @@ public class GroupResource
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Update an existing Group")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The Configuration Type object that needs to be updated in the CMDB", required = true
+    )})
     public Response update(Group entity)
     {
         return storage.update(servletRequest.getRequestURL(), entity);
@@ -94,6 +138,11 @@ public class GroupResource
     @DELETE
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Deletes a Group")
+    @ApiResponses({ @ApiResponse(code = 204, message = "No Content") })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of Group to delete", dataType = "int", paramType = "path", required = true
+    )})
     public Response delete(@PathParam("id") Integer id)
     {
         return storage.delete(Group.class, id.longValue());

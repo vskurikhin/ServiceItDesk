@@ -42,6 +42,7 @@ import static su.svn.shared.Constants.Rest.TASK_RESOURCE;
         name = "Tasks Resource",
         description = "RESTful API to interact with tasks resource."
     )},
+    host = "localhost:8181",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
