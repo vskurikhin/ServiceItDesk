@@ -26,27 +26,24 @@ import static su.svn.shared.Constants.Rest.GROUP_RESOURCE;
 @Path("/v1" + GROUP_RESOURCE)
 @SwaggerDefinition(
     info = @Info(
-        title = "Swagger-generated RESTful API",
-        description = "RESTful Description XXX",
+        title = "Configuration management database RESTful API",
+        description = "This is a sample configuration management database service.",
         version = "1.0.0",
         termsOfService = "share and care",
         contact = @Contact(
             name = "Victor", email = "vskurikhin@gmail.com",
-            url = "https://svn.su"),
+            url = "https://itdesk.svn.su"),
         license = @License(
             name = "This is free and unencumbered software released into the public domain.",
             url = "http://unlicense.org")),
-    tags = {
-        @Tag(name = "XXX Resource", description = "RESTful API to interact with Annuity Pay resource.")
-    },
-    host = "localhost:8080",
-    basePath = "/ServiceItDesk/rest/api/v1/XXX",
-    schemes = {SwaggerDefinition.Scheme.HTTP},
-    externalDocs = @ExternalDocs(
-        value = "Developing a Swagger-enabled REST API using WebSphere Developer Tools",
-        url = "https://tinyurl.com/swagger-wlp")
+    tags = {@Tag(
+        name = "Groups Resource",
+        description = "RESTful API to interact with groups resource."
+    )},
+    basePath = "/ServiceItDesk/rest/api",
+    schemes = {SwaggerDefinition.Scheme.HTTP}
 )
-@Api(tags = "XXX Resource")
+@Api(tags = "Operations about Configuration Unit Resource")
 public class GroupResource
 {
     @Context

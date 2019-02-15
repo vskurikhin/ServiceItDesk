@@ -26,27 +26,24 @@ import static su.svn.shared.Constants.Rest.CONFIGURATION_UNIT_RESOURCE;
 @Path("/v1" + CONFIGURATION_UNIT_RESOURCE)
 @SwaggerDefinition(
     info = @Info(
-        title = "Swagger-generated RESTful API",
-        description = "RESTful Description XXX",
+        title = "Configuration management database RESTful API",
+        description = "This is a sample configuration management database service.",
         version = "1.0.0",
         termsOfService = "share and care",
         contact = @Contact(
             name = "Victor", email = "vskurikhin@gmail.com",
-            url = "https://svn.su"),
+            url = "https://itdesk.svn.su"),
         license = @License(
             name = "This is free and unencumbered software released into the public domain.",
             url = "http://unlicense.org")),
-    tags = {
-        @Tag(name = "XXX Resource", description = "RESTful API to interact with Annuity Pay resource.")
-    },
-    host = "localhost:8080",
-    basePath = "/ServiceItDesk/rest/api/v1/XXX",
-    schemes = {SwaggerDefinition.Scheme.HTTP},
-    externalDocs = @ExternalDocs(
-        value = "Developing a Swagger-enabled REST API using WebSphere Developer Tools",
-        url = "https://tinyurl.com/swagger-wlp")
+    tags = {@Tag(
+        name = "Configuration units Resource",
+        description = "RESTful API to interact with configuration units resource."
+    )},
+    basePath = "/ServiceItDesk/rest/api",
+    schemes = {SwaggerDefinition.Scheme.HTTP}
 )
-@Api(tags = "XXX Resource")
+@Api(tags = "Operations about Configuration Unit Resource")
 public class ConfigurationUnitResource
 {
     @Context
@@ -58,6 +55,14 @@ public class ConfigurationUnitResource
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Add a new Configuration Unit to the CMDB")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The Configuration Unit object that needs to be added to the CMDB", required = true
+    )})
     public Response create(ConfigurationUnit entity)
     {
         return storage.createConfigurationUnit(servletRequest.getRequestURL(), entity);
@@ -67,6 +72,14 @@ public class ConfigurationUnitResource
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/admin/owner")
+    @ApiOperation("Add a new Configuration Unit to the CMDB")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The Configuration Unit object that needs to be added to the CMDB", required = true
+    )})
     public Response createWithAdminAndOwner(ConfigurationUnit entity)
     {
         return storage.createConfigurationUnit(servletRequest.getRequestURL(), entity);
@@ -74,6 +87,11 @@ public class ConfigurationUnitResource
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Find ALL Configuration Units")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public Response readAll()
     {
         return storage.readAllConfigurationUnit();
@@ -82,6 +100,17 @@ public class ConfigurationUnitResource
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
+    @ApiOperation(value = "Find Configuration Type by ID",
+        notes = "Returns a single Configuration Type",
+        response = ConfigurationUnit.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 404, message = "Not Found")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of Configuration Type to return", dataType = "int", paramType = "path", required = true
+    )})
     public Response read(@PathParam("id") Integer id)
     {
         return storage.readById(ConfigurationUnit.class, id.longValue());
