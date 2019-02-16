@@ -1,6 +1,6 @@
 /*
  * task-editor.js
- * This file was last modified at 2019-02-11 23:25 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:18 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -10,7 +10,7 @@ var currentTask;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    let btnDelete = $('#btnDelete');
+    var btnDelete = $('#btnDelete');
     btnDelete.hide();
 
     // Register listeners
@@ -192,7 +192,7 @@ function deleteTask() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	let list = data == null ? [] : (data instanceof Array ? data : [data]);
+	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#asideList li').remove();
 	$.each(list, function(index, task) {
@@ -203,9 +203,9 @@ function renderList(data) {
 
 function renderListStatus(data) {
     console.log('renderListGroup');
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var statusSelect = $('#status');
-    let statusId = Number(statusSelect.find('option:selected').val());
+    var statusId = Number(statusSelect.find('option:selected').val());
 
     $.each(list, function(index, status) {
         if (statusId !== status.id) {
@@ -222,9 +222,9 @@ function renderListStatus(data) {
 // TODO remove
 function renderListGroup(data) {
     console.log('renderListGroup');
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var groupSelect = $('#group');
-    let groupId = Number(groupSelect.find('option:selected').val());
+    var groupId = Number(groupSelect.find('option:selected').val());
     console.log('renderListGroup groupId:' + groupId);
 
     $.each(list, function(index, group) {
@@ -241,9 +241,9 @@ function renderListGroup(data) {
 
 function renderListUser(data) {
     console.log('renderListUser');
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var consumerSelect = $('#consumer');
-    let consumerId = Number(consumerSelect.find('option:selected').val());
+    var consumerId = Number(consumerSelect.find('option:selected').val());
 
     $.each(list, function(index, user) {
         if (consumerId !== user.id) {
@@ -258,7 +258,7 @@ function renderListUser(data) {
 }
 
 function renderMessagesList(data) {
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var rows = [];
 
     $('#message-text').prop('disabled', false);
@@ -301,15 +301,15 @@ function renderDetails(task) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let taskId = $('#taskId').val();
+	var taskId = $('#taskId').val();
 
-    let consumer = $('#consumer');
-    let taskConsumerId = consumer.find('option:selected').val();
-    let taskConsumerName = consumer.find('option:selected').text();
+    var consumer = $('#consumer');
+    var taskConsumerId = consumer.find('option:selected').val();
+    var taskConsumerName = consumer.find('option:selected').text();
 
-    let status = $('#status');
-    let taskStatusId = status.find('option:selected').val();
-    let taskStatusName = status.find('option:selected').text();
+    var status = $('#status');
+    var taskStatusId = status.find('option:selected').val();
+    var taskStatusName = status.find('option:selected').text();
 
     return JSON.stringify({
         "id": taskId === "" ? Number("0") : Number(taskId),

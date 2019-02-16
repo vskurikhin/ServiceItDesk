@@ -1,6 +1,6 @@
 /*
  * ConfigurationUnitResource.java
- * This file was last modified at 2019-02-14 21:13 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 14:10 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -26,8 +26,8 @@ import static su.svn.shared.Constants.Rest.CONFIGURATION_UNIT_RESOURCE;
 @Path("/v1" + CONFIGURATION_UNIT_RESOURCE)
 @SwaggerDefinition(
     info = @Info(
-        title = "Configuration management database RESTful API",
-        description = "This is a sample configuration management database service.",
+        title = "Process management RESTful API",
+        description = "This is a sample process management service.",
         version = "1.0.0",
         termsOfService = "share and care",
         contact = @Contact(
@@ -37,14 +37,14 @@ import static su.svn.shared.Constants.Rest.CONFIGURATION_UNIT_RESOURCE;
             name = "This is free and unencumbered software released into the public domain.",
             url = "http://unlicense.org")),
     tags = {@Tag(
-        name = "Configuration units Resource",
-        description = "RESTful API to interact with configuration units resource."
+        name = "Operations about ITIL",
+        description = "RESTful API to interact with Process management resource."
     )},
-    host = "localhost:8181",
+    host = "localhost:8080",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
-@Api(tags = "Operations about Configuration Unit Resource")
+@Api(tags = "Operations about ITIL")
 public class ConfigurationUnitResource
 {
     @Context
@@ -56,7 +56,12 @@ public class ConfigurationUnitResource
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation("Add a new Configuration Unit to the CMDB")
+    @ApiOperation(
+        value = "Add a new Configuration Unit to the CMDB",
+        authorizations = @Authorization(value = "Bearer", scopes = {
+            @AuthorizationScope(scope = "create", description = "allows adding of Configuration Unit")
+        })
+    )
     @ApiResponses({
         @ApiResponse(code = 201, message = "Created"),
         @ApiResponse(code = 406, message = "Not Acceptable")
@@ -73,7 +78,12 @@ public class ConfigurationUnitResource
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/admin/owner")
-    @ApiOperation("Add a new Configuration Unit to the CMDB")
+    @ApiOperation(
+        value = "Add a new Configuration Unit to the CMDB",
+        authorizations = @Authorization(value = "Bearer", scopes = {
+            @AuthorizationScope(scope = "create", description = "allows adding of Configuration Unit")
+        })
+    )
     @ApiResponses({
         @ApiResponse(code = 201, message = "Created"),
         @ApiResponse(code = 406, message = "Not Acceptable")
@@ -120,7 +130,12 @@ public class ConfigurationUnitResource
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation("Update an existing Configuration Unit")
+    @ApiOperation(
+        value = "Update an existing Configuration Unit",
+        authorizations = @Authorization(value = "Bearer", scopes = {
+            @AuthorizationScope(scope = "update", description = "allows updating of Configuration Unit")
+        })
+    )
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 406, message = "Not Acceptable")
@@ -136,7 +151,12 @@ public class ConfigurationUnitResource
     @DELETE
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
-    @ApiOperation(value = "Deletes a Configuration Unit")
+    @ApiOperation(
+        value = "Deletes a Configuration Unit",
+        authorizations = @Authorization(value = "Bearer", scopes = {
+            @AuthorizationScope(scope = "update", description = "allows deleting of Configuration Unit")
+        })
+    )
     @ApiResponses({ @ApiResponse(code = 204, message = "No Content") })
     @ApiImplicitParams({@ApiImplicitParam(
         name = "id", value = "ID of Configuration Unit to delete", dataType = "int", paramType = "path", required = true

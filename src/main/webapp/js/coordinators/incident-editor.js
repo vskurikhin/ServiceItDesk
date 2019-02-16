@@ -1,6 +1,6 @@
 /*
  * incident-editor.js
- * This file was last modified at 2019-02-11 23:22 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:18 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -10,7 +10,7 @@ var currentIncident;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    let btnDelete = $('#btnDelete');
+    var btnDelete = $('#btnDelete');
     btnDelete.hide();
 
     // Register listeners
@@ -203,9 +203,9 @@ function renderList(data) {
 
 function renderListStatus(data) {
     console.log('renderListGroup');
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var statusSelect = $('#status');
-    let statusId = Number(statusSelect.find('option:selected').val());
+    var statusId = Number(statusSelect.find('option:selected').val());
 
     $.each(list, function(index, status) {
         if (statusId !== status.id) {
@@ -221,9 +221,9 @@ function renderListStatus(data) {
 
 function renderListUser(data) {
     console.log('renderListUser');
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var consumerSelect = $('#consumer');
-    let consumerId = Number(consumerSelect.find('option:selected').val());
+    var consumerId = Number(consumerSelect.find('option:selected').val());
 
     $.each(list, function(index, user) {
         if (consumerId !== user.id) {
@@ -238,7 +238,7 @@ function renderListUser(data) {
 }
 
 function renderMessagesList(data) {
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var rows = [];
 
     $('#message-text').prop('disabled', false);
@@ -252,7 +252,7 @@ function renderMessagesList(data) {
 
 function renderDetails(incident) {
     function renderDropdown(num, selectId, selectName, id, name) {
-        let divDropdownSin = $('#div-dropdown-sin-' + num);
+        var divDropdownSin = $('#div-dropdown-sin-' + num);
 
         divDropdownSin.empty();
         divDropdownSin.html(
@@ -281,15 +281,15 @@ function renderDetails(incident) {
 
 // Helper function to serialize all the form fields into a JSON string
 function messageToJSON() {
-    let incidentId = $('#incidentId').val();
+    var incidentId = $('#incidentId').val();
 
-    let consumer = $('#consumer');
-    let incidentConsumerId = consumer.find('option:selected').val();
-    let incidentConsumerName = consumer.find('option:selected').text();
+    var consumer = $('#consumer');
+    var incidentConsumerId = consumer.find('option:selected').val();
+    var incidentConsumerName = consumer.find('option:selected').text();
 
-    let status = $('#status');
-    let incidentStatusId = status.find('option:selected').val();
-    let incidentStatusName = status.find('option:selected').text();
+    var status = $('#status');
+    var incidentStatusId = status.find('option:selected').val();
+    var incidentStatusName = status.find('option:selected').text();
 
     return JSON.stringify({
         "id": incidentId === "" ? Number("0") : Number(incidentId),
@@ -302,15 +302,15 @@ function messageToJSON() {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let incidentId = $('#incidentId').val();
+	var incidentId = $('#incidentId').val();
 
-    let consumer = $('#consumer');
-    let incidentConsumerId = consumer.find('option:selected').val();
-    let incidentConsumerName = consumer.find('option:selected').text();
+    var consumer = $('#consumer');
+    var incidentConsumerId = consumer.find('option:selected').val();
+    var incidentConsumerName = consumer.find('option:selected').text();
 
-    let status = $('#status');
-    let incidentStatusId = status.find('option:selected').val();
-    let incidentStatusName = status.find('option:selected').text();
+    var status = $('#status');
+    var incidentStatusId = status.find('option:selected').val();
+    var incidentStatusName = status.find('option:selected').text();
 
 	return JSON.stringify({
 		"id": incidentId === "" ? Number("0") : Number(incidentId),

@@ -1,6 +1,6 @@
 /*
- * LogoutServlet.java
- * This file was last modified at 2019-02-11 23:50 by Victor N. Skurikhin.
+ * WelcomeServlet.java
+ * This file was last modified at 2019-02-16 13:14 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -16,11 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static su.svn.shared.Constants.Security.ROLE_ACTUARY;
-import static su.svn.shared.Constants.Security.ROLE_ADMIN;
-import static su.svn.shared.Constants.Security.ROLE_COORDINATOR;
+import static su.svn.shared.Constants.Security.*;
+import static su.svn.shared.Constants.Servlet.WELCOME;
 
-@WebServlet("/welcome.do")
+@WebServlet("/" + WELCOME)
 public class WelcomeServlet extends HttpServlet
 {
     @Inject
@@ -29,17 +28,23 @@ public class WelcomeServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
-        if (securityContext.isCallerInRole(ROLE_ACTUARY)) {
-            response.sendRedirect(request.getContextPath() + "/actuaries/index.jsp");
-        }
-        else if (securityContext.isCallerInRole(ROLE_ADMIN)) {
-            response.sendRedirect(request.getContextPath() + "/admins/index.jsp");
+        if (securityContext.isCallerInRole(ROLE_SUPERUSER)) {
+            response.sendRedirect(request.getContextPath() + "/super/index.jsp");
         }
         else if (securityContext.isCallerInRole(ROLE_COORDINATOR)) {
             response.sendRedirect(request.getContextPath() + "/coordinators/index.jsp");
         }
-        else {
+        else if (securityContext.isCallerInRole(ROLE_ADMIN)) {
+            response.sendRedirect(request.getContextPath() + "/admins/index.jsp");
+        }
+        else if (securityContext.isCallerInRole(ROLE_ACTUARY)) {
+            response.sendRedirect(request.getContextPath() + "/actuaries/index.jsp");
+        }
+        else if (securityContext.isCallerInRole(ROLE_USER)) {
             response.sendRedirect(request.getContextPath() + "/welcome.jsp");
+        }
+        else {
+            response.sendRedirect(request.getContextPath());
         }
     }
 }

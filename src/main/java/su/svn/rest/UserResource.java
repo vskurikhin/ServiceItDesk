@@ -1,6 +1,6 @@
 /*
  * UserResource.java
- * This file was last modified at 2019-02-14 21:15 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 12:01 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -37,13 +37,14 @@ import static su.svn.shared.Constants.Rest.USER_RESOURCE;
             name = "This is free and unencumbered software released into the public domain.",
             url = "http://unlicense.org")),
     tags = {@Tag(
-        name = "Users Resource",
-        description = "RESTful API to interact with users resource."
+        name = "Operations about ITIL",
+        description = "RESTful API to interact with Process management resource."
     )},
-    host = "localhost:8181",
+    host = "localhost:8080",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
+@Api(tags = "Operations about ITIL")
 public class UserResource
 {
     @Context
@@ -55,6 +56,14 @@ public class UserResource
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Add a new User to the CMDB")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The User object that needs to be added to the CMDB", required = true
+    )})
     public Response create(User entity)
     {
         return storage.createUser(servletRequest.getRequestURL(), entity);
@@ -64,6 +73,14 @@ public class UserResource
     @Path("/group")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Add a new User to the CMDB")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The User object that needs to be added to the CMDB", required = true
+    )})
     public Response createWithGroup(User entity)
     {
         return storage.createUser(servletRequest.getRequestURL(), entity);
@@ -71,6 +88,11 @@ public class UserResource
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Find ALL Users")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public Response readAll()
     {
         return storage.readAll(User.class);
@@ -79,6 +101,18 @@ public class UserResource
     @GET
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Find User by ID",
+        notes = "Returns a single User",
+        response = User.class,
+        authorizations = @Authorization(value = "api_key")
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 404, message = "Not Found")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of User to return", dataType = "int", paramType = "path", required = true
+    )})
     public Response read(@PathParam("id") Integer id)
     {
         return storage.readById(User.class, id.longValue());
@@ -87,6 +121,14 @@ public class UserResource
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation("Update an existing User")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 406, message = "Not Acceptable")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "entity", value = "The User object that needs to be updated in the CMDB", required = true
+    )})
     public Response update(User entity)
     {
         return storage.updateUser(servletRequest.getRequestURL(), entity);
@@ -95,6 +137,11 @@ public class UserResource
     @DELETE
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Deletes a User")
+    @ApiResponses({ @ApiResponse(code = 204, message = "No Content") })
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "id", value = "ID of User to delete", dataType = "int", paramType = "path", required = true
+    )})
     public Response delete(@PathParam("id") Integer id)
     {
         return storage.delete(User.class, id.longValue());

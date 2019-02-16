@@ -1,6 +1,6 @@
 /*
  * incidents.js
- * This file was last modified at 2019-02-14 21:42 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:34 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -141,14 +141,14 @@ function resolution() {
 }
 
 function renderList(data) {
-	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#asideList li').remove();
-	$.each(list, function(index, incident) {
-		$('#asideList').append('<li><a href="#" data-identity="' + incident.id + '">' + incident.title + '</a></li>');
-	});
-	setTriggers();
+    $('#asideList li').remove();
+    $.each(list, function(index, incident) {
+        $('#asideList').append('<li><a href="#" data-identity="' + incident.id + '">' + incident.title + '</a></li>');
+    });
+    setTriggers();
 }
 
 function renderMessagesList(data) {
@@ -167,37 +167,37 @@ function renderMessagesList(data) {
 function renderDetails(incident) {
     console.log('renderDetails');
 
-	$('#incidentId').val(incident.id);
-	$('#title').val(incident.title);
-	$('#consumer').html('Инициатор: ' + incident.consumer.name);
-	$('#status').html('Статус: ' + incident.status.status);
-	$('#description').val(incident.description);
+    $('#incidentId').val(incident.id);
+    $('#title').val(incident.title);
+    $('#consumer').html('Инициатор: ' + incident.consumer.name);
+    $('#status').html('Статус: ' + incident.status.status);
+    $('#description').val(incident.description);
 
-    if (1 === task.status.id) {
+    if (1 === incident.status.id) {
         $('#btnStatus1').show();
         $('#btnAddMessage').hide();
         $('#btnStatus2').hide();
     }
-    else if (2 === task.status.id) {
+    else if (2 === incident.status.id) {
         $('#btnStatus1').hide();
         $('#btnAddMessage').show();
         $('#btnStatus2').show();
 
     }
 
-	renderMessagesList(incident.messages)
+    renderMessagesList(incident.messages)
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON(incidentStatusId) {
     console.log('formToJSON');
-	var incidentId = $('#incidentId').val();
+    var incidentId = $('#incidentId').val();
 
-	return JSON.stringify({
-		"id": incidentId === "" ? Number("0") : Number(incidentId),
+    return JSON.stringify({
+        "id": incidentId === "" ? Number("0") : Number(incidentId),
         "status-id": incidentStatusId === "" ? Number("0") : Number(incidentStatusId),
-		"message": $('#message-text').val()
-	});
+        "message": $('#message-text').val()
+    });
 }
 
 function find() {

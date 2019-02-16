@@ -1,6 +1,6 @@
 /*
  * tasks.js
- * This file was last modified at 2019-02-14 21:41 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:26 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -167,11 +167,11 @@ function renderMessagesList(data) {
 function renderDetails(task) {
     console.log('renderDetails');
 
-	$('#taskId').val(task.id);
-	$('#title').val(task.title);
-	$('#consumer').html('Инициатор: ' + task.consumer.name);
+    $('#taskId').val(task.id);
+    $('#title').val(task.title);
+    $('#consumer').html('Инициатор: ' + task.consumer.name);
     $('#status').html('Статус: ' + task.status.status);
-	$('#description').val(task.description);
+    $('#description').val(task.description);
 
     if (1 === task.status.id) {
         $('#btnStatus1').show();
@@ -185,20 +185,19 @@ function renderDetails(task) {
 
     }
 
-	renderMessagesList(task.messages)
+    renderMessagesList(task.messages)
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON(taskStatusId) {
     console.log('formToJSON');
+    var taskId = $('#taskId').val();
 
-	var taskId = $('#taskId').val();
-
-	return JSON.stringify({
-		"id": taskId === "" ? Number("0") : Number(taskId),
+    return JSON.stringify({
+        "id": taskId === "" ? Number("0") : Number(taskId),
         "status-id": taskStatusId === "" ? Number("0") : Number(taskStatusId),
-		"message": $('#message-text').val()
-	});
+        "message": $('#message-text').val()
+    });
 }
 
 function find() {

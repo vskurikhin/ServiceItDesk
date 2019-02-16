@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ web.xml
-  ~ This file was last modified at 2019-02-11 23:42 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 13:50 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -16,17 +16,6 @@
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>
     </welcome-file-list>
-
-    <!--
-    <filter>
-        <filter-name>CORS Filter</filter-name>
-        <filter-class>org.ebaysf.web.cors.CORSFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>CORS Filter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    -->
 
     <servlet>
         <servlet-name>jersey</servlet-name>
@@ -147,6 +136,7 @@
             <web-resource-name>Restricted Access</web-resource-name>
             <url-pattern>/cmdbs/*</url-pattern>
             <url-pattern>/js/cmdbs/*</url-pattern>
+            <url-pattern>/super/*</url-pattern>
         </web-resource-collection>
 
         <auth-constraint>

@@ -1,6 +1,6 @@
 /*
  * groups.js
- * This file was last modified at 2019-02-12 00:03 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:18 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -10,7 +10,7 @@ var currentGroup;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    let btnDelete = $('#btnDelete');
+    var btnDelete = $('#btnDelete');
     btnDelete.hide();
 
     // Register listeners
@@ -163,7 +163,7 @@ function deleteGroup() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	let list = data == null ? [] : (data instanceof Array ? data : [data]);
+	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#groupList li').remove();
 	$.each(list, function(index, group) {
@@ -180,7 +180,7 @@ function renderDetails(group) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let groupId = $('#groupId').val();
+	var groupId = $('#groupId').val();
 
 	return JSON.stringify({
 		"id": groupId === "" ? Number("0") : Number(groupId),

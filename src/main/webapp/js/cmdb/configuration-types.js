@@ -1,6 +1,6 @@
 /*
  * configuration-types.js
- * This file was last modified at 2019-02-11 00:29 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:17 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -13,7 +13,7 @@ var currentConfigurationType;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    let btnDelete = $('#btnDelete');
+    var btnDelete = $('#btnDelete');
     btnDelete.hide();
 
     // Register listeners
@@ -166,7 +166,7 @@ function deleteConfigurationType() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	let list = data == null ? [] : (data instanceof Array ? data : [data]);
+	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#configurationTypeList li').remove();
 	$.each(list, function(index, configurationType) {
@@ -183,12 +183,13 @@ function renderDetails(configurationType) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let configurationTypeId = $('#configurationTypeId').val();
-	return JSON.stringify({
+	var configurationTypeId = $('#configurationTypeId').val();
+
+    return JSON.stringify({
 		"id": configurationTypeId === "" ? Number("0") : Number(configurationTypeId),
 		"name": $('#name').val(),
 		"description": $('#description').val()
-		});
+    });
 }
 
 // Retrieve configurationType list when application starts

@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-types.jsp
-  ~ This file was last modified at 2019-02-11 23:30 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 12:55 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -30,7 +30,7 @@
         <%@ include file = "menu.jsp" %>
         <tr>
             <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px;">
-                <%@ include file = "aside.jsp" %>
+                <%@ include file = "aside-cmdb.jsp" %>
             </td>
             <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-right-main">

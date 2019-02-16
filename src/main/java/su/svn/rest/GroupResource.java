@@ -1,6 +1,6 @@
 /*
  * GroupResource.java
- * This file was last modified at 2019-02-14 21:14 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 14:58 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -26,8 +26,8 @@ import static su.svn.shared.Constants.Rest.GROUP_RESOURCE;
 @Path("/v1" + GROUP_RESOURCE)
 @SwaggerDefinition(
     info = @Info(
-        title = "Configuration management database RESTful API",
-        description = "This is a sample configuration management database service.",
+        title = "Process management RESTful API",
+        description = "This is a sample process management service.",
         version = "1.0.0",
         termsOfService = "share and care",
         contact = @Contact(
@@ -37,14 +37,14 @@ import static su.svn.shared.Constants.Rest.GROUP_RESOURCE;
             name = "This is free and unencumbered software released into the public domain.",
             url = "http://unlicense.org")),
     tags = {@Tag(
-        name = "Groups Resource",
-        description = "RESTful API to interact with groups resource."
+        name = "Operations about ITIL",
+        description = "RESTful API to interact with Process management resource."
     )},
-    host = "localhost:8181",
+    host = "localhost:8080",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
-@Api(tags = "Operations about Configuration Unit Resource")
+@Api(tags = "Operations about ITIL")
 public class GroupResource
 {
     @Context
@@ -62,10 +62,11 @@ public class GroupResource
         @ApiResponse(code = 406, message = "Not Acceptable")
     })
     @ApiImplicitParams({@ApiImplicitParam(
-        name = "entity", value = "The Configuration Unit object that needs to be added to the CMDB", required = true
+        name = "entity", value = "The Group object that needs to be added to the CMDB", required = true
     )})
     public Response create(Group entity)
     {
+        System.err.println("entity = " + entity);
         return storage.create(servletRequest.getRequestURL(), entity);
     }
 
@@ -128,7 +129,7 @@ public class GroupResource
         @ApiResponse(code = 406, message = "Not Acceptable")
     })
     @ApiImplicitParams({@ApiImplicitParam(
-        name = "entity", value = "The Configuration Type object that needs to be updated in the CMDB", required = true
+        name = "entity", value = "The Group object that needs to be updated in the CMDB", required = true
     )})
     public Response update(Group entity)
     {

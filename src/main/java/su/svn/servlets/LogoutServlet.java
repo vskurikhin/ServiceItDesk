@@ -1,6 +1,6 @@
 /*
  * LogoutServlet.java
- * This file was last modified at 2019-02-11 23:50 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:15 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/logout.do")
+import static su.svn.shared.Constants.Servlet.LOGOUT;
+
+@WebServlet("/" + LOGOUT)
 public class LogoutServlet extends HttpServlet
 {
     @Override

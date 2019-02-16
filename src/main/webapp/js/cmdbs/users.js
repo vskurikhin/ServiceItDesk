@@ -1,6 +1,6 @@
 /*
  * users.js
- * This file was last modified at 2019-02-12 00:03 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 13:18 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -10,7 +10,7 @@ var currentUser;
 
 function setTriggers() {
     // Nothing to delete in initial application state
-    let btnDelete = $('#btnDelete');
+    var btnDelete = $('#btnDelete');
     btnDelete.hide();
 
     // Register listeners
@@ -178,7 +178,7 @@ function deleteUser() {
 
 function renderList(data) {
 	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	let list = data == null ? [] : (data instanceof Array ? data : [data]);
+	var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
 	$('#userList li').remove();
 	$.each(list, function(index, user) {
@@ -189,9 +189,9 @@ function renderList(data) {
 
 function renderListGroup(data) {
     console.log('renderListGroup');
-    let list = data == null ? [] : (data instanceof Array ? data : [data]);
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
     var groupSelect = $('#group');
-    let groupId = Number(groupSelect.find('option:selected').val());
+    var groupId = Number(groupSelect.find('option:selected').val());
     console.log('renderListGroup groupId:' + groupId);
 
     $.each(list, function(index, group) {
@@ -214,7 +214,7 @@ function renderDetails(user) {
 
 	$('#userId').val(user.id);
 	$('#name').val(user.name);
-    let divDropdownSin1 = $('#div-dropdown-sin-1');
+    var divDropdownSin1 = $('#div-dropdown-sin-1');
     divDropdownSin1.empty();
     divDropdownSin1.html(
         '<div class="dropdown-sin-1 dropdown-single">' +
@@ -228,9 +228,10 @@ function renderDetails(user) {
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	let userId = $('#userId').val();
-	let userGroupId = $('#group').find('option:selected').val();
-    let userGroupName = $('#group').find('option:selected').text();
+	var userId = $('#userId').val();
+	var userGroupId = $('#group').find('option:selected').val();
+    var userGroupName = $('#group').find('option:selected').text();
+
 	return JSON.stringify({
 		"id": userId === "" ? Number("0") : Number(userId),
 		"name": $('#name').val(),

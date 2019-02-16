@@ -3,7 +3,7 @@
 
 <%--
   ~ menu.jsp
-  ~ This file was last modified at 2019-02-11 23:29 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-12 00:03 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -16,9 +16,11 @@
                 <nav class="menu">
                     <ul>
                         <li><a id="navigation-menu-0" href="<c:out value="${baseURL}/"/>welcome.jsp">«Домашняя страница»</a></li>
-                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>actuaries/index.jsp">«Регистраторы»</a></li>
-                        <li><a id="navigation-menu-2" href="<c:out value="${baseURL}/"/>admins/index.jsp">«Администраторы»</a></li>
-                        <li><a id="navigation-menu-3" href="<c:out value="${baseURL}/"/>coordinators/index.jsp">«Координаторы»</a></li>
+                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>coordinators/incidents.jsp">«Консоль инцидентов»</a></li>
+                        <li><a id="navigation-menu-1" href="<c:out value="${baseURL}/"/>coordinators/incident-editor.jsp">«Редактор инцидентов»</a></li>
+                        <li><a id="navigation-menu-2" href="<c:out value="${baseURL}/"/>coordinators/tasks.jsp">«Консоль задач»</a></li>
+                        <li><a id="navigation-menu-2" href="<c:out value="${baseURL}/"/>coordinators/task-editor.jsp">«Редактор задач»</a></li>
+                        <li><a id="navigation-menu-3" href="<c:out value="${baseURL}/"/>cmdb/index.jsp">«Консоль CMDB»</a></li>
                         <li><a id="navigation-menu-4" href="<c:out value="${baseURL}/"/>logout.do">Выход</a></li>
                     </ul>
                 </nav>

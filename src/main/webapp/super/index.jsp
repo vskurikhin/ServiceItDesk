@@ -4,7 +4,7 @@
 
 <%--
   ~ index.jsp
-  ~ This file was last modified at 2019-02-16 13:43 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 12:26 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -28,13 +28,12 @@
             <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
                     <div id="main-container">
-                        <div class="w3-margin">
 <h3>Служба Service Desk</h3>
 <p style="text-align: justify">
  Основной целью Службы Service Desk является поддержка услуг, предоставляемых ИТ-организацией на основе достигнутых с
  заказчиком договоренностей, путем выполнения ряда действий по поддержке (из разных процессов).
 </p>
-<p style="text-align: justify">
+<p>
  Являясь точкой контакта с пользователями, Служба Service Desk позволяет уменьшить нагрузку на другие ИТ-подразделения
  путем «перехвата» не относящихся к делу обращений и вопросов, на которые легко ответить. Служба Service Desk действует
  как фильтр, который пропускает звонки на вторую и третью линии поддержки, только когда это действительно необходимо.
@@ -75,7 +74,6 @@
  допускает использование отдельных процедур для обработки Запросов на Обслуживание, которые отделены от Процесса
  Управления Инцидентами.
 </p><br/>
-                        </div>
                     </div>
                 </main>
             </td>

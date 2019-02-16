@@ -1,6 +1,6 @@
 /*
  * TaskResource.java
- * This file was last modified at 2019-02-14 21:15 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 12:01 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -39,13 +39,14 @@ import static su.svn.shared.Constants.Rest.TASK_RESOURCE;
             name = "This is free and unencumbered software released into the public domain.",
             url = "http://unlicense.org")),
     tags = {@Tag(
-        name = "Tasks Resource",
-        description = "RESTful API to interact with tasks resource."
+        name = "Operations about ITIL",
+        description = "RESTful API to interact with Process management resource."
     )},
-    host = "localhost:8181",
+    host = "localhost:8080",
     basePath = "/ServiceItDesk/rest/api",
     schemes = {SwaggerDefinition.Scheme.HTTP}
 )
+@Api(tags = "Operations about ITIL")
 public class TaskResource
 {
     @Context
