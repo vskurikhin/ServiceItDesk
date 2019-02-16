@@ -4,7 +4,7 @@
 
 <%--
   ~ login.jsp
-  ~ This file was last modified at 2019-02-11 21:55 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 19:40 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -25,7 +25,7 @@
     <table class="tg body">
 <%@ include file = "menu.jsp" %>
         <tr>
-            <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px;">
+            <td class="tg-0lax my-left-aside" style="height: 600px;">
                 <%@ include file = "aside.jsp" %>
             </td>
             <td class="tg-0lax my-right-main">

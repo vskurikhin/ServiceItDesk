@@ -1,6 +1,6 @@
 /*
  * users.js
- * This file was last modified at 2019-02-16 13:18 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 23:08 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -46,16 +46,16 @@ function setTriggers() {
         return false;
     });
 
-    $('#userList a').click(function() {
+    $('#asideList a').click(function() {
         findById($(this).data('identity'));
     });
 }
 
 function search(searchKey) {
-	if (searchKey === '')
-		findAll();
-	else
-		findByName(searchKey);
+    if (searchKey === '')
+        findAll();
+    else
+        findByName(searchKey);
 }
 
 function newUser() {
@@ -63,13 +63,13 @@ function newUser() {
 }
 
 function findAll() {
-	console.log('findAll');
-	$.ajax({
-		type: 'GET',
-		url: rootURL,
-		dataType: "json", // data type of response
-		success: renderList
-	});
+    console.log('findAll');
+    $.ajax({
+        type: 'GET',
+        url: rootURL,
+        dataType: "json", // data type of response
+        success: renderList
+    });
 }
 
 function findAllGroup() {
@@ -83,53 +83,53 @@ function findAllGroup() {
 }
 
 function find() {
-	findAll();
-	findAllGroup();
+    findAll();
+    findAllGroup();
 }
 
 function findByName(searchKey) {
-	console.log('findByName: ' + searchKey);
-	$.ajax({
-		type: 'GET',
-		url: rootURL + '/search/' + searchKey,
-		dataType: "json",
-		success: renderList
-	});
+    console.log('findByName: ' + searchKey);
+    $.ajax({
+        type: 'GET',
+        url: rootURL + '/search/' + searchKey,
+        dataType: "json",
+        success: renderList
+    });
 }
 
 function findById(id) {
-	console.log('findById: ' + id);
-	$.ajax({
-		type: 'GET',
-		url: rootURL + '/' + id,
-		dataType: "json",
-		success: function(data){
+    console.log('findById: ' + id);
+    $.ajax({
+        type: 'GET',
+        url: rootURL + '/' + id,
+        dataType: "json",
+        success: function(data){
             $('#btnDelete').show();
             $('#btnSave').html('Save');
-			console.log('findById success: ' + data.name);
-			currentUser = data;
-			renderDetails(currentUser);
-		}
-	});
+            console.log('findById success: ' + data.name);
+            currentUser = data;
+            renderDetails(currentUser);
+        }
+    });
 }
 
 function addUser() {
-	console.log('addUser');
-	// noinspection JSUnusedLocalSymbols
+    console.log('addUser');
+    // noinspection JSUnusedLocalSymbols
     $.ajax({
-		type: 'POST',
-		contentType: 'application/json',
-		url: rootURL,
-		dataType: "json",
-		data: formToJSON(),
+        type: 'POST',
+        contentType: 'application/json',
+        url: rootURL,
+        dataType: "json",
+        data: formToJSON(),
         statusCode: {
-		    201: function(data, textStatus, jqXHR){
+            201: function(data, textStatus, jqXHR){
                 console.log("User created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
                 $('#userId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
-		    },
+            },
             406: function(data, textStatus, jqXHR){
                 alert('addUser error: ' + textStatus);
             },
@@ -137,54 +137,54 @@ function addUser() {
                 alert('addUser FATAL error: ' + textStatus);
             }
         }
-	});
+    });
 }
 
 function updateUser() {
-	console.log('updateUser');
-	// noinspection JSUnusedLocalSymbols
+    console.log('updateUser');
+    // noinspection JSUnusedLocalSymbols
     $.ajax({
-		type: 'PUT',
-		contentType: 'application/json',
-		url: rootURL,
-		dataType: "json",
-		data: formToJSON(),
-		success: function(data, textStatus, jqXHR){
+        type: 'PUT',
+        contentType: 'application/json',
+        url: rootURL,
+        dataType: "json",
+        data: formToJSON(),
+        success: function(data, textStatus, jqXHR){
             console.log("User updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateUser error: ' + textStatus);
-		}
-	});
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('updateUser error: ' + textStatus);
+        }
+    });
 }
 
 function deleteUser() {
-	console.log('deleteUser');
-	// noinspection JSUnusedLocalSymbols
+    console.log('deleteUser');
+    // noinspection JSUnusedLocalSymbols
     $.ajax({
-		type: 'DELETE',
-		url: rootURL + '/' + $('#userId').val(),
-		success: function(data, textStatus, jqXHR){
-			alert('User deleted successfully');
+        type: 'DELETE',
+        url: rootURL + '/' + $('#userId').val(),
+        success: function(data, textStatus, jqXHR){
+            alert('User deleted successfully');
             setTimeout(function(){location.reload();}, 750);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteUser error');
-		}
-	});
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('deleteUser error');
+        }
+    });
 }
 
 function renderList(data) {
-	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#userList li').remove();
-	$.each(list, function(index, user) {
-		$('#userList').append('<li><a href="#" data-identity="' + user.id + '">'+user.name+'</a></li>');
-	});
-	setTriggers();
+    $('#asideList li').remove();
+    $.each(list, function(index, user) {
+        $('#asideList').append('<li><a href="#" data-identity="' + user.id + '">'+user.name+'</a></li>');
+    });
+    setTriggers();
 }
 
 function renderListGroup(data) {
@@ -212,8 +212,8 @@ function renderDetails(user) {
         $('#group').append('<option value="' + id + '" selected>' + name + '</option>');
     }
 
-	$('#userId').val(user.id);
-	$('#name').val(user.name);
+    $('#userId').val(user.id);
+    $('#name').val(user.name);
     var divDropdownSin1 = $('#div-dropdown-sin-1');
     divDropdownSin1.empty();
     divDropdownSin1.html(
@@ -223,21 +223,21 @@ function renderDetails(user) {
     );
     renderListGroupSelected(user.group.id, user.group.name);
     findAllGroup();
-	$('#description').val(user.description);
+    $('#description').val(user.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var userId = $('#userId').val();
-	var userGroupId = $('#group').find('option:selected').val();
+    var userId = $('#userId').val();
+    var userGroupId = $('#group').find('option:selected').val();
     var userGroupName = $('#group').find('option:selected').text();
 
-	return JSON.stringify({
-		"id": userId === "" ? Number("0") : Number(userId),
-		"name": $('#name').val(),
+    return JSON.stringify({
+        "id": userId === "" ? Number("0") : Number(userId),
+        "name": $('#name').val(),
         "group": {"id": Number(userGroupId), "name": userGroupName},
-		"description": $('#description').val()
-	});
+        "description": $('#description').val()
+    });
 }
 
 // Retrieve user list when application starts

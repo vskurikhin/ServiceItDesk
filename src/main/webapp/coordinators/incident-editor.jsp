@@ -4,7 +4,7 @@
 
 <%--
   ~ incident-editor.jsp
-  ~ This file was last modified at 2019-02-11 23:15 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 22:12 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -24,10 +24,10 @@
     </style>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
-        let userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
-        let statusRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.STATUS_RESOURCE %>';
-        let messageRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.MESSAGE_RESOURCE %>';
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
+        var userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
+        var statusRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.STATUS_RESOURCE %>';
+        var messageRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.MESSAGE_RESOURCE %>';
     </script>
 </head>
 

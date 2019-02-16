@@ -1,6 +1,6 @@
 /*
  * configuration-units.js
- * This file was last modified at 2019-02-16 13:17 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 23:09 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -46,33 +46,33 @@ function setTriggers() {
         return false;
     });
 
-    $('#configurationUnitList a').click(function() {
+    $('#asideList a').click(function() {
         findById($(this).data('identity'));
     });
 }
 
 function search(searchKey) {
-	if (searchKey === '')
-		findAll();
-	else
-		findByName(searchKey);
+    if (searchKey === '')
+        findAll();
+    else
+        findByName(searchKey);
 }
 
 function newConfigurationUnit() {
-	$('#btnDelete').hide();
+    $('#btnDelete').hide();
     $('#btnSave').html('Add');
-	currentConfigurationUnit = {};
-	renderDetails(currentConfigurationUnit); // Display empty form
+    currentConfigurationUnit = {};
+    renderDetails(currentConfigurationUnit); // Display empty form
 }
 
 function findAll() {
-	console.log('findAll');
-	$.ajax({
-		type: 'GET',
-		url: rootURL,
-		dataType: "json", // data type of response
-		success: renderList
-	});
+    console.log('findAll');
+    $.ajax({
+        type: 'GET',
+        url: rootURL,
+        dataType: "json", // data type of response
+        success: renderList
+    });
 }
 
 function findAllGroups() {
@@ -113,48 +113,48 @@ function find() {
 }
 
 function findByName(searchKey) {
-	console.log('findByName: ' + searchKey);
-	$.ajax({
-		type: 'GET',
-		url: rootURL + '/search/' + searchKey,
-		dataType: "json",
-		success: renderList
-	});
+    console.log('findByName: ' + searchKey);
+    $.ajax({
+        type: 'GET',
+        url: rootURL + '/search/' + searchKey,
+        dataType: "json",
+        success: renderList
+    });
 }
 
 function findById(id) {
-	console.log('findById: ' + id);
-	$.ajax({
-		type: 'GET',
-		url: rootURL + '/' + id,
-		dataType: "json",
-		success: function(data){
+    console.log('findById: ' + id);
+    $.ajax({
+        type: 'GET',
+        url: rootURL + '/' + id,
+        dataType: "json",
+        success: function(data){
             $('#btnDelete').show();
             $('#btnSave').html('Save');
-			console.log('findById success: ' + data.name);
-			currentConfigurationUnit = data;
-			renderDetails(currentConfigurationUnit);
-		}
-	});
+            console.log('findById success: ' + data.name);
+            currentConfigurationUnit = data;
+            renderDetails(currentConfigurationUnit);
+        }
+    });
 }
 
 function addConfigurationUnit() {
-	console.log('addConfigurationUnit');
-	// noinspection JSUnusedLocalSymbols
+    console.log('addConfigurationUnit');
+    // noinspection JSUnusedLocalSymbols
     $.ajax({
-		type: 'POST',
-		contentType: 'application/json',
-		url: rootURL,
-		dataType: "json",
-		data: formToJSON(),
+        type: 'POST',
+        contentType: 'application/json',
+        url: rootURL,
+        dataType: "json",
+        data: formToJSON(),
         statusCode: {
-		    201: function(data, textStatus, jqXHR){
+            201: function(data, textStatus, jqXHR){
                 console.log("ConfigurationUnit created successfully" + textStatus);
                 $('#btnDelete').show();
                 $('#btnSave').html('Save');
                 $('#configurationUnitId').val(data.id);
                 setTimeout(function(){location.reload();}, 750);
-		    },
+            },
             406: function(data, textStatus, jqXHR){
                 alert('addConfigurationUnit error: ' + textStatus);
             },
@@ -162,53 +162,53 @@ function addConfigurationUnit() {
                 alert('addConfigurationUnit FATAL error: ' + textStatus);
             }
         }
-	});
+    });
 }
 
 function updateConfigurationUnit() {
-	console.log('updateConfigurationUnit');
-	// noinspection JSUnusedLocalSymbols
+    console.log('updateConfigurationUnit');
+    // noinspection JSUnusedLocalSymbols
     $.ajax({
-		type: 'PUT',
-		contentType: 'application/json',
-		url: rootURL,
-		dataType: "json",
-		data: formToJSON(),
-		success: function(data, textStatus, jqXHR){
+        type: 'PUT',
+        contentType: 'application/json',
+        url: rootURL,
+        dataType: "json",
+        data: formToJSON(),
+        success: function(data, textStatus, jqXHR){
             console.log("ConfigurationUnit updated successfully: " + textStatus);
             $('#btnDelete').show();
             setTimeout(function(){location.reload();}, 750);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			alert('updateConfigurationUnit error: ' + textStatus);
-		}
-	});
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('updateConfigurationUnit error: ' + textStatus);
+        }
+    });
 }
 
 function deleteConfigurationUnit() {
-	console.log('deleteConfigurationUnit');
-	$.ajax({
-		type: 'DELETE',
-		url: rootURL + '/' + $('#configurationUnitId').val(),
-		success: function(data, textStatus, jqXHR){
-			alert('ConfigurationUnit deleted successfully');
+    console.log('deleteConfigurationUnit');
+    $.ajax({
+        type: 'DELETE',
+        url: rootURL + '/' + $('#configurationUnitId').val(),
+        success: function(data, textStatus, jqXHR){
+            alert('ConfigurationUnit deleted successfully');
             setTimeout(function(){location.reload();}, 750);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			alert('deleteConfigurationUnit error');
-		}
-	});
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('deleteConfigurationUnit error');
+        }
+    });
 }
 
 function renderList(data) {
-	// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-	var list = data == null ? [] : (data instanceof Array ? data : [data]);
+    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
+    var list = data == null ? [] : (data instanceof Array ? data : [data]);
 
-	$('#configurationUnitList li').remove();
-	$.each(list, function(index, configurationUnit) {
-		$('#configurationUnitList').append('<li><a href="#" data-identity="' + configurationUnit.id + '">'+configurationUnit.name+'</a></li>');
-	});
-	setTriggers();
+    $('#asideList li').remove();
+    $.each(list, function(index, configurationUnit) {
+        $('#asideList').append('<li><a href="#" data-identity="' + configurationUnit.id + '">'+configurationUnit.name+'</a></li>');
+    });
+    setTriggers();
 }
 
 function renderListConfigurationType(data) {
@@ -292,10 +292,10 @@ function renderDetails(configurationUnit) {
 
     console.log('renderDetails');
 
-	$('#configurationUnitId').val(configurationUnit.id);
-	$('#name').val(configurationUnit.name);
+    $('#configurationUnitId').val(configurationUnit.id);
+    $('#name').val(configurationUnit.name);
 
-	renderDropdown('1', 'admin', 'admin', configurationUnit.admin.id, configurationUnit.admin.name);
+    renderDropdown('1', 'admin', 'admin', configurationUnit.admin.id, configurationUnit.admin.name);
     renderDropdown('2', 'owner', 'owner', configurationUnit.owner.id, configurationUnit.owner.name);
     findAllUsers();
     renderDropdown('3', 'group', 'group', configurationUnit.group.id, configurationUnit.group.name);
@@ -303,12 +303,12 @@ function renderDetails(configurationUnit) {
     renderDropdown('4', 'ctype', 'ctype', configurationUnit.type.id, configurationUnit.type.name);
     findAllCTypes();
 
-	$('#description').val(configurationUnit.description);
+    $('#description').val(configurationUnit.description);
 }
 
 // Helper function to serialize all the form fields into a JSON string
 function formToJSON() {
-	var configurationUnitId = $('#configurationUnitId').val();
+    var configurationUnitId = $('#configurationUnitId').val();
 
     var group = $('#group');
     var configurationUnitGroupId = group.find('option:selected').val();
@@ -326,15 +326,15 @@ function formToJSON() {
     var configurationUnitTypeId = ctype.find('option:selected').val();
     var configurationUnitTypeName = ctype.find('option:selected').text();
 
-	return JSON.stringify({
-		"id": configurationUnitId === "" ? Number("0") : Number(configurationUnitId),
-		"name": $('#name').val(),
+    return JSON.stringify({
+        "id": configurationUnitId === "" ? Number("0") : Number(configurationUnitId),
+        "name": $('#name').val(),
         "admin": {"id": Number(configurationUnitAdminId), "name": configurationUnitAdminName, "description": null},
         "owner": {"id": Number(configurationUnitOwnerId), "name": configurationUnitOwnerName, "description": null},
         "group": {"id": Number(configurationUnitGroupId), "name": configurationUnitGroupName, "description": null},
         "type":  {"id": Number(configurationUnitTypeId),  "name": configurationUnitTypeName,  "description": null},
-		"description": $('#description').val()
-	});
+        "description": $('#description').val()
+    });
 }
 
 // Retrieve configurationUnit list when application starts

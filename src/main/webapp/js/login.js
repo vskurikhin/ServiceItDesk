@@ -1,3 +1,11 @@
+/*
+ * login.js
+ * This file was last modified at 2019-02-16 18:58 by Victor N. Skurikhin.
+ * $Id$
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
 function checkLoginForm() {
     const checked = document.getElementById('login').value !== ''
                  && document.getElementById('password').value !== '';
@@ -24,20 +32,20 @@ function checkPassword (form) {
     const b_letters = "QWERTYUIOPLKJHGFDSAZXCVBNM";
     const digits = "0123456789";
     const specials = "!@#$%^&*()_-+=\|/.,:;[]{}";
-    let is_s = false;
-    let is_b = false;
-    let is_d = false;
-    let is_sp = false;
+    var is_s = false;
+    var is_b = false;
+    var is_d = false;
+    var is_sp = false;
 
-    for (let i = 0; i < password.length; i++) {
+    for (var i = 0; i < password.length; i++) {
         if (!is_s && s_letters.indexOf(password[i]) !== -1) is_s = true;
         else if (!is_b && b_letters.indexOf(password[i]) !== -1) is_b = true;
         else if (!is_d && digits.indexOf(password[i]) !== -1) is_d = true;
         else if (!is_sp && specials.indexOf(password[i]) !== -1) is_sp = true
     }
 
-    let rating = 0;
-    let text = "";
+    var rating = 0;
+    var text = "";
     if (is_s) rating++;
     if (is_b) rating++;
     if (is_d) rating++;

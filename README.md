@@ -24,12 +24,14 @@
 2. Реализованы все RESTful сервисы.
 3. Работаю над интерфейсом CMDB Console (смотрю в сторону RESTful + jQuery).
 
-1. Раялизованна «CMDB Console»
+1. Раaлизованна «CMDB Console»
 2. Реализован IncidentManagementService
 3. Реализован TaskManagementService (частично)
-4. Раялизованна «Incedent Console»
-5. Раялизованна «Task Console» (частично)
+4. Раaлизованна «Incedent Console»
+5. Раaлизованна «Task Console» (частично)
 
-TODO:
-1. Security Аудентификация + матрица доступа -> авторизация
-2. По возможности доработать TaskManagement + Task Console
+6. Security Аудентификация + матрица доступа -> авторизация
+7. Swagger документирование всех RESTful сервисов
+
+TODO
+1. По возможности доработать TaskManagement + Task Console

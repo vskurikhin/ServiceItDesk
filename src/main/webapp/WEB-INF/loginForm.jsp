@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
                     <%--
   ~ loginForm.jsp
-  ~ This file was last modified at 2019-02-11 21:54 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 19:41 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -9,6 +9,8 @@
 
 <!-- form method="post" action="j_security_check" class="loginForm" onsubmit="return checkPassword(this);" -->
                     <form method="post" action="j_security_check" class="loginForm">
+                        <div class="w3-row login-margin" style="height: 44px">
+                        </div>
                         <div class="w3-row login-margin">
                             <div class="w3-col m1 text-margin">
                                 <label for="login">Login: </label>

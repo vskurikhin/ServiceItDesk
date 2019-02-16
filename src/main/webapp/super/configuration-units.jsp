@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-units.jsp
-  ~ This file was last modified at 2019-02-16 12:56 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 22:56 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -24,10 +24,10 @@
     </style>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_UNIT_RESOURCE %>';
-        let groupRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>';
-        let userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
-        let configurationTypeRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_UNIT_RESOURCE %>';
+        var groupRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.GROUP_RESOURCE %>';
+        var userRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.USER_RESOURCE %>';
+        var configurationTypeRootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
     </script>
 </head>
 
@@ -43,23 +43,18 @@
                     <form id="configurationUnitForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2" style="height: 44px">
+                                <th class="tg2-baqh" colspan="2" style="height: 44px">
                                     <button form="configurationUnitForm" id="btnAdd">Clear</button>
                                     <button form="configurationUnitForm" id="btnSave">Add</button>
                                     <button form="configurationUnitForm" id="btnDelete">Delete</button>
                                     <button form="configurationUnitForm" id="btnSearch" hidden>Search</button>
-                                </td>
+                                </th>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="3">
-                                    <div class="leftArea">
-                                        <ul id="configurationUnitList"></ul>
-                                    </div>
-                                </th>
-                                <th class="tg2-0lax">
+                                <td class="tg2-0lax">
                                     <label>Id:</label><br/>
                                     <input form="configurationUnitForm" id="configurationUnitId" name="id" type="text" disabled title=""/>
-                                </th>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">

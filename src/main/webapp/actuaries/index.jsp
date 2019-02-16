@@ -4,7 +4,7 @@
 
 <%--
   ~ index.jsp
-  ~ This file was last modified at 2019-02-16 13:44 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 21:37 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -25,6 +25,8 @@
     <table class="tg body">
 <%@ include file = "menu.jsp" %>
         <tr>
+            <td class="tg-0lax" style="height: 600px;">
+            </td>
             <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-left">
                     <div id="main-container">
@@ -43,7 +45,7 @@
 </p>
 <h3>Существует две категории обращений:</h3>
 <p style="text-align: justify">
- <b>• ИИнциденты:</b> по существу, это все обращения, за исключением тех, что связаны со стандартными изменениями:
+ <b>• Инциденты:</b> по существу, это все обращения, за исключением тех, что связаны со стандартными изменениями:
 </p>
 <p style="text-align: justify">
  - Сообщения об ошибках: реальные сбои в инфраструктуре и жалобы на услуги.

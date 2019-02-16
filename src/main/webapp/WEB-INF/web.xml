@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ web.xml
-  ~ This file was last modified at 2019-02-16 13:50 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 15:38 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -55,10 +55,6 @@
     <security-role>
         <description>Users of the system</description>
         <role-name>USER</role-name>
-    </security-role>
-
-    <security-role>
-        <role-name>*</role-name>
     </security-role>
 
     <security-constraint>

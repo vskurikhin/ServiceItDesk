@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-types.jsp
-  ~ This file was last modified at 2019-02-16 12:55 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 22:52 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
     </script>
 </head>
 
@@ -30,30 +30,25 @@
         <%@ include file = "menu.jsp" %>
         <tr>
             <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px;">
-                <%@ include file = "aside-cmdb.jsp" %>
+                <%@ include file = "aside.jsp" %>
             </td>
             <td class="tg-0lax my-right-main">
                 <main id="main" class="w3-col m12 w3-margin-0 my-right-main">
                     <form id="configurationTypeForm">
                         <table class="tg2">
                             <tr>
-                                <td class="tg2-baqh" colspan="2" style="height: 44px">
+                                <th class="tg2-baqh" colspan="2" style="height: 44px">
                                     <button form="configurationTypeForm" id="btnAdd">Clear</button>
                                     <button form="configurationTypeForm" id="btnSave">Add</button>
                                     <button form="configurationTypeForm" id="btnDelete">Delete</button>
                                     <button form="configurationTypeForm" id="btnSearch" hidden>Search</button>
-                                </td>
+                                </th>
                             </tr>
                             <tr>
-                                <th class="tg2-0laxl" rowspan="3">
-                                    <div class="leftArea">
-                                        <ul id="configurationTypeList"></ul>
-                                    </div>
-                                </th>
-                                <th class="tg2-0lax">
+                                <td class="tg2-0lax">
                                     <label>Id:</label><br/>
                                     <input form="configurationTypeForm" id="configurationTypeId" name="id" type="text" disabled title=""/>
-                                </th>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="tg2-0lax">

@@ -4,7 +4,7 @@
 
 <%--
   ~ index.jsp
-  ~ This file was last modified at 2019-02-16 13:43 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 21:37 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -43,7 +43,7 @@
 </p>
 <h3>Существует две категории обращений:</h3>
 <p style="text-align: justify">
- <b>• ИИнциденты:</b> по существу, это все обращения, за исключением тех, что связаны со стандартными изменениями:
+ <b>• Инциденты:</b> по существу, это все обращения, за исключением тех, что связаны со стандартными изменениями:
 </p>
 <p style="text-align: justify">
  - Сообщения об ошибках: реальные сбои в инфраструктуре и жалобы на услуги.

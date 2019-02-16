@@ -1,6 +1,6 @@
 /*
  * ConfigurationTypeResource.java
- * This file was last modified at 2019-02-16 14:11 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 19:16 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -11,7 +11,9 @@ package su.svn.rest;
 import io.swagger.annotations.*;
 import su.svn.models.ConfigurationType;
 import su.svn.services.ResponseStorageService;
+import su.svn.shared.Constants;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,12 +23,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static su.svn.shared.Constants.Rest.CONFIGURATION_TYPE_RESOURCE;
-import static su.svn.shared.Constants.Security.ROLE_ADMIN;
-import static su.svn.shared.Constants.Security.ROLE_COORDINATOR;
-
 @Stateless
-@Path("/v1" + CONFIGURATION_TYPE_RESOURCE)
+@Path("/v1" + Constants.Rest.CONFIGURATION_TYPE_RESOURCE)
 @SwaggerDefinition(
     info = @Info(
         title = "Process management RESTful API",
@@ -50,14 +48,11 @@ import static su.svn.shared.Constants.Security.ROLE_COORDINATOR;
 @Api(tags = "Operations about ITIL")
 public class ConfigurationTypeResource
 {
-    @Context
-    private HttpServletRequest servletRequest;
-
     @EJB
     private ResponseStorageService storage;
 
     @POST
-    @RolesAllowed({ROLE_ADMIN, ROLE_COORDINATOR})
+    @RolesAllowed({ Constants.Security.ROLE_ADMIN, Constants.Security.ROLE_COORDINATOR })
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(
@@ -68,17 +63,19 @@ public class ConfigurationTypeResource
     )
     @ApiResponses({
         @ApiResponse(code = 201, message = "Created"),
-        @ApiResponse(code = 406, message = "Not Acceptable")
+        @ApiResponse(code = 406, message = "Not Acceptable"),
+        @ApiResponse(code = 500, message = "Internal Server Error"),
     })
     @ApiImplicitParams({@ApiImplicitParam(
         name = "entity", value = "The Configuration Type object that needs to be added to the CMDB", required = true
     )})
-    public Response create(ConfigurationType entity)
+    public Response create(ConfigurationType entity, @Context HttpServletRequest request)
     {
-        return storage.create(servletRequest.getRequestURL(), entity);
+        return storage.create(request.getRequestURL(), entity);
     }
 
     @GET
+    @PermitAll
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation("Find ALL Configuration Types")
     @ApiResponses({
@@ -91,9 +88,11 @@ public class ConfigurationTypeResource
     }
 
     @GET
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
-    @ApiOperation(value = "Find Configuration Type by ID",
+    @PermitAll
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(
+        value = "Find Configuration Type by ID",
         notes = "Returns a single Configuration Type",
         response = ConfigurationType.class
     )
@@ -110,7 +109,7 @@ public class ConfigurationTypeResource
     }
 
     @PUT
-    @RolesAllowed({ROLE_ADMIN, ROLE_COORDINATOR})
+    @RolesAllowed({ Constants.Security.ROLE_ADMIN, Constants.Security.ROLE_COORDINATOR })
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(
@@ -121,27 +120,31 @@ public class ConfigurationTypeResource
     )
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 406, message = "Not Acceptable")
+        @ApiResponse(code = 406, message = "Not Acceptable"),
+        @ApiResponse(code = 500, message = "Internal Server Error"),
     })
     @ApiImplicitParams({@ApiImplicitParam(
         name = "entity", value = "The Configuration Type object that needs to be updated in the CMDB", required = true
     )})
-    public Response update(ConfigurationType entity)
+    public Response update(ConfigurationType entity, @Context HttpServletRequest request)
     {
-        return storage.update(servletRequest.getRequestURL(), entity);
+        return storage.update(request.getRequestURL(), entity);
     }
 
     @DELETE
-    @RolesAllowed({ROLE_ADMIN, ROLE_COORDINATOR})
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/{id}")
+    @RolesAllowed({ Constants.Security.ROLE_ADMIN, Constants.Security.ROLE_COORDINATOR })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(
         value = "Deletes a Configuration Type",
         authorizations = @Authorization(value = "Bearer", scopes = {
-            @AuthorizationScope(scope = "update", description = "allows deleting of Configuration Unit")
+            @AuthorizationScope(scope = "delete", description = "allows deleting of Configuration Unit")
         })
     )
-    @ApiResponses({ @ApiResponse(code = 204, message = "No Content") })
+    @ApiResponses({
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 500, message = "Internal Server Error"),
+    })
     @ApiImplicitParams({@ApiImplicitParam(
         name = "id", value = "ID of Configuration Type to delete", dataType = "int", paramType = "path", required = true
     )})

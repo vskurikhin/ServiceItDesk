@@ -1,6 +1,6 @@
 /*
  * incidents.js
- * This file was last modified at 2019-02-16 13:34 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-16 18:55 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -183,6 +183,11 @@ function renderDetails(incident) {
         $('#btnAddMessage').show();
         $('#btnStatus2').show();
 
+    }
+    else if (3 === incident.status.id) {
+        $('#btnStatus1').hide();
+        $('#btnAddMessage').hide();
+        $('#btnStatus2').hide();
     }
 
     renderMessagesList(incident.messages)

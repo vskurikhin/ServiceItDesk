@@ -4,7 +4,7 @@
 
 <%--
   ~ configuration-types.jsp
-  ~ This file was last modified at 2019-02-12 00:03 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 22:10 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href='<c:out value="${baseURL}/"/>css/style-all.min.css'/>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.CONFIGURATION_TYPE_RESOURCE %>'
     </script>
 </head>
 
