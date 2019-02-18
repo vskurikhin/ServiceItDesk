@@ -8,7 +8,6 @@
 
 package su.svn.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -75,7 +74,7 @@ public class Incident implements DataSet
     private Long id = 0L;
 
     @Basic
-    @Column(name = "incident_title", nullable = false, unique = true)
+    @Column(name = "incident_title", nullable = false)
     private String title;
 
     @Basic

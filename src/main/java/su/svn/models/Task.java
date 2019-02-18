@@ -73,7 +73,7 @@ public class Task implements DataSet
     private Long id = 0L;
 
     @Basic
-    @Column(name = "task_title", nullable = false, unique = true)
+    @Column(name = "task_title", nullable = false)
     private String title;
 
     @Basic
@@ -95,7 +95,7 @@ public class Task implements DataSet
         CascadeType.MERGE
     })
     @JoinTable(name = "pm_task_record",
-        joinColumns = @JoinColumn(name = "incident_id"),
+        joinColumns = @JoinColumn(name = "task_id"),
         inverseJoinColumns = @JoinColumn(name = "message_id")
     )
     private Collection<Message> messages = new TreeSet<>();
