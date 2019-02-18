@@ -1,11 +1,13 @@
 *.java ident
 
+
 # In general, use LF for text
 * text eol=lf
 
 # Windows CMD does not like LF in batch files
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.pptx text eol=crlf
 
 # Visual Studio solutions like to switch to CRLF at times
 *.sln text eol=crlf
