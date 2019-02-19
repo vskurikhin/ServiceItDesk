@@ -4,7 +4,7 @@
 
 <%--
   ~ incidents.jsp
-  ~ This file was last modified at 2019-02-14 22:23 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-16 23:28 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -24,11 +24,11 @@
     </style>
     <script type="text/javascript" language="javascript" src='<c:out value="${baseURL}/"/>js/script-all.min.js'></script>
     <script language="javascript">
-        let STATUS_NONE = 0;
-        let STATUS_NEW = 1;
-        let STATUS_WORK = 2;
-        let STATUS_CLOSED = 3;
-        let rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
+        var STATUS_NONE = 0;
+        var STATUS_NEW = 1;
+        var STATUS_WORK = 2;
+        var STATUS_CLOSED = 3;
+        var rootURL = '<c:out value="${baseURL}" /><%= Rest.API_URL + "/v1" + Rest.INCIDENT_RESOURCE %>';
     </script>
 </head>
 

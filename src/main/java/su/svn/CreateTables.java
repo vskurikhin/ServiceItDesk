@@ -1,6 +1,6 @@
 /*
  * CreateTables.java
- * This file was last modified at 2019-02-02 12:44 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-18 21:09 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
 import su.svn.models.*;
+import su.svn.utils.Authentication;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.EnumSet;
 
 /**
@@ -70,8 +73,17 @@ public class CreateTables
         }
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException
     {
+        /*
+        String pwd = "superFunt";
+
+        System.out.println("Authentication.encodeSHA256(" + pwd + ") = " + Authentication.encodeSHA256(pwd));
+        String[] passwords = new String[] {"admin", "actuary", "coordinator", "user"};
+
+        for (String password : passwords) {
+            System.out.println("Authentication.encodeSHA256(" + password + ") = " + Authentication.encodeSHA256(password));
+        } */
         createTables();
     }
 }

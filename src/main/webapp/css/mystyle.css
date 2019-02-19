@@ -1,6 +1,6 @@
 /*
  * mystyle.css
- * This file was last modified at 2019-02-16 21:25 by Victor N. Skurikhin.
+ * This file was last modified at 2019-02-18 20:44 by Victor N. Skurikhin.
  * $Id$
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -202,7 +202,7 @@ html {
 .body {
     margin: 0 auto;
     min-width: 1024px;
-    width: 100%
+    width: 90%
 }
 
 .main-header {

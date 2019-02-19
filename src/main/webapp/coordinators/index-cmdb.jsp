@@ -4,7 +4,7 @@
 
 <%--
   ~ index-cmdb.jsp
-  ~ This file was last modified at 2019-02-16 13:42 by Victor N. Skurikhin.
+  ~ This file was last modified at 2019-02-18 22:02 by Victor N. Skurikhin.
   ~ $Id$
   ~ This is free and unencumbered software released into the public domain.
   ~ For more information, please refer to <http://unlicense.org>
@@ -25,7 +25,7 @@
     <table class="tg body">
 <%@ include file = "menu.jsp" %>
         <tr>
-            <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px;">
+            <td class="tg-0lax my-left-aside" style="border-right: 2px dotted black; height: 600px; min-width: 277px">
                 <%@ include file = "aside-cmdb.jsp" %>
             </td>
             <td class="tg-0lax my-right-main">

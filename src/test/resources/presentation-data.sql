@@ -7,15 +7,6 @@ VALUES
  (nextval('group_id_seq'), 'Actuaries', 'Test Actuaries'),
  (nextval('group_id_seq'), 'Users', 'Test Users');
 
-INSERT INTO cm_user
- (user_id, user_name, description, primary_group_id)
-VALUES
- (2147483647, 'superuser', 'Administrator', 2147483647),
- (nextval('user_id_seq'), 'admin', 'Administrator', 1),
- (nextval('user_id_seq'), 'coordinator', 'Test Coordinator', 2),
- (nextval('user_id_seq'), 'actuary', 'Test Actuary', 3),
- (nextval('user_id_seq'), 'user', 'Test User', 4);
-
 INSERT INTO cm_user_group 
  (user_id, group_id) 
 VALUES
@@ -27,6 +18,15 @@ VALUES
 ALTER TABLE cm_user 
  ADD COLUMN password VARCHAR NOT NULL
  DEFAULT 'e1X6Nk2/9ydYmDO74y89BK0aNQmQnQjK59X46mMRV9Q=';
+
+INSERT INTO cm_user
+ (user_id, user_name, description, primary_group_id, password)
+VALUES
+ (2147483647, 'superuser', 'Administrator', 2147483647),
+ (nextval('user_id_seq'), 'admin', 'Administrator', 1),
+ (nextval('user_id_seq'), 'coordinator', 'Test Coordinator', 2),
+ (nextval('user_id_seq'), 'actuary', 'Test Actuary', 3),
+ (nextval('user_id_seq'), 'user', 'Test User', 4);
 
 CREATE VIEW glassfish_groups AS
 SELECT g1.name AS group_name, u1.user_name AS login
